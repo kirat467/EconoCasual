@@ -1,43 +1,74 @@
 import pandas as pd
-import numpy as np
-
-# Create sample customer data
-np.random.seed(42)
-
-data = {
-    "customer_id": range(1, 11),
-    "previous_purchases": [2, 5, 1, 7, 3, 6, 2, 8, 4, 5],
-    "discount": [1, 0, 1, 0, 1, 0, 1, 0, 1, 0],
-    "purchase": [1, 1, 1, 1, 0, 1, 1, 1, 1, 0]
-}
-
-# Create a DataFrame
-df = pd.DataFrame(data)
-
-# Display customer data
-print("CUSTOMER DATA")
-print(df)
-
-# Compare purchase rates
-print("\nPURCHASE RATE BY DISCOUNT")
-print(df.groupby("discount")["purchase"].mean())
-
 import matplotlib.pyplot as plt
+from pathlib import Path
 
-# Calculate purchase rates
+project_folder = Path(__file__).resolve().parent.parent
+file_path = project_folder / "data" / "customers.csv"
+
+df = pd.read_csv(file_path)
+
+print("ECONOCASUAL - DATA ANALYSIS")
+print("===========================")
+
+print("\nCUSTOMER DATA")
+print(df.head())
+
+print("\nDATASET SHAPE")
+print(df.shape)
+
+print("\nCOLUMN NAMES")
+print(df.columns.tolist())
+
+print("\nMISSING VALUES")
+print(df.isnull().sum())
+
+print("\nDUPLICATE ROWS")
+print(df.duplicated().sum())
+
+print("\nPURCHASE RATE BY DISCOUNT")
 purchase_rates = df.groupby("discount")["purchase"].mean()
+print(purchase_rates)
 
-# Create a bar chart
+print("\nPURCHASE RATE BY PREVIOUS PURCHASES")
+previous_purchase_rates = df.groupby("previous_purchases")["purchase"].mean()
+print(previous_purchase_rates)
+
+# Chart 1: Purchase rate by discount
 purchase_rates.plot(kind="bar")
 
-# Add chart labels
-plt.title("Purchase Rate With and Without Discounts")
+plt.title("Purchase Rate with and without Discounts")
 plt.xlabel("Discount (0 = No, 1 = Yes)")
 plt.ylabel("Purchase Rate")
 plt.xticks(rotation=0)
 
-# Display the chart
 plt.tight_layout()
 plt.show()
 
-    
+# First chart
+purchase_rates.plot(kind="bar")
+
+plt.title("Purchase Rate with and without Discounts")
+plt.xlabel("Discount (0 = No, 1 = Yes)")
+plt.ylabel("Purchase Rate")
+
+plt.tight_layout()
+plt.show()
+
+print("FIRST CHART CLOSED")
+
+# Second chart
+print("PREPARING SECOND CHART")
+
+print("OPENING SECOND CHART")
+
+plt.figure(figsize=(8, 5))
+previous_purchase_rates.plot(kind="bar")
+
+plt.title("Purchase Rate by Previous Purchases")
+plt.xlabel("Previous Purchases")
+plt.ylabel("Purchase Rate")
+
+plt.tight_layout()
+plt.show()
+
+print("SECOND CHART CLOSED")
