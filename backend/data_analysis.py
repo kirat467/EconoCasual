@@ -2,10 +2,13 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from pathlib import Path
 
+pd.set_option("display.max_rows", None)
+
 project_folder = Path(__file__).resolve().parent.parent
 file_path = project_folder / "data" / "customers.csv"
 
 df = pd.read_csv(file_path)
+print("Column names:",df.columns.tolist())
 
 print("ECONOCASUAL - DATA ANALYSIS")
 print("===========================")
@@ -18,6 +21,7 @@ print(df.shape)
 
 print("\nCOLUMN NAMES")
 print(df.columns.tolist())
+print("ACTUAL CLUMN NAMES:",df.columns.tolist())
 
 print("\nMISSING VALUES")
 print(df.isnull().sum())
@@ -29,7 +33,14 @@ print("\nPURCHASE RATE BY DISCOUNT")
 purchase_rates = df.groupby("discount")["purchase"].mean()
 print(purchase_rates)
 
+print("\nOVERALL PURCHASE RATE")
+
+overall_purchase_rate = df["purchase"].mean()
+
+print(f"Overall Purchase Rate: {overall_purchase_rate:.2%}")
+
 print("\nPURCHASE RATE BY PREVIOUS PURCHASES")
+
 previous_purchase_rates = df.groupby("previous_purchases")["purchase"].mean()
 print(previous_purchase_rates)
 
@@ -72,3 +83,15 @@ plt.tight_layout()
 plt.show()
 
 print("SECOND CHART CLOSED")
+
+print("\n========== ANALYSIS SUMMARY ==========")
+print(f"Total customers: {len(df)}")
+print(f"Overall purchase rate: {df['purchase'].mean():.2%}")
+print("======================================")
+
+
+
+
+
+
+
