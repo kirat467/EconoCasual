@@ -129,3 +129,20 @@ if "engagement" in df.columns and "purchase" in df.columns:
 
     plt.tight_layout()
     plt.show()
+
+print("\n========== CUSTOMER PURCHASE COMPARISON ==========")
+
+purchase_history = df.groupby("previous_purchases")["purchase"].mean()
+
+print("\nPurchase rate by previous purchases:")
+print((purchase_history * 100).round(2).astype(str) + "%")
+
+highest_group = purchase_history.idxmax()
+highest_rate = purchase_history.max()
+
+print(f"\nHighest purchase rate: customers with {highest_group} previous purchases")
+print(f"Purchase rate: {highest_rate:.2%}")
+
+print("===================================================")
+
+    
