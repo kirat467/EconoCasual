@@ -63,3 +63,13 @@ The analysis provides an initial understanding of customer purchasing behavior. 
 - Identify important features related to customer purchases.
 - Prepare the dataset for machine learning.
 - Develop and evaluate a customer purchase prediction model.
+
+## 11. Customer Engagement Analysis
+
+- Customer engagement was analyzed using Python and Pandas to understand its relationship with purchasing behavior.
+
+- The average engagement value was calculated to understand overall customer engagement. Descriptive statistics were also generated to examine the distribution of engagement values.
+
+- Purchase rates were calculated for different engagement groups using the mean of the purchase column. A bar chart was created to visualize the relationship between customer engagement and purchase behavior.
+
+- The analysis helps identify differences in purchasing behavior across engagement groups.
