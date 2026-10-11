@@ -50,6 +50,12 @@ The analysis provides an initial understanding of customer purchasing behavior. 
 - Analyzed purchase rates based on customers' previous purchases.
 - Visualized the results using Matplotlib charts.
 - Prepared the initial analysis for the next stage of customer purchase prediction.
+-Overall purchase rate calculated.
+-Purchase rates analyzed by discount.
+-Purchase rates analyzed by previous purchases.
+-Customer engagement analysis.
+-Three graphs generated.
+-Preparation for customer purchase prediction.
 
 ## 10. Future Work
 
