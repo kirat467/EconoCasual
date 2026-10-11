@@ -89,9 +89,43 @@ print(f"Total customers: {len(df)}")
 print(f"Overall purchase rate: {df['purchase'].mean():.2%}")
 print("======================================")
 
+# Customer Engagement Analysis
 
+print("\n--- Customer Engagement Analysis ---")
 
+if "engagement" in df.columns:
+    print("\nAverage Engagement Rate:")
+    print(df["engagement"].mean())
 
+    print("\nEngagement Statistics:")
+    print(df["engagement"].describe())
 
+    if "purchase" in df.columns:
+        print("\nPurchase Rate by Engagement:")
 
+        engagement_purchase = df.groupby("engagement")["purchase"].mean()
 
+        print(engagement_purchase)
+else:
+    print("Engagement column not found.")
+    print("Available columns:")
+    print(df.columns.tolist())
+
+    # Purchase Rate by Engagement Chart
+
+import matplotlib.pyplot as plt
+
+if "engagement" in df.columns and "purchase" in df.columns:
+
+    engagement_purchase = df.groupby("engagement")["purchase"].mean()
+
+    plt.figure(figsize=(8, 5))
+    engagement_purchase.plot(kind="bar")
+
+    plt.title("Purchase Rate by Engagement")
+    plt.xlabel("Engagement")
+    plt.ylabel("Purchase Rate")
+    plt.xticks(rotation=0)
+
+    plt.tight_layout()
+    plt.show()
