@@ -58,3 +58,19 @@ print(df.info())
 print("\nPurchase rate by discount:")
 print(df.groupby("discount")["purchase"].mean())
 
+print("\nPurchase rate by previous purchases:")
+print(df.groupby("previous_purchases")["purchase"].mean())
+
+print("\nPurchase rate by engagement:")
+print(df.groupby("engagement")["purchase"].mean())
+
+print("\nMissing values:")
+print(df.isnull().sum())
+
+print("\nDuplicate rows:")
+print(df.duplicated().sum())
+
+print("\nDataset Summary:")
+print("Total customers:", len(df))
+print("Total columns:", len(df.columns))
+print("Overall purchase rate:", df["purchase"].mean())
