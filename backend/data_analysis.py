@@ -280,4 +280,12 @@ plt.ylabel("Purchase Rate")
 plt.tight_layout()
 plt.show()
 
+# Analyze engagement and previous purchases together
+combined_analysis = df.groupby(
+    ["engagement", "previous_purchases"]
+)["purchase"].mean()
+
+print("Purchase Rate by Engagement and Previous Purchases:")
+print(combined_analysis)
+
     
