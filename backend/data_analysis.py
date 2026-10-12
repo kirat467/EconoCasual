@@ -192,4 +192,56 @@ print(correlation["purchase"].drop("purchase").round(2))
 
 print("==========================================")
 
+print("\n========== FINAL ANALYSIS INSIGHTS ==========")
+
+purchase_rate = df["purchase"].mean() * 100
+print(f"Overall Purchase Rate: {purchase_rate:.2f}%")
+
+previous_corr = df["previous_purchases"].corr(df["purchase"])
+engagement_corr = df["engagement"].corr(df["purchase"])
+discount_corr = df["discount"].corr(df["purchase"])
+
+print(f"Previous Purchases Correlation: {previous_corr:.2f}")
+print(f"Engagement Correlation: {engagement_corr:.2f}")
+print(f"Discount Correlation: {discount_corr:.2f}")
+
+print("=============================================")
+
+print("\n========== CUSTOMER PURCHASE COMPARISON ==========")
+
+buyers = df[df["purchase"] == 1]
+non_buyers = df[df["purchase"] == 0]
+
+print("\nAverage Previous Purchases:")
+print(f"Buyers: {buyers['previous_purchases'].mean():.2f}")
+print(f"Non-buyers: {non_buyers['previous_purchases'].mean():.2f}")
+
+print("\nAverage Engagement:")
+print(f"Buyers: {buyers['engagement'].mean():.2f}")
+print(f"Non-buyers: {non_buyers['engagement'].mean():.2f}")
+
+print("\nAverage Discount:")
+print(f"Buyers: {buyers['discount'].mean():.2f}")
+print(f"Non-buyers: {non_buyers['discount'].mean():.2f}")
+
+print("===================================================")
+
+print("\n========== PURCHASE RATE BY ENGAGEMENT ==========")
+
+engagement_purchase = df.groupby("engagement")["purchase"].mean() * 100
+
+print("\nEngagement Level | Purchase Rate (%)")
+print(engagement_purchase.round(2))
+
+print("=================================================")
+
+print("\n========== PURCHASE RATE BY DISCOUNT ==========")
+
+discount_rates = df.groupby("discount")["purchase"].mean() * 100
+
+print("\nDiscount | Purchase Rate (%)")
+print(discount_rates.round(2))
+
+print("===============================================")
+
     
