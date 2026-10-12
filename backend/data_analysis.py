@@ -244,4 +244,31 @@ print(discount_rates.round(2))
 
 print("===============================================")
 
+# Find the customer group with the highest purchase rate
+
+purchase_by_engagement = df.groupby("engagement")["purchase"].mean()
+
+print("Purchase Rate by Engagement:")
+print(purchase_by_engagement)
+
+print("\nEngagement Level with Highest Purchase Rate:")
+print(purchase_by_engagement.idxmax())
+
+# Analyze purchase rate by previous purchases
+purchase_by_previous = df.groupby("previous_purchases")["purchase"].mean()
+
+print("Purchase Rate by Previous Purchases:")
+print(purchase_by_previous)
+
+# Plot purchase rate by previous purchases
+import matplotlib.pyplot as plt
+
+purchase_by_previous.plot(kind="bar", figsize=(8, 5))
+
+plt.title("Purchase Rate by Previous Purchases")
+plt.xlabel("Previous Purchases")
+plt.ylabel("Purchase Rate")
+plt.tight_layout()
+plt.show()
+
     
