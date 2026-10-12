@@ -145,4 +145,51 @@ print(f"Purchase rate: {highest_rate:.2%}")
 
 print("===================================================")
 
+print("\n========== DATA QUALITY CHECK ==========")
+
+print("\nDataset Shape:")
+print(df.shape)
+
+print("\nMissing Values:")
+print(df.isnull().sum())
+
+print("\nDuplicate Rows:")
+print(df.duplicated().sum())
+
+print("\nDataset Information:")
+df.info()
+
+print("========================================")
+
+print("\n========== PURCHASE DISTRIBUTION ==========")
+
+print("\nPurchase Counts:")
+print(df["purchase"].value_counts())
+
+print("\nPurchase Percentages:")
+print((df["purchase"].value_counts(normalize=True) * 100).round(2))
+
+print("\n============================================")
+
+print("\n========== DESCRIPTIVE STATISTICS ==========")
+
+print("\nCustomer Data Summary:")
+print(df.describe())
+
+print("\n=============================================")
+
+print("\n========== CORRELATION ANALYSIS ==========")
+
+correlation = df[
+    ["previous_purchases", "engagement", "discount", "purchase"]
+].corr()
+
+print("\nCorrelation Between Variables:")
+print(correlation.round(2))
+
+print("\nCorrelation with Purchase:")
+print(correlation["purchase"].drop("purchase").round(2))
+
+print("==========================================")
+
     
