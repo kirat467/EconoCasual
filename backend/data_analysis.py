@@ -192,4 +192,133 @@ print(correlation["purchase"].drop("purchase").round(2))
 
 print("==========================================")
 
+print("\n========== FINAL ANALYSIS INSIGHTS ==========")
+
+purchase_rate = df["purchase"].mean() * 100
+print(f"Overall Purchase Rate: {purchase_rate:.2f}%")
+
+previous_corr = df["previous_purchases"].corr(df["purchase"])
+engagement_corr = df["engagement"].corr(df["purchase"])
+discount_corr = df["discount"].corr(df["purchase"])
+
+print(f"Previous Purchases Correlation: {previous_corr:.2f}")
+print(f"Engagement Correlation: {engagement_corr:.2f}")
+print(f"Discount Correlation: {discount_corr:.2f}")
+
+print("=============================================")
+
+print("\n========== CUSTOMER PURCHASE COMPARISON ==========")
+
+buyers = df[df["purchase"] == 1]
+non_buyers = df[df["purchase"] == 0]
+
+print("\nAverage Previous Purchases:")
+print(f"Buyers: {buyers['previous_purchases'].mean():.2f}")
+print(f"Non-buyers: {non_buyers['previous_purchases'].mean():.2f}")
+
+print("\nAverage Engagement:")
+print(f"Buyers: {buyers['engagement'].mean():.2f}")
+print(f"Non-buyers: {non_buyers['engagement'].mean():.2f}")
+
+print("\nAverage Discount:")
+print(f"Buyers: {buyers['discount'].mean():.2f}")
+print(f"Non-buyers: {non_buyers['discount'].mean():.2f}")
+
+print("===================================================")
+
+print("\n========== PURCHASE RATE BY ENGAGEMENT ==========")
+
+engagement_purchase = df.groupby("engagement")["purchase"].mean() * 100
+
+print("\nEngagement Level | Purchase Rate (%)")
+print(engagement_purchase.round(2))
+
+print("=================================================")
+
+print("\n========== PURCHASE RATE BY DISCOUNT ==========")
+
+discount_rates = df.groupby("discount")["purchase"].mean() * 100
+
+print("\nDiscount | Purchase Rate (%)")
+print(discount_rates.round(2))
+
+print("===============================================")
+
+# Find the customer group with the highest purchase rate
+
+purchase_by_engagement = df.groupby("engagement")["purchase"].mean()
+
+print("Purchase Rate by Engagement:")
+print(purchase_by_engagement)
+
+print("\nEngagement Level with Highest Purchase Rate:")
+print(purchase_by_engagement.idxmax())
+
+# Analyze purchase rate by previous purchases
+purchase_by_previous = df.groupby("previous_purchases")["purchase"].mean()
+
+print("Purchase Rate by Previous Purchases:")
+print(purchase_by_previous)
+
+# Plot purchase rate by previous purchases
+import matplotlib.pyplot as plt
+
+purchase_by_previous.plot(kind="bar", figsize=(8, 5))
+
+plt.title("Purchase Rate by Previous Purchases")
+plt.xlabel("Previous Purchases")
+plt.ylabel("Purchase Rate")
+plt.tight_layout()
+plt.show()
+
+# Plot purchase rate by engagement
+purchase_by_engagement.plot(kind="bar", figsize=(8, 5))
+
+plt.title("Purchase Rate by Customer Engagement")
+plt.xlabel("Engagement Level")
+plt.ylabel("Purchase Rate")
+plt.tight_layout()
+plt.show()
+
+# Analyze engagement and previous purchases together
+combined_analysis = df.groupby(
+    ["engagement", "previous_purchases"]
+)["purchase"].mean()
+
+print("Purchase Rate by Engagement and Previous Purchases:")
+print(combined_analysis)
+
+# Heatmap of purchase rates
+import matplotlib.pyplot as plt
+import numpy as np
+
+heatmap_data = df.pivot_table(
+    index="engagement",
+    columns="previous_purchases",
+    values="purchase",
+    aggfunc="mean"
+)
+
+plt.figure(figsize=(10, 6))
+
+plt.imshow(heatmap_data, aspect="auto", cmap="YlGnBu", origin="lower")
+
+plt.colorbar(label="Purchase Rate")
+plt.title("Purchase Rate Heatmap")
+plt.xlabel("Previous Purchases")
+plt.ylabel("Customer Engagement")
+
+plt.xticks(
+    range(len(heatmap_data.columns)),
+    heatmap_data.columns
+)
+
+plt.yticks(
+    range(len(heatmap_data.index)),
+    heatmap_data.index
+)
+
+plt.tight_layout()
+plt.show()
+
     
