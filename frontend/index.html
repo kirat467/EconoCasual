@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>EconoCasual · Customer intelligence</title>
+  <meta name="description" content="Explore who buys, how engaged customers are, and how discounts line up with purchases.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap bar">
+    <a class="wordmark" href="#top" aria-label="EconoCasual home">
+      <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true">
+        <rect x="2" y="12" width="5" height="10" rx="1.5"/>
+        <rect x="9.5" y="6" width="5" height="16" rx="1.5"/>
+        <rect x="17" y="2" width="5" height="20" rx="1.5"/>
+      </svg>
+      EconoCasual
+    </a>
+    <nav class="nav" aria-label="Sections">
+      <a href="#summary" class="active">Summary</a>
+      <a href="#drivers">What drives purchases</a>
+      <a href="#customers">Customer records</a>
+    </nav>
+    <button class="btn" id="export" type="button">Export CSV</button>
+  </div>
+</header>
+
+<main id="top">
+  <section class="wrap hero" id="summary" aria-labelledby="headline">
+    <h1 id="headline" class="headline" aria-live="polite">Loading customer sample…</h1>
+    <p class="subline" id="subline"></p>
+
+    <div class="split-bar" aria-hidden="true"><i id="splitFill"></i></div>
+    <div class="split-key"><span><b id="keyBought">–</b> bought</span><span><b id="keyNot">–</b> did not</span></div>
+
+    <div class="segments" role="group" aria-label="Customer group">
+      <button type="button" class="seg is-on" data-seg="all" aria-pressed="true">All customers</button>
+      <button type="button" class="seg" data-seg="high" aria-pressed="false">High engagement (7–10)</button>
+      <button type="button" class="seg" data-seg="low" aria-pressed="false">Low engagement (0–3)</button>
+      <button type="button" class="seg" data-seg="repeat" aria-pressed="false">Repeat buyers (5+ before)</button>
+    </div>
+  </section>
+
+  <section class="wrap stats" aria-label="Key figures">
+    <div class="stat"><span class="stat-label">Customers in view</span><strong id="sTotal">–</strong><span class="stat-note" id="sTotalNote">&nbsp;</span></div>
+    <div class="stat"><span class="stat-label">Purchase rate</span><strong id="sRate">–</strong><span class="stat-note" id="sRateNote">&nbsp;</span></div>
+    <div class="stat"><span class="stat-label">Average engagement</span><strong id="sEng">–</strong><span class="stat-note">on a 0–10 scale</span></div>
+    <div class="stat"><span class="stat-label">Offered a discount</span><strong id="sDisc">–</strong><span class="stat-note" id="sDiscNote">&nbsp;</span></div>
+  </section>
+
+  <section class="wrap drivers" id="drivers" aria-labelledby="drv-title">
+    <div class="drivers-main">
+      <div class="sec-head">
+        <h2 id="drv-title">Purchase rate by engagement</h2>
+        <p>Share of customers who bought at each engagement score, split by whether they were offered a discount. Grey bars show how many customers sit at each score.</p>
+      </div>
+      <div class="legend" aria-hidden="true">
+        <span><i class="line with"></i> Offered a discount</span>
+        <span><i class="line without"></i> No discount</span>
+        <span><i class="swatch"></i> Customers at this score</span>
+      </div>
+      <div class="chart" id="trendWrap">
+        <svg id="trend" role="img" aria-labelledby="trendDesc" preserveAspectRatio="xMidYMid meet"></svg>
+        <div class="tip" id="tip" hidden></div>
+      </div>
+      <p class="sr-only" id="trendDesc"></p>
+    </div>
+
+    <aside class="drivers-side">
+      <div class="sec-head">
+        <h2>Discount comparison</h2>
+        <p>Observed purchase rate for the customers in view.</p>
+      </div>
+      <ul class="compare" id="compare"></ul>
+      <p class="gap-line" id="gapLine"></p>
+      <p class="caveat">This compares groups in sample data. Customers were not randomly chosen for discounts, so a gap here is a pattern to investigate, not proof that the discount caused it.</p>
+    </aside>
+  </section>
+
+  <section class="wrap lower" aria-labelledby="prev-title">
+    <div>
+      <div class="sec-head">
+        <h2 id="prev-title">Purchase rate by past purchases</h2>
+        <p>Do customers with a buying history convert more often?</p>
+      </div>
+      <ul class="bars" id="prevBars"></ul>
+    </div>
+    <div>
+      <div class="sec-head">
+        <h2>What stands out</h2>
+        <p>Plain-language readout of the group you selected.</p>
+      </div>
+      <ul class="notes" id="notes"></ul>
+    </div>
+  </section>
+
+  <section class="wrap records" id="customers" aria-labelledby="rec-title">
+    <div class="rec-head">
+      <div class="sec-head">
+        <h2 id="rec-title">Customer records</h2>
+        <p>Search by ID, filter by outcome, and click a column to sort.</p>
+      </div>
+      <div class="filters">
+        <label class="sr-only" for="search">Search customer ID</label>
+        <input id="search" type="search" placeholder="Customer ID, e.g. 0042" autocomplete="off">
+        <label class="sr-only" for="purchaseFilter">Purchase outcome</label>
+        <select id="purchaseFilter">
+          <option value="all">All outcomes</option>
+          <option value="1">Purchased</option>
+          <option value="0">Did not purchase</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="table-scroll" tabindex="0" aria-label="Customer records table">
+      <table>
+        <thead>
+          <tr>
+            <th aria-sort="ascending"><button type="button" data-sort="customer_id">Customer</button></th>
+            <th class="num"><button type="button" data-sort="previous_purchases">Past purchases</button></th>
+            <th><button type="button" data-sort="engagement">Engagement</button></th>
+            <th><button type="button" data-sort="discount">Discount</button></th>
+            <th><button type="button" data-sort="purchase">Outcome</button></th>
+          </tr>
+        </thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
+
+    <div class="pager">
+      <span id="summaryText">–</span>
+      <div class="pager-ctl">
+        <button type="button" id="prev" aria-label="Previous page">Previous</button>
+        <span id="pageText">1 / 1</span>
+        <button type="button" id="next" aria-label="Next page">Next</button>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <p>EconoCasual frontend prototype. All 1,000 records are generated sample data with the fields <code>customer_id</code>, <code>previous_purchases</code>, <code>engagement</code>, <code>discount</code> and <code>purchase</code>. No prediction model is connected yet.</p>
+  </div>
+</footer>
+
+<div id="toast" role="status" aria-live="polite"></div>
+<script src="script.js"></script>
+</body>
+</html>
