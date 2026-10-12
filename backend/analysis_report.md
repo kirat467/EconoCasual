@@ -73,3 +73,23 @@ The analysis provides an initial understanding of customer purchasing behavior. 
 - Purchase rates were calculated for different engagement groups using the mean of the purchase column. A bar chart was created to visualize the relationship between customer engagement and purchase behavior.
 
 - The analysis helps identify differences in purchasing behavior across engagement groups.
+
+## 12. Correlation Analysis
+
+Correlation analysis was performed to understand the relationship between customer characteristics and purchase behavior.
+
+The observed correlation values with purchase were:
+
+- Previous Purchases: 0.30
+- Customer Engagement: 0.18
+- Discount: 0.05
+
+### Key Findings
+
+1. Previous purchases showed the strongest positive correlation with purchase behavior among these three variables.
+2. Customer engagement showed a weaker positive correlation.
+3. Discount showed a very weak positive correlation.
+
+### Conclusion
+
+Previous purchase history had the strongest observed relationship with purchase behavior in this dataset. These correlations do not establish causation.
