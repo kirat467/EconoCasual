@@ -271,4 +271,13 @@ plt.ylabel("Purchase Rate")
 plt.tight_layout()
 plt.show()
 
+# Plot purchase rate by engagement
+purchase_by_engagement.plot(kind="bar", figsize=(8, 5))
+
+plt.title("Purchase Rate by Customer Engagement")
+plt.xlabel("Engagement Level")
+plt.ylabel("Purchase Rate")
+plt.tight_layout()
+plt.show()
+
     
