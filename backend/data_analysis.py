@@ -288,4 +288,37 @@ combined_analysis = df.groupby(
 print("Purchase Rate by Engagement and Previous Purchases:")
 print(combined_analysis)
 
+# Heatmap of purchase rates
+import matplotlib.pyplot as plt
+import numpy as np
+
+heatmap_data = df.pivot_table(
+    index="engagement",
+    columns="previous_purchases",
+    values="purchase",
+    aggfunc="mean"
+)
+
+plt.figure(figsize=(10, 6))
+
+plt.imshow(heatmap_data, aspect="auto", cmap="YlGnBu", origin="lower")
+
+plt.colorbar(label="Purchase Rate")
+plt.title("Purchase Rate Heatmap")
+plt.xlabel("Previous Purchases")
+plt.ylabel("Customer Engagement")
+
+plt.xticks(
+    range(len(heatmap_data.columns)),
+    heatmap_data.columns
+)
+
+plt.yticks(
+    range(len(heatmap_data.index)),
+    heatmap_data.index
+)
+
+plt.tight_layout()
+plt.show()
+
     
