@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>EconoCasual · Customer intelligence</title>
+  <title>EconoCasual: customer intelligence</title>
   <meta name="description" content="Explore who buys, how engaged customers are, and how discounts line up with purchases.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -13,7 +13,7 @@
 <body>
 
 <header class="site-header">
-  <div class="wrap bar">
+  <div class="wrap topbar">
     <a class="wordmark" href="#top" aria-label="EconoCasual home">
       <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true">
         <rect x="2" y="12" width="5" height="10" rx="1.5"/>
@@ -25,6 +25,7 @@
     <nav class="nav" aria-label="Sections">
       <a href="#summary" class="active">Summary</a>
       <a href="#drivers">What drives purchases</a>
+      <a href="#predict">Try a customer</a>
       <a href="#customers">Customer records</a>
     </nav>
     <button class="btn" id="export" type="button">Export CSV</button>
@@ -36,15 +37,23 @@
     <h1 id="headline" class="headline" aria-live="polite">Loading customer sample…</h1>
     <p class="subline" id="subline"></p>
 
-    <div class="split-bar" aria-hidden="true"><i id="splitFill"></i></div>
-    <div class="split-key"><span><b id="keyBought">–</b> bought</span><span><b id="keyNot">–</b> did not</span></div>
-
     <div class="segments" role="group" aria-label="Customer group">
-      <button type="button" class="seg is-on" data-seg="all" aria-pressed="true">All customers</button>
-      <button type="button" class="seg" data-seg="high" aria-pressed="false">High engagement (7–10)</button>
-      <button type="button" class="seg" data-seg="low" aria-pressed="false">Low engagement (0–3)</button>
-      <button type="button" class="seg" data-seg="repeat" aria-pressed="false">Repeat buyers (5+ before)</button>
+      <button type="button" class="seg is-on" data-seg="all" aria-pressed="true">All customers <span class="seg-n"></span></button>
+      <button type="button" class="seg" data-seg="high" aria-pressed="false">High engagement (7–10) <span class="seg-n"></span></button>
+      <button type="button" class="seg" data-seg="low" aria-pressed="false">Low engagement (0–3) <span class="seg-n"></span></button>
+      <button type="button" class="seg" data-seg="repeat" aria-pressed="false">Repeat buyers (5+ before) <span class="seg-n"></span></button>
     </div>
+
+    <figure class="people" id="people">
+      <div class="people-groups" id="peopleGroups" role="img" aria-label="One square for each of the 1,000 customers, grouped by whether they were offered a discount. Filled squares bought. The same numbers appear in the headline and the figures below."></div>
+      <div class="dot-tip" id="dotTip" hidden></div>
+      <figcaption class="people-key">
+        <span><i class="sw with"></i><i class="sw without"></i> Bought</span>
+        <span><i class="sw off"></i> Did not buy</span>
+        <span><i class="sw faded"></i> Outside the selected group</span>
+        <span class="hint">Each square is one customer. Hover or tap one for details.</span>
+      </figcaption>
+    </figure>
   </section>
 
   <section class="wrap stats" aria-label="Key figures">
@@ -54,49 +63,85 @@
     <div class="stat"><span class="stat-label">Offered a discount</span><strong id="sDisc">–</strong><span class="stat-note" id="sDiscNote">&nbsp;</span></div>
   </section>
 
-  <section class="wrap drivers" id="drivers" aria-labelledby="drv-title">
-    <div class="drivers-main">
-      <div class="sec-head">
-        <h2 id="drv-title">Purchase rate by engagement</h2>
-        <p>Share of customers who bought at each engagement score, split by whether they were offered a discount. Grey bars show how many customers sit at each score.</p>
+  <div id="drivers">
+    <section class="wrap drivers" aria-labelledby="drv-title">
+      <div class="drivers-main">
+        <div class="sec-head">
+          <h2 id="drv-title">Purchase rate by engagement</h2>
+          <p>Share of customers who bought at each engagement score, split by whether they were offered a discount. Grey bars show how many customers sit at each score.</p>
+        </div>
+        <div class="legend" aria-hidden="true">
+          <span><i class="line with"></i> Offered a discount</span>
+          <span><i class="line without"></i> No discount</span>
+          <span><i class="swatch"></i> Customers at this score</span>
+        </div>
+        <div class="chart" id="trendWrap">
+          <svg id="trend" role="img" tabindex="0" aria-labelledby="trendDesc"></svg>
+          <div class="tip" id="tip" hidden></div>
+        </div>
+        <p class="sr-only" id="trendDesc"></p>
       </div>
-      <div class="legend" aria-hidden="true">
-        <span><i class="line with"></i> Offered a discount</span>
-        <span><i class="line without"></i> No discount</span>
-        <span><i class="swatch"></i> Customers at this score</span>
-      </div>
-      <div class="chart" id="trendWrap">
-        <svg id="trend" role="img" aria-labelledby="trendDesc" preserveAspectRatio="xMidYMid meet"></svg>
-        <div class="tip" id="tip" hidden></div>
-      </div>
-      <p class="sr-only" id="trendDesc"></p>
-    </div>
 
-    <aside class="drivers-side">
-      <div class="sec-head">
-        <h2>Discount comparison</h2>
-        <p>Observed purchase rate for the customers in view.</p>
-      </div>
-      <ul class="compare" id="compare"></ul>
-      <p class="gap-line" id="gapLine"></p>
-      <p class="caveat">This compares groups in sample data. Customers were not randomly chosen for discounts, so a gap here is a pattern to investigate, not proof that the discount caused it.</p>
-    </aside>
-  </section>
+      <aside class="drivers-side">
+        <div class="sec-head">
+          <h2>Discount comparison</h2>
+          <p>Observed purchase rate for the customers in view.</p>
+        </div>
+        <ul class="compare" id="compare"></ul>
+        <div class="gap-line" id="gapLine"></div>
+        <p class="caveat">This compares groups in sample data. Customers were not randomly chosen for discounts, so a gap here is a pattern to investigate, not proof that the discount caused it.</p>
+      </aside>
+    </section>
 
-  <section class="wrap lower" aria-labelledby="prev-title">
-    <div>
-      <div class="sec-head">
-        <h2 id="prev-title">Purchase rate by past purchases</h2>
-        <p>Do customers with a buying history convert more often?</p>
+    <section class="wrap lower" aria-labelledby="prev-title">
+      <div>
+        <div class="sec-head">
+          <h2 id="prev-title">Purchase rate by past purchases</h2>
+          <p>Do customers with a buying history convert more often? The dark tick marks the overall rate for the group in view.</p>
+        </div>
+        <ul class="bars" id="prevBars"></ul>
       </div>
-      <ul class="bars" id="prevBars"></ul>
+      <div>
+        <div class="sec-head">
+          <h2>What stands out</h2>
+          <p>Plain-language readout of the group you selected.</p>
+        </div>
+        <ul class="notes" id="notes"></ul>
+      </div>
+    </section>
+  </div>
+
+  <section class="wrap predict" id="predict" aria-labelledby="pred-title">
+    <div class="sec-head">
+      <h2 id="pred-title">Try a customer</h2>
+      <p>Set a customer profile and see how likely a purchase is. The estimate comes from a simple logistic regression fitted in your browser on the sample records.</p>
     </div>
-    <div>
-      <div class="sec-head">
-        <h2>What stands out</h2>
-        <p>Plain-language readout of the group you selected.</p>
+    <div class="pred-grid">
+      <div class="pred-controls">
+        <div class="ctl">
+          <label for="pEng">Engagement score <output id="pEngOut" for="pEng">5</output></label>
+          <input type="range" id="pEng" min="0" max="10" step="1" value="5">
+        </div>
+        <div class="ctl">
+          <label for="pPrev">Past purchases <output id="pPrevOut" for="pPrev">3</output></label>
+          <input type="range" id="pPrev" min="0" max="10" step="1" value="3">
+        </div>
+        <label class="check"><input type="checkbox" id="pDisc"> Offer a discount</label>
+        <div class="pred-actions">
+          <button type="button" class="btn-ghost" id="pLoad">Load a real customer</button>
+          <button type="button" class="btn-ghost" id="pReset">Reset to average</button>
+        </div>
+        <p class="pred-actual" id="pActual" hidden></p>
       </div>
-      <ul class="notes" id="notes"></ul>
+      <div class="pred-out" aria-live="polite">
+        <span class="stat-label">Estimated chance of purchase</span>
+        <strong class="pred-big" id="pProb">–</strong>
+        <div class="track"><span class="fill" id="pFill"></span><span class="avg" id="pAvg"></span></div>
+        <p id="pDelta"></p>
+        <p id="pSimilar"></p>
+        <p class="pred-model" id="pModel"></p>
+        <p class="caveat">The model only learns patterns in this sample. A higher estimate with a discount does not prove the discount caused the purchase.</p>
+      </div>
     </div>
   </section>
 
@@ -104,11 +149,11 @@
     <div class="rec-head">
       <div class="sec-head">
         <h2 id="rec-title">Customer records</h2>
-        <p>Search by ID, filter by outcome, and click a column to sort.</p>
+        <p>Search by ID, filter by outcome, and click a column to sort. Records follow the group chosen at the top.</p>
       </div>
       <div class="filters">
         <label class="sr-only" for="search">Search customer ID</label>
-        <input id="search" type="search" placeholder="Customer ID, e.g. 0042" autocomplete="off">
+        <input id="search" type="search" placeholder="Customer ID, e.g. 0042" autocomplete="off" inputmode="numeric">
         <label class="sr-only" for="purchaseFilter">Purchase outcome</label>
         <select id="purchaseFilter">
           <option value="all">All outcomes</option>
@@ -118,15 +163,15 @@
       </div>
     </div>
 
-    <div class="table-scroll" tabindex="0" aria-label="Customer records table">
+    <div class="table-scroll" tabindex="0" role="region" aria-label="Customer records table">
       <table>
         <thead>
           <tr>
-            <th aria-sort="ascending"><button type="button" data-sort="customer_id">Customer</button></th>
-            <th class="num"><button type="button" data-sort="previous_purchases">Past purchases</button></th>
-            <th><button type="button" data-sort="engagement">Engagement</button></th>
-            <th><button type="button" data-sort="discount">Discount</button></th>
-            <th><button type="button" data-sort="purchase">Outcome</button></th>
+            <th scope="col" aria-sort="ascending"><button type="button" data-sort="customer_id">Customer</button></th>
+            <th scope="col" class="num" aria-sort="none"><button type="button" data-sort="previous_purchases">Past purchases</button></th>
+            <th scope="col" aria-sort="none"><button type="button" data-sort="engagement">Engagement</button></th>
+            <th scope="col" aria-sort="none"><button type="button" data-sort="discount">Discount</button></th>
+            <th scope="col" aria-sort="none"><button type="button" data-sort="purchase">Outcome</button></th>
           </tr>
         </thead>
         <tbody id="rows"></tbody>
@@ -146,10 +191,11 @@
 
 <footer class="site-footer">
   <div class="wrap">
-    <p>EconoCasual frontend prototype. All 1,000 records are generated sample data with the fields <code>customer_id</code>, <code>previous_purchases</code>, <code>engagement</code>, <code>discount</code> and <code>purchase</code>. No prediction model is connected yet.</p>
+    <p>EconoCasual frontend prototype. All 1,000 records are generated sample data with the fields <code>customer_id</code>, <code>previous_purchases</code>, <code>engagement</code>, <code>discount</code> and <code>purchase</code>. The purchase estimate comes from a small model fitted in the browser; no backend is connected yet.</p>
   </div>
 </footer>
 
+<noscript><p class="noscript">This dashboard needs JavaScript to draw its charts and table.</p></noscript>
 <div id="toast" role="status" aria-live="polite"></div>
 <script src="script.js"></script>
 </body>
