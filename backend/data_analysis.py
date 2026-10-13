@@ -524,4 +524,59 @@ plt.show()
 
 print("\nCustomer loyalty analysis completed!")
 print("==============================================")
+
+# ==========================================
+# AUTOMATED CUSTOMER BEHAVIOR INSIGHTS
+# ==========================================
+
+print("\n========== CUSTOMER BEHAVIOR INSIGHTS ==========")
+
+# Overall purchase rate
+overall_rate = df["purchase"].mean() * 100
+
+# Average customer behavior
+avg_previous_purchases = df["previous_purchases"].mean()
+avg_engagement = df["engagement"].mean()
+
+# Compare buyers and non-buyers
+buyers = df[df["purchase"] == 1]
+non_buyers = df[df["purchase"] == 0]
+
+print(f"\nOverall Purchase Rate: {overall_rate:.2f}%")
+print(f"Average Previous Purchases: {avg_previous_purchases:.2f}")
+print(f"Average Customer Engagement: {avg_engagement:.2f}")
+
+print("\n--- Buyer vs Non-Buyer Comparison ---")
+print(
+    f"Buyers' Average Previous Purchases: "
+    f"{buyers['previous_purchases'].mean():.2f}"
+)
+print(
+    f"Non-Buyers' Average Previous Purchases: "
+    f"{non_buyers['previous_purchases'].mean():.2f}"
+)
+
+print(
+    f"Buyers' Average Engagement: "
+    f"{buyers['engagement'].mean():.2f}"
+)
+print(
+    f"Non-Buyers' Average Engagement: "
+    f"{non_buyers['engagement'].mean():.2f}"
+)
+
+print("\n--- Business Recommendation ---")
+
+if buyers["previous_purchases"].mean() > non_buyers["previous_purchases"].mean():
+    print("Previous purchase history is associated with purchasing behavior.")
+else:
+    print("Previous purchase history shows no higher average among buyers.")
+
+if buyers["engagement"].mean() > non_buyers["engagement"].mean():
+    print("Higher engagement is associated with purchasing behavior.")
+else:
+    print("Higher engagement is not associated with a higher buyer average.")
+
+print("\nInsight generation completed!")
+print("=================================================")
     
