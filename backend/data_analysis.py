@@ -579,4 +579,40 @@ else:
 
 print("\nInsight generation completed!")
 print("=================================================")
+
+# ==========================================
+# CUSTOMER DATA VALIDATION
+# ==========================================
+
+print("\n========== CUSTOMER DATA VALIDATION ==========")
+
+# Check for missing values
+missing_values = df.isnull().sum()
+print("\nMissing Values:")
+print(missing_values)
+
+# Check for duplicate customer IDs
+duplicate_ids = df["customer_id"].duplicated().sum()
+print(f"\nDuplicate Customer IDs: {duplicate_ids}")
+
+# Validate purchase values
+invalid_purchases = (~df["purchase"].isin([0, 1])).sum()
+print(f"Invalid Purchase Values: {invalid_purchases}")
+
+# Validate discount values
+invalid_discounts = (~df["discount"].isin([0, 1])).sum()
+print(f"Invalid Discount Values: {invalid_discounts}")
+
+# Validate engagement range
+invalid_engagement = (
+    (~df["engagement"].between(1, 10))
+).sum()
+print(f"Invalid Engagement Values: {invalid_engagement}")
+
+# Validate previous purchases
+invalid_previous = (df["previous_purchases"] < 0).sum()
+print(f"Invalid Previous Purchase Values: {invalid_previous}")
+
+print("\nData validation completed!")
+print("==============================================")
     
