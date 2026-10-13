@@ -459,4 +459,28 @@ plt.show()
 print("\nEngagement-based insights completed!")
 print("==============================================")
 
+# ==========================================
+# EXPORT CUSTOMER INSIGHTS
+# ==========================================
+
+import os
+
+print("\n========== EXPORTING CUSTOMER INSIGHTS ==========")
+
+# Create the data folder if it doesn't exist
+os.makedirs("data", exist_ok=True)
+
+# Select useful customer information
+insights = df.copy()
+
+# Save results in a separate file
+output_file = os.path.join("data", "customer_insights.csv")
+insights.to_csv(output_file, index=False)
+
+print("\nCustomer insights exported successfully!")
+print(f"Total customer records: {len(insights)}")
+print(f"Saved file: {output_file}")
+print("Original customers.csv remains unchanged.")
+print("=================================================")
+
     
