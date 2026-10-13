@@ -374,4 +374,46 @@ plt.show()
 print("\nCustomer segmentation completed successfully!")
 print("============================================")
 
+# ==========================================
+# CUSTOMER PURCHASE RISK ANALYSIS
+# ==========================================
+
+print("\n========== CUSTOMER PURCHASE RISK ANALYSIS ==========")
+
+def identify_risk(row):
+    if row["engagement"] < engagement_median and row["previous_purchases"] < purchase_median:
+        return "High Attention Needed"
+    elif row["engagement"] < engagement_median or row["previous_purchases"] < purchase_median:
+        return "Moderate Attention Needed"
+    else:
+        return "Low Attention Needed"
+
+df["customer_risk"] = df.apply(identify_risk, axis=1)
+
+risk_summary = df.groupby("customer_risk").agg(
+    customer_count=("customer_id", "count"),
+    actual_purchase_rate=("purchase", "mean")
+)
+
+risk_summary["actual_purchase_rate"] *= 100
+
+print("\nCustomer Risk Summary:")
+print(risk_summary.round(2))
+
+plt.figure(figsize=(8, 5))
+plt.bar(
+    risk_summary.index,
+    risk_summary["customer_count"]
+)
+
+plt.title("Customer Distribution by Attention Level")
+plt.xlabel("Customer Attention Level")
+plt.ylabel("Number of Customers")
+plt.xticks(rotation=15, ha="right")
+plt.tight_layout()
+plt.show()
+
+print("\nCustomer risk analysis completed successfully!")
+print("======================================================")
+
     
