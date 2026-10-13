@@ -321,4 +321,57 @@ plt.yticks(
 plt.tight_layout()
 plt.show()
 
+# ==========================================
+# CUSTOMER SEGMENTATION - UNIQUE FEATURE
+# ==========================================
+
+print("\n========== CUSTOMER SEGMENTATION ==========")
+
+# Calculate median values
+purchase_median = df["previous_purchases"].median()
+engagement_median = df["engagement"].median()
+
+# Classify customers into different segments
+def classify_customer(row):
+    if (row["previous_purchases"] >= purchase_median
+            and row["engagement"] >= engagement_median):
+        return "High-Value Customers"
+    elif row["previous_purchases"] >= purchase_median:
+        return "Loyal Customers"
+    elif row["engagement"] >= engagement_median:
+        return "Highly Engaged Customers"
+    else:
+        return "Customers Needing Attention"
+
+df["customer_segment"] = df.apply(classify_customer, axis=1)
+
+# Calculate customer count and purchase rate
+segment_summary = df.groupby("customer_segment").agg(
+    customer_count=("customer_id", "count"),
+    purchase_rate=("purchase", "mean")
+)
+
+segment_summary["purchase_rate"] *= 100
+
+print("\nCustomer Segment Summary:")
+print(segment_summary.round(2))
+
+# Visualize purchase rate by customer segment
+plt.figure(figsize=(10, 6))
+
+plt.bar(
+    segment_summary.index,
+    segment_summary["purchase_rate"]
+)
+
+plt.title("Purchase Rate by Customer Segment")
+plt.xlabel("Customer Segment")
+plt.ylabel("Purchase Rate (%)")
+plt.xticks(rotation=20, ha="right")
+plt.tight_layout()
+plt.show()
+
+print("\nCustomer segmentation completed successfully!")
+print("============================================")
+
     
