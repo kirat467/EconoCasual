@@ -1,0 +1,1001 @@
+customer_id,previous_purchases,engagement,discount,purchase,customer_segment,customer_risk
+1,6,1,0,0,Loyal Customers,Moderate Attention Needed
+2,3,8,1,1,Highly Engaged Customers,Moderate Attention Needed
+3,7,4,1,1,Loyal Customers,Moderate Attention Needed
+4,4,4,1,1,Loyal Customers,Moderate Attention Needed
+5,6,5,1,1,High-Value Customers,Low Attention Needed
+6,9,8,1,1,High-Value Customers,Low Attention Needed
+7,2,5,1,1,Highly Engaged Customers,Moderate Attention Needed
+8,6,8,1,0,High-Value Customers,Low Attention Needed
+9,7,10,0,1,High-Value Customers,Low Attention Needed
+10,4,1,1,0,Loyal Customers,Moderate Attention Needed
+11,3,10,1,1,Highly Engaged Customers,Moderate Attention Needed
+12,7,9,0,0,High-Value Customers,Low Attention Needed
+13,7,6,0,0,High-Value Customers,Low Attention Needed
+14,2,3,1,1,Customers Needing Attention,High Attention Needed
+15,5,8,1,1,High-Value Customers,Low Attention Needed
+16,4,9,1,1,High-Value Customers,Low Attention Needed
+17,1,6,1,0,Highly Engaged Customers,Moderate Attention Needed
+18,7,7,1,1,High-Value Customers,Low Attention Needed
+19,5,1,1,0,Loyal Customers,Moderate Attention Needed
+20,1,5,1,1,Highly Engaged Customers,Moderate Attention Needed
+21,4,5,1,1,High-Value Customers,Low Attention Needed
+22,0,10,1,0,Highly Engaged Customers,Moderate Attention Needed
+23,9,4,0,1,Loyal Customers,Moderate Attention Needed
+24,5,6,0,1,High-Value Customers,Low Attention Needed
+25,8,7,1,1,High-Value Customers,Low Attention Needed
+26,0,9,1,0,Highly Engaged Customers,Moderate Attention Needed
+27,9,1,0,1,Loyal Customers,Moderate Attention Needed
+28,2,6,1,0,Highly Engaged Customers,Moderate Attention Needed
+29,6,7,1,0,High-Value Customers,Low Attention Needed
+30,3,3,1,0,Customers Needing Attention,High Attention Needed
+31,8,8,1,1,High-Value Customers,Low Attention Needed
+32,2,5,0,1,Highly Engaged Customers,Moderate Attention Needed
+33,4,9,1,1,High-Value Customers,Low Attention Needed
+34,2,5,1,0,Highly Engaged Customers,Moderate Attention Needed
+35,6,9,1,0,High-Value Customers,Low Attention Needed
+36,4,10,1,1,High-Value Customers,Low Attention Needed
+37,8,4,1,1,Loyal Customers,Moderate Attention Needed
+38,6,9,0,0,High-Value Customers,Low Attention Needed
+39,1,5,0,0,Highly Engaged Customers,Moderate Attention Needed
+40,3,10,1,1,Highly Engaged Customers,Moderate Attention Needed
+41,8,9,1,1,High-Value Customers,Low Attention Needed
+42,1,3,1,0,Customers Needing Attention,High Attention Needed
+43,9,4,1,0,Loyal Customers,Moderate Attention Needed
+44,8,9,1,1,High-Value Customers,Low Attention Needed
+45,9,10,1,1,High-Value Customers,Low Attention Needed
+46,4,6,0,0,High-Value Customers,Low Attention Needed
+47,1,2,1,0,Customers Needing Attention,High Attention Needed
+48,3,7,1,0,Highly Engaged Customers,Moderate Attention Needed
+49,6,2,0,0,Loyal Customers,Moderate Attention Needed
+50,7,2,1,1,Loyal Customers,Moderate Attention Needed
+51,2,1,1,0,Customers Needing Attention,High Attention Needed
+52,0,3,0,0,Customers Needing Attention,High Attention Needed
+53,3,6,0,1,Highly Engaged Customers,Moderate Attention Needed
+54,1,8,1,1,Highly Engaged Customers,Moderate Attention Needed
+55,7,9,0,1,High-Value Customers,Low Attention Needed
+56,3,7,1,1,Highly Engaged Customers,Moderate Attention Needed
+57,1,4,1,1,Customers Needing Attention,High Attention Needed
+58,5,6,0,1,High-Value Customers,Low Attention Needed
+59,5,5,0,0,High-Value Customers,Low Attention Needed
+60,9,8,1,1,High-Value Customers,Low Attention Needed
+61,3,1,1,1,Customers Needing Attention,High Attention Needed
+62,5,1,0,0,Loyal Customers,Moderate Attention Needed
+63,1,6,1,0,Highly Engaged Customers,Moderate Attention Needed
+64,9,10,1,1,High-Value Customers,Low Attention Needed
+65,1,2,1,1,Customers Needing Attention,High Attention Needed
+66,9,5,0,1,High-Value Customers,Low Attention Needed
+67,3,1,1,1,Customers Needing Attention,High Attention Needed
+68,7,7,1,1,High-Value Customers,Low Attention Needed
+69,6,1,0,0,Loyal Customers,Moderate Attention Needed
+70,8,4,0,1,Loyal Customers,Moderate Attention Needed
+71,7,9,0,1,High-Value Customers,Low Attention Needed
+72,4,1,0,0,Loyal Customers,Moderate Attention Needed
+73,1,4,0,1,Customers Needing Attention,High Attention Needed
+74,4,6,0,1,High-Value Customers,Low Attention Needed
+75,7,6,1,1,High-Value Customers,Low Attention Needed
+76,9,8,1,1,High-Value Customers,Low Attention Needed
+77,8,1,0,0,Loyal Customers,Moderate Attention Needed
+78,8,7,1,1,High-Value Customers,Low Attention Needed
+79,0,1,1,0,Customers Needing Attention,High Attention Needed
+80,8,7,1,0,High-Value Customers,Low Attention Needed
+81,6,3,0,0,Loyal Customers,Moderate Attention Needed
+82,8,8,0,1,High-Value Customers,Low Attention Needed
+83,7,3,1,0,Loyal Customers,Moderate Attention Needed
+84,0,1,0,0,Customers Needing Attention,High Attention Needed
+85,7,8,1,1,High-Value Customers,Low Attention Needed
+86,7,3,1,1,Loyal Customers,Moderate Attention Needed
+87,2,2,1,0,Customers Needing Attention,High Attention Needed
+88,0,1,1,0,Customers Needing Attention,High Attention Needed
+89,7,3,1,1,Loyal Customers,Moderate Attention Needed
+90,2,2,1,1,Customers Needing Attention,High Attention Needed
+91,2,2,1,1,Customers Needing Attention,High Attention Needed
+92,0,6,1,1,Highly Engaged Customers,Moderate Attention Needed
+93,4,1,0,0,Loyal Customers,Moderate Attention Needed
+94,9,2,1,1,Loyal Customers,Moderate Attention Needed
+95,6,6,0,0,High-Value Customers,Low Attention Needed
+96,9,3,1,1,Loyal Customers,Moderate Attention Needed
+97,8,4,1,0,Loyal Customers,Moderate Attention Needed
+98,6,1,0,1,Loyal Customers,Moderate Attention Needed
+99,8,8,1,1,High-Value Customers,Low Attention Needed
+100,7,7,0,0,High-Value Customers,Low Attention Needed
+101,1,7,1,1,Highly Engaged Customers,Moderate Attention Needed
+102,0,3,0,0,Customers Needing Attention,High Attention Needed
+103,6,10,0,1,High-Value Customers,Low Attention Needed
+104,6,10,1,0,High-Value Customers,Low Attention Needed
+105,7,3,1,1,Loyal Customers,Moderate Attention Needed
+106,4,2,0,1,Loyal Customers,Moderate Attention Needed
+107,2,1,0,1,Customers Needing Attention,High Attention Needed
+108,7,7,1,1,High-Value Customers,Low Attention Needed
+109,5,7,1,1,High-Value Customers,Low Attention Needed
+110,2,2,1,1,Customers Needing Attention,High Attention Needed
+111,0,7,1,0,Highly Engaged Customers,Moderate Attention Needed
+112,2,8,1,1,Highly Engaged Customers,Moderate Attention Needed
+113,4,1,1,0,Loyal Customers,Moderate Attention Needed
+114,2,9,1,1,Highly Engaged Customers,Moderate Attention Needed
+115,0,7,1,1,Highly Engaged Customers,Moderate Attention Needed
+116,4,3,0,0,Loyal Customers,Moderate Attention Needed
+117,9,8,1,1,High-Value Customers,Low Attention Needed
+118,6,7,1,1,High-Value Customers,Low Attention Needed
+119,6,8,0,1,High-Value Customers,Low Attention Needed
+120,8,6,0,1,High-Value Customers,Low Attention Needed
+121,9,9,1,1,High-Value Customers,Low Attention Needed
+122,9,5,1,1,High-Value Customers,Low Attention Needed
+123,2,3,1,0,Customers Needing Attention,High Attention Needed
+124,6,3,0,1,Loyal Customers,Moderate Attention Needed
+125,0,1,1,0,Customers Needing Attention,High Attention Needed
+126,3,8,1,1,Highly Engaged Customers,Moderate Attention Needed
+127,3,2,1,1,Customers Needing Attention,High Attention Needed
+128,4,3,1,0,Loyal Customers,Moderate Attention Needed
+129,6,8,0,1,High-Value Customers,Low Attention Needed
+130,6,8,0,1,High-Value Customers,Low Attention Needed
+131,3,4,1,0,Customers Needing Attention,High Attention Needed
+132,6,4,0,0,Loyal Customers,Moderate Attention Needed
+133,2,5,1,0,Highly Engaged Customers,Moderate Attention Needed
+134,5,6,1,0,High-Value Customers,Low Attention Needed
+135,1,5,0,0,Highly Engaged Customers,Moderate Attention Needed
+136,9,7,0,1,High-Value Customers,Low Attention Needed
+137,8,2,0,1,Loyal Customers,Moderate Attention Needed
+138,4,7,0,1,High-Value Customers,Low Attention Needed
+139,5,10,1,0,High-Value Customers,Low Attention Needed
+140,3,7,1,0,Highly Engaged Customers,Moderate Attention Needed
+141,9,1,0,0,Loyal Customers,Moderate Attention Needed
+142,6,7,1,1,High-Value Customers,Low Attention Needed
+143,8,5,0,1,High-Value Customers,Low Attention Needed
+144,6,3,0,0,Loyal Customers,Moderate Attention Needed
+145,0,3,1,0,Customers Needing Attention,High Attention Needed
+146,0,4,0,0,Customers Needing Attention,High Attention Needed
+147,8,2,1,0,Loyal Customers,Moderate Attention Needed
+148,8,2,1,1,Loyal Customers,Moderate Attention Needed
+149,3,1,1,0,Customers Needing Attention,High Attention Needed
+150,8,5,1,1,High-Value Customers,Low Attention Needed
+151,2,4,1,1,Customers Needing Attention,High Attention Needed
+152,6,10,1,1,High-Value Customers,Low Attention Needed
+153,5,2,0,1,Loyal Customers,Moderate Attention Needed
+154,7,3,0,1,Loyal Customers,Moderate Attention Needed
+155,8,7,0,1,High-Value Customers,Low Attention Needed
+156,4,7,0,0,High-Value Customers,Low Attention Needed
+157,0,4,1,1,Customers Needing Attention,High Attention Needed
+158,2,5,1,0,Highly Engaged Customers,Moderate Attention Needed
+159,9,5,0,1,High-Value Customers,Low Attention Needed
+160,7,6,0,1,High-Value Customers,Low Attention Needed
+161,5,9,1,0,High-Value Customers,Low Attention Needed
+162,7,2,1,1,Loyal Customers,Moderate Attention Needed
+163,8,5,0,0,High-Value Customers,Low Attention Needed
+164,3,3,0,0,Customers Needing Attention,High Attention Needed
+165,0,4,1,0,Customers Needing Attention,High Attention Needed
+166,0,10,0,1,Highly Engaged Customers,Moderate Attention Needed
+167,9,6,1,0,High-Value Customers,Low Attention Needed
+168,3,8,1,1,Highly Engaged Customers,Moderate Attention Needed
+169,6,1,0,1,Loyal Customers,Moderate Attention Needed
+170,1,10,1,1,Highly Engaged Customers,Moderate Attention Needed
+171,2,8,1,1,Highly Engaged Customers,Moderate Attention Needed
+172,0,7,1,1,Highly Engaged Customers,Moderate Attention Needed
+173,4,1,1,1,Loyal Customers,Moderate Attention Needed
+174,0,2,1,1,Customers Needing Attention,High Attention Needed
+175,7,3,0,1,Loyal Customers,Moderate Attention Needed
+176,0,1,1,0,Customers Needing Attention,High Attention Needed
+177,0,9,1,1,Highly Engaged Customers,Moderate Attention Needed
+178,1,8,0,0,Highly Engaged Customers,Moderate Attention Needed
+179,1,2,1,0,Customers Needing Attention,High Attention Needed
+180,5,9,1,1,High-Value Customers,Low Attention Needed
+181,6,7,0,1,High-Value Customers,Low Attention Needed
+182,4,9,1,0,High-Value Customers,Low Attention Needed
+183,0,6,0,1,Highly Engaged Customers,Moderate Attention Needed
+184,0,6,1,1,Highly Engaged Customers,Moderate Attention Needed
+185,2,4,0,1,Customers Needing Attention,High Attention Needed
+186,1,10,1,0,Highly Engaged Customers,Moderate Attention Needed
+187,4,10,1,1,High-Value Customers,Low Attention Needed
+188,9,2,1,1,Loyal Customers,Moderate Attention Needed
+189,5,7,0,1,High-Value Customers,Low Attention Needed
+190,6,5,0,1,High-Value Customers,Low Attention Needed
+191,3,6,1,0,Highly Engaged Customers,Moderate Attention Needed
+192,6,2,0,0,Loyal Customers,Moderate Attention Needed
+193,7,5,1,0,High-Value Customers,Low Attention Needed
+194,0,10,1,0,Highly Engaged Customers,Moderate Attention Needed
+195,5,4,0,0,Loyal Customers,Moderate Attention Needed
+196,7,9,0,0,High-Value Customers,Low Attention Needed
+197,4,6,1,1,High-Value Customers,Low Attention Needed
+198,3,2,1,0,Customers Needing Attention,High Attention Needed
+199,1,1,1,0,Customers Needing Attention,High Attention Needed
+200,5,5,1,1,High-Value Customers,Low Attention Needed
+201,5,9,0,1,High-Value Customers,Low Attention Needed
+202,0,6,1,0,Highly Engaged Customers,Moderate Attention Needed
+203,8,10,0,1,High-Value Customers,Low Attention Needed
+204,5,7,1,0,High-Value Customers,Low Attention Needed
+205,2,5,0,0,Highly Engaged Customers,Moderate Attention Needed
+206,3,10,1,1,Highly Engaged Customers,Moderate Attention Needed
+207,3,6,1,1,Highly Engaged Customers,Moderate Attention Needed
+208,2,5,1,0,Highly Engaged Customers,Moderate Attention Needed
+209,9,9,0,1,High-Value Customers,Low Attention Needed
+210,2,6,1,1,Highly Engaged Customers,Moderate Attention Needed
+211,2,8,0,0,Highly Engaged Customers,Moderate Attention Needed
+212,3,2,1,0,Customers Needing Attention,High Attention Needed
+213,6,9,1,1,High-Value Customers,Low Attention Needed
+214,3,5,1,0,Highly Engaged Customers,Moderate Attention Needed
+215,8,7,0,1,High-Value Customers,Low Attention Needed
+216,0,10,1,0,Highly Engaged Customers,Moderate Attention Needed
+217,7,1,1,1,Loyal Customers,Moderate Attention Needed
+218,6,10,0,0,High-Value Customers,Low Attention Needed
+219,1,5,0,1,Highly Engaged Customers,Moderate Attention Needed
+220,7,10,0,1,High-Value Customers,Low Attention Needed
+221,0,2,1,1,Customers Needing Attention,High Attention Needed
+222,8,6,0,0,High-Value Customers,Low Attention Needed
+223,8,1,0,1,Loyal Customers,Moderate Attention Needed
+224,1,3,0,0,Customers Needing Attention,High Attention Needed
+225,6,5,1,1,High-Value Customers,Low Attention Needed
+226,9,4,0,0,Loyal Customers,Moderate Attention Needed
+227,2,3,1,1,Customers Needing Attention,High Attention Needed
+228,6,10,1,1,High-Value Customers,Low Attention Needed
+229,9,5,1,1,High-Value Customers,Low Attention Needed
+230,8,8,0,1,High-Value Customers,Low Attention Needed
+231,3,4,1,0,Customers Needing Attention,High Attention Needed
+232,0,1,0,0,Customers Needing Attention,High Attention Needed
+233,1,7,1,1,Highly Engaged Customers,Moderate Attention Needed
+234,0,8,1,1,Highly Engaged Customers,Moderate Attention Needed
+235,4,3,1,0,Loyal Customers,Moderate Attention Needed
+236,4,6,1,1,High-Value Customers,Low Attention Needed
+237,6,2,0,1,Loyal Customers,Moderate Attention Needed
+238,8,7,1,1,High-Value Customers,Low Attention Needed
+239,8,8,1,1,High-Value Customers,Low Attention Needed
+240,2,6,0,1,Highly Engaged Customers,Moderate Attention Needed
+241,2,6,1,1,Highly Engaged Customers,Moderate Attention Needed
+242,2,5,1,1,Highly Engaged Customers,Moderate Attention Needed
+243,3,8,1,1,Highly Engaged Customers,Moderate Attention Needed
+244,7,1,0,1,Loyal Customers,Moderate Attention Needed
+245,5,10,1,1,High-Value Customers,Low Attention Needed
+246,7,4,1,0,Loyal Customers,Moderate Attention Needed
+247,0,4,1,0,Customers Needing Attention,High Attention Needed
+248,7,3,1,0,Loyal Customers,Moderate Attention Needed
+249,3,3,1,1,Customers Needing Attention,High Attention Needed
+250,0,4,1,0,Customers Needing Attention,High Attention Needed
+251,7,1,0,0,Loyal Customers,Moderate Attention Needed
+252,3,2,0,0,Customers Needing Attention,High Attention Needed
+253,5,9,1,1,High-Value Customers,Low Attention Needed
+254,7,10,1,1,High-Value Customers,Low Attention Needed
+255,3,2,1,0,Customers Needing Attention,High Attention Needed
+256,2,5,1,1,Highly Engaged Customers,Moderate Attention Needed
+257,8,9,1,1,High-Value Customers,Low Attention Needed
+258,2,9,1,1,Highly Engaged Customers,Moderate Attention Needed
+259,8,8,0,1,High-Value Customers,Low Attention Needed
+260,1,1,0,1,Customers Needing Attention,High Attention Needed
+261,1,1,1,0,Customers Needing Attention,High Attention Needed
+262,1,9,1,1,Highly Engaged Customers,Moderate Attention Needed
+263,5,8,0,1,High-Value Customers,Low Attention Needed
+264,2,10,1,0,Highly Engaged Customers,Moderate Attention Needed
+265,8,9,1,0,High-Value Customers,Low Attention Needed
+266,3,7,0,1,Highly Engaged Customers,Moderate Attention Needed
+267,0,3,1,1,Customers Needing Attention,High Attention Needed
+268,3,3,1,0,Customers Needing Attention,High Attention Needed
+269,0,2,1,1,Customers Needing Attention,High Attention Needed
+270,4,5,1,0,High-Value Customers,Low Attention Needed
+271,3,3,0,0,Customers Needing Attention,High Attention Needed
+272,7,6,0,0,High-Value Customers,Low Attention Needed
+273,7,2,0,1,Loyal Customers,Moderate Attention Needed
+274,6,3,0,1,Loyal Customers,Moderate Attention Needed
+275,2,5,1,1,Highly Engaged Customers,Moderate Attention Needed
+276,0,1,1,0,Customers Needing Attention,High Attention Needed
+277,0,1,0,0,Customers Needing Attention,High Attention Needed
+278,2,10,1,1,Highly Engaged Customers,Moderate Attention Needed
+279,5,9,1,1,High-Value Customers,Low Attention Needed
+280,6,7,0,1,High-Value Customers,Low Attention Needed
+281,5,1,0,1,Loyal Customers,Moderate Attention Needed
+282,5,8,0,1,High-Value Customers,Low Attention Needed
+283,5,3,1,1,Loyal Customers,Moderate Attention Needed
+284,2,8,0,1,Highly Engaged Customers,Moderate Attention Needed
+285,5,5,1,0,High-Value Customers,Low Attention Needed
+286,7,1,0,0,Loyal Customers,Moderate Attention Needed
+287,1,7,1,0,Highly Engaged Customers,Moderate Attention Needed
+288,4,5,1,0,High-Value Customers,Low Attention Needed
+289,0,6,0,1,Highly Engaged Customers,Moderate Attention Needed
+290,0,6,1,0,Highly Engaged Customers,Moderate Attention Needed
+291,4,8,1,1,High-Value Customers,Low Attention Needed
+292,2,9,1,1,Highly Engaged Customers,Moderate Attention Needed
+293,3,2,1,0,Customers Needing Attention,High Attention Needed
+294,2,9,1,1,Highly Engaged Customers,Moderate Attention Needed
+295,0,10,1,1,Highly Engaged Customers,Moderate Attention Needed
+296,0,9,0,0,Highly Engaged Customers,Moderate Attention Needed
+297,4,10,1,1,High-Value Customers,Low Attention Needed
+298,5,10,1,1,High-Value Customers,Low Attention Needed
+299,2,7,1,0,Highly Engaged Customers,Moderate Attention Needed
+300,8,1,1,1,Loyal Customers,Moderate Attention Needed
+301,4,7,0,1,High-Value Customers,Low Attention Needed
+302,7,10,0,0,High-Value Customers,Low Attention Needed
+303,0,5,1,0,Highly Engaged Customers,Moderate Attention Needed
+304,4,6,1,0,High-Value Customers,Low Attention Needed
+305,2,10,0,1,Highly Engaged Customers,Moderate Attention Needed
+306,0,7,1,0,Highly Engaged Customers,Moderate Attention Needed
+307,3,5,1,0,Highly Engaged Customers,Moderate Attention Needed
+308,4,7,0,0,High-Value Customers,Low Attention Needed
+309,6,9,0,1,High-Value Customers,Low Attention Needed
+310,0,3,1,0,Customers Needing Attention,High Attention Needed
+311,2,8,1,1,Highly Engaged Customers,Moderate Attention Needed
+312,1,2,1,1,Customers Needing Attention,High Attention Needed
+313,8,7,1,1,High-Value Customers,Low Attention Needed
+314,9,2,0,1,Loyal Customers,Moderate Attention Needed
+315,5,4,0,0,Loyal Customers,Moderate Attention Needed
+316,9,7,1,1,High-Value Customers,Low Attention Needed
+317,2,3,0,0,Customers Needing Attention,High Attention Needed
+318,7,2,0,1,Loyal Customers,Moderate Attention Needed
+319,7,10,0,1,High-Value Customers,Low Attention Needed
+320,1,7,0,0,Highly Engaged Customers,Moderate Attention Needed
+321,5,1,1,1,Loyal Customers,Moderate Attention Needed
+322,6,8,0,1,High-Value Customers,Low Attention Needed
+323,1,3,0,0,Customers Needing Attention,High Attention Needed
+324,9,2,0,0,Loyal Customers,Moderate Attention Needed
+325,1,3,1,0,Customers Needing Attention,High Attention Needed
+326,9,5,0,1,High-Value Customers,Low Attention Needed
+327,0,8,1,0,Highly Engaged Customers,Moderate Attention Needed
+328,7,10,0,1,High-Value Customers,Low Attention Needed
+329,0,7,0,0,Highly Engaged Customers,Moderate Attention Needed
+330,8,7,0,1,High-Value Customers,Low Attention Needed
+331,5,7,1,0,High-Value Customers,Low Attention Needed
+332,6,8,0,1,High-Value Customers,Low Attention Needed
+333,9,1,0,0,Loyal Customers,Moderate Attention Needed
+334,6,4,0,0,Loyal Customers,Moderate Attention Needed
+335,9,6,0,1,High-Value Customers,Low Attention Needed
+336,2,9,1,1,Highly Engaged Customers,Moderate Attention Needed
+337,1,2,1,0,Customers Needing Attention,High Attention Needed
+338,8,1,0,1,Loyal Customers,Moderate Attention Needed
+339,7,10,1,0,High-Value Customers,Low Attention Needed
+340,9,2,1,1,Loyal Customers,Moderate Attention Needed
+341,6,7,1,1,High-Value Customers,Low Attention Needed
+342,8,3,1,1,Loyal Customers,Moderate Attention Needed
+343,3,10,1,1,Highly Engaged Customers,Moderate Attention Needed
+344,3,2,1,0,Customers Needing Attention,High Attention Needed
+345,0,7,1,0,Highly Engaged Customers,Moderate Attention Needed
+346,7,2,0,1,Loyal Customers,Moderate Attention Needed
+347,2,3,1,1,Customers Needing Attention,High Attention Needed
+348,6,7,0,1,High-Value Customers,Low Attention Needed
+349,1,4,1,0,Customers Needing Attention,High Attention Needed
+350,1,1,1,0,Customers Needing Attention,High Attention Needed
+351,6,5,1,1,High-Value Customers,Low Attention Needed
+352,5,9,1,1,High-Value Customers,Low Attention Needed
+353,2,8,1,1,Highly Engaged Customers,Moderate Attention Needed
+354,8,9,0,1,High-Value Customers,Low Attention Needed
+355,9,10,0,0,High-Value Customers,Low Attention Needed
+356,5,9,0,1,High-Value Customers,Low Attention Needed
+357,9,7,0,1,High-Value Customers,Low Attention Needed
+358,9,4,1,1,Loyal Customers,Moderate Attention Needed
+359,5,5,1,0,High-Value Customers,Low Attention Needed
+360,0,1,1,0,Customers Needing Attention,High Attention Needed
+361,3,1,1,0,Customers Needing Attention,High Attention Needed
+362,9,3,1,0,Loyal Customers,Moderate Attention Needed
+363,5,8,1,1,High-Value Customers,Low Attention Needed
+364,5,2,0,0,Loyal Customers,Moderate Attention Needed
+365,4,4,1,1,Loyal Customers,Moderate Attention Needed
+366,0,2,0,0,Customers Needing Attention,High Attention Needed
+367,7,5,1,0,High-Value Customers,Low Attention Needed
+368,4,9,0,1,High-Value Customers,Low Attention Needed
+369,4,1,0,0,Loyal Customers,Moderate Attention Needed
+370,6,5,1,0,High-Value Customers,Low Attention Needed
+371,3,9,1,1,Highly Engaged Customers,Moderate Attention Needed
+372,5,1,0,0,Loyal Customers,Moderate Attention Needed
+373,3,9,1,1,Highly Engaged Customers,Moderate Attention Needed
+374,2,8,1,1,Highly Engaged Customers,Moderate Attention Needed
+375,6,4,1,1,Loyal Customers,Moderate Attention Needed
+376,7,10,0,1,High-Value Customers,Low Attention Needed
+377,3,5,0,0,Highly Engaged Customers,Moderate Attention Needed
+378,1,5,0,0,Highly Engaged Customers,Moderate Attention Needed
+379,9,6,0,0,High-Value Customers,Low Attention Needed
+380,2,7,1,0,Highly Engaged Customers,Moderate Attention Needed
+381,0,8,0,0,Highly Engaged Customers,Moderate Attention Needed
+382,7,8,1,1,High-Value Customers,Low Attention Needed
+383,2,2,0,0,Customers Needing Attention,High Attention Needed
+384,9,9,0,1,High-Value Customers,Low Attention Needed
+385,6,7,0,1,High-Value Customers,Low Attention Needed
+386,9,4,1,1,Loyal Customers,Moderate Attention Needed
+387,4,4,0,1,Loyal Customers,Moderate Attention Needed
+388,9,8,1,1,High-Value Customers,Low Attention Needed
+389,4,4,1,0,Loyal Customers,Moderate Attention Needed
+390,6,6,0,1,High-Value Customers,Low Attention Needed
+391,8,5,0,0,High-Value Customers,Low Attention Needed
+392,4,3,1,0,Loyal Customers,Moderate Attention Needed
+393,0,10,1,0,Highly Engaged Customers,Moderate Attention Needed
+394,9,2,0,1,Loyal Customers,Moderate Attention Needed
+395,9,9,1,1,High-Value Customers,Low Attention Needed
+396,0,10,0,0,Highly Engaged Customers,Moderate Attention Needed
+397,1,9,1,0,Highly Engaged Customers,Moderate Attention Needed
+398,5,1,1,1,Loyal Customers,Moderate Attention Needed
+399,8,10,1,1,High-Value Customers,Low Attention Needed
+400,7,3,1,1,Loyal Customers,Moderate Attention Needed
+401,4,8,0,1,High-Value Customers,Low Attention Needed
+402,0,6,0,0,Highly Engaged Customers,Moderate Attention Needed
+403,6,5,1,1,High-Value Customers,Low Attention Needed
+404,4,5,1,0,High-Value Customers,Low Attention Needed
+405,5,6,1,1,High-Value Customers,Low Attention Needed
+406,6,7,1,0,High-Value Customers,Low Attention Needed
+407,2,1,1,0,Customers Needing Attention,High Attention Needed
+408,9,9,0,0,High-Value Customers,Low Attention Needed
+409,2,3,1,1,Customers Needing Attention,High Attention Needed
+410,4,4,1,0,Loyal Customers,Moderate Attention Needed
+411,5,10,1,1,High-Value Customers,Low Attention Needed
+412,8,1,0,1,Loyal Customers,Moderate Attention Needed
+413,4,10,1,0,High-Value Customers,Low Attention Needed
+414,0,3,1,0,Customers Needing Attention,High Attention Needed
+415,3,2,1,0,Customers Needing Attention,High Attention Needed
+416,4,2,0,0,Loyal Customers,Moderate Attention Needed
+417,9,1,1,0,Loyal Customers,Moderate Attention Needed
+418,9,8,0,0,High-Value Customers,Low Attention Needed
+419,4,3,1,0,Loyal Customers,Moderate Attention Needed
+420,6,3,1,1,Loyal Customers,Moderate Attention Needed
+421,3,6,1,1,Highly Engaged Customers,Moderate Attention Needed
+422,0,8,1,0,Highly Engaged Customers,Moderate Attention Needed
+423,4,9,0,1,High-Value Customers,Low Attention Needed
+424,6,9,1,1,High-Value Customers,Low Attention Needed
+425,9,4,1,1,Loyal Customers,Moderate Attention Needed
+426,9,5,0,1,High-Value Customers,Low Attention Needed
+427,5,2,0,0,Loyal Customers,Moderate Attention Needed
+428,4,9,1,0,High-Value Customers,Low Attention Needed
+429,3,8,0,0,Highly Engaged Customers,Moderate Attention Needed
+430,1,3,1,1,Customers Needing Attention,High Attention Needed
+431,3,9,1,1,Highly Engaged Customers,Moderate Attention Needed
+432,9,3,1,1,Loyal Customers,Moderate Attention Needed
+433,9,9,0,1,High-Value Customers,Low Attention Needed
+434,2,2,1,0,Customers Needing Attention,High Attention Needed
+435,9,10,0,1,High-Value Customers,Low Attention Needed
+436,0,9,1,0,Highly Engaged Customers,Moderate Attention Needed
+437,7,8,0,1,High-Value Customers,Low Attention Needed
+438,4,9,0,1,High-Value Customers,Low Attention Needed
+439,3,5,1,1,Highly Engaged Customers,Moderate Attention Needed
+440,7,2,0,0,Loyal Customers,Moderate Attention Needed
+441,6,8,0,0,High-Value Customers,Low Attention Needed
+442,1,6,1,1,Highly Engaged Customers,Moderate Attention Needed
+443,0,8,1,0,Highly Engaged Customers,Moderate Attention Needed
+444,3,5,1,0,Highly Engaged Customers,Moderate Attention Needed
+445,7,10,1,1,High-Value Customers,Low Attention Needed
+446,1,2,1,0,Customers Needing Attention,High Attention Needed
+447,2,6,0,1,Highly Engaged Customers,Moderate Attention Needed
+448,0,5,0,0,Highly Engaged Customers,Moderate Attention Needed
+449,0,5,1,1,Highly Engaged Customers,Moderate Attention Needed
+450,2,1,1,1,Customers Needing Attention,High Attention Needed
+451,4,2,0,0,Loyal Customers,Moderate Attention Needed
+452,2,8,1,1,Highly Engaged Customers,Moderate Attention Needed
+453,0,3,1,1,Customers Needing Attention,High Attention Needed
+454,0,10,1,1,Highly Engaged Customers,Moderate Attention Needed
+455,7,3,0,1,Loyal Customers,Moderate Attention Needed
+456,9,8,1,0,High-Value Customers,Low Attention Needed
+457,1,8,1,1,Highly Engaged Customers,Moderate Attention Needed
+458,2,2,1,0,Customers Needing Attention,High Attention Needed
+459,1,8,1,0,Highly Engaged Customers,Moderate Attention Needed
+460,2,1,0,0,Customers Needing Attention,High Attention Needed
+461,6,6,1,1,High-Value Customers,Low Attention Needed
+462,0,8,1,0,Highly Engaged Customers,Moderate Attention Needed
+463,9,3,0,1,Loyal Customers,Moderate Attention Needed
+464,7,8,0,1,High-Value Customers,Low Attention Needed
+465,9,1,0,0,Loyal Customers,Moderate Attention Needed
+466,9,9,1,1,High-Value Customers,Low Attention Needed
+467,9,9,0,1,High-Value Customers,Low Attention Needed
+468,1,5,1,1,Highly Engaged Customers,Moderate Attention Needed
+469,2,10,1,1,Highly Engaged Customers,Moderate Attention Needed
+470,8,4,1,1,Loyal Customers,Moderate Attention Needed
+471,6,6,1,1,High-Value Customers,Low Attention Needed
+472,3,7,0,1,Highly Engaged Customers,Moderate Attention Needed
+473,9,5,0,1,High-Value Customers,Low Attention Needed
+474,4,10,0,1,High-Value Customers,Low Attention Needed
+475,1,9,1,0,Highly Engaged Customers,Moderate Attention Needed
+476,7,3,0,1,Loyal Customers,Moderate Attention Needed
+477,3,7,0,0,Highly Engaged Customers,Moderate Attention Needed
+478,8,10,0,1,High-Value Customers,Low Attention Needed
+479,4,10,1,1,High-Value Customers,Low Attention Needed
+480,8,5,0,0,High-Value Customers,Low Attention Needed
+481,3,7,0,0,Highly Engaged Customers,Moderate Attention Needed
+482,9,2,0,1,Loyal Customers,Moderate Attention Needed
+483,4,4,0,0,Loyal Customers,Moderate Attention Needed
+484,8,2,1,1,Loyal Customers,Moderate Attention Needed
+485,7,7,1,1,High-Value Customers,Low Attention Needed
+486,2,2,1,0,Customers Needing Attention,High Attention Needed
+487,0,1,0,0,Customers Needing Attention,High Attention Needed
+488,2,9,1,1,Highly Engaged Customers,Moderate Attention Needed
+489,3,1,1,0,Customers Needing Attention,High Attention Needed
+490,1,8,0,0,Highly Engaged Customers,Moderate Attention Needed
+491,0,2,1,0,Customers Needing Attention,High Attention Needed
+492,6,8,0,1,High-Value Customers,Low Attention Needed
+493,7,3,0,1,Loyal Customers,Moderate Attention Needed
+494,6,6,0,0,High-Value Customers,Low Attention Needed
+495,4,3,1,1,Loyal Customers,Moderate Attention Needed
+496,0,7,1,1,Highly Engaged Customers,Moderate Attention Needed
+497,6,10,1,1,High-Value Customers,Low Attention Needed
+498,6,9,1,1,High-Value Customers,Low Attention Needed
+499,8,2,1,1,Loyal Customers,Moderate Attention Needed
+500,2,5,1,0,Highly Engaged Customers,Moderate Attention Needed
+501,8,6,0,1,High-Value Customers,Low Attention Needed
+502,0,4,1,1,Customers Needing Attention,High Attention Needed
+503,0,4,1,0,Customers Needing Attention,High Attention Needed
+504,3,4,1,0,Customers Needing Attention,High Attention Needed
+505,8,2,0,1,Loyal Customers,Moderate Attention Needed
+506,5,4,1,0,Loyal Customers,Moderate Attention Needed
+507,2,1,1,0,Customers Needing Attention,High Attention Needed
+508,0,6,1,1,Highly Engaged Customers,Moderate Attention Needed
+509,3,1,0,0,Customers Needing Attention,High Attention Needed
+510,8,10,1,1,High-Value Customers,Low Attention Needed
+511,2,6,1,1,Highly Engaged Customers,Moderate Attention Needed
+512,8,1,0,0,Loyal Customers,Moderate Attention Needed
+513,6,6,1,1,High-Value Customers,Low Attention Needed
+514,3,10,0,0,Highly Engaged Customers,Moderate Attention Needed
+515,2,8,1,1,Highly Engaged Customers,Moderate Attention Needed
+516,9,2,0,0,Loyal Customers,Moderate Attention Needed
+517,4,2,0,1,Loyal Customers,Moderate Attention Needed
+518,4,4,1,0,Loyal Customers,Moderate Attention Needed
+519,2,3,1,0,Customers Needing Attention,High Attention Needed
+520,8,4,0,1,Loyal Customers,Moderate Attention Needed
+521,3,7,0,1,Highly Engaged Customers,Moderate Attention Needed
+522,4,1,0,0,Loyal Customers,Moderate Attention Needed
+523,3,6,1,1,Highly Engaged Customers,Moderate Attention Needed
+524,4,3,0,1,Loyal Customers,Moderate Attention Needed
+525,6,10,1,1,High-Value Customers,Low Attention Needed
+526,8,7,0,1,High-Value Customers,Low Attention Needed
+527,6,10,0,1,High-Value Customers,Low Attention Needed
+528,4,2,0,1,Loyal Customers,Moderate Attention Needed
+529,9,2,0,1,Loyal Customers,Moderate Attention Needed
+530,9,4,1,0,Loyal Customers,Moderate Attention Needed
+531,6,1,1,1,Loyal Customers,Moderate Attention Needed
+532,9,3,1,1,Loyal Customers,Moderate Attention Needed
+533,4,9,1,1,High-Value Customers,Low Attention Needed
+534,2,7,0,0,Highly Engaged Customers,Moderate Attention Needed
+535,6,7,1,0,High-Value Customers,Low Attention Needed
+536,1,4,0,0,Customers Needing Attention,High Attention Needed
+537,8,2,0,1,Loyal Customers,Moderate Attention Needed
+538,9,4,0,1,Loyal Customers,Moderate Attention Needed
+539,9,6,1,1,High-Value Customers,Low Attention Needed
+540,0,3,1,0,Customers Needing Attention,High Attention Needed
+541,5,1,1,1,Loyal Customers,Moderate Attention Needed
+542,6,8,0,1,High-Value Customers,Low Attention Needed
+543,7,5,1,0,High-Value Customers,Low Attention Needed
+544,9,5,0,1,High-Value Customers,Low Attention Needed
+545,8,4,1,1,Loyal Customers,Moderate Attention Needed
+546,1,6,1,0,Highly Engaged Customers,Moderate Attention Needed
+547,9,3,0,0,Loyal Customers,Moderate Attention Needed
+548,1,9,0,0,Highly Engaged Customers,Moderate Attention Needed
+549,4,5,1,1,High-Value Customers,Low Attention Needed
+550,4,3,1,1,Loyal Customers,Moderate Attention Needed
+551,5,1,1,0,Loyal Customers,Moderate Attention Needed
+552,2,10,1,1,Highly Engaged Customers,Moderate Attention Needed
+553,7,6,1,1,High-Value Customers,Low Attention Needed
+554,0,2,0,0,Customers Needing Attention,High Attention Needed
+555,5,3,1,1,Loyal Customers,Moderate Attention Needed
+556,3,1,0,1,Customers Needing Attention,High Attention Needed
+557,0,9,0,0,Highly Engaged Customers,Moderate Attention Needed
+558,6,8,0,0,High-Value Customers,Low Attention Needed
+559,8,2,1,0,Loyal Customers,Moderate Attention Needed
+560,3,8,1,0,Highly Engaged Customers,Moderate Attention Needed
+561,3,9,1,1,Highly Engaged Customers,Moderate Attention Needed
+562,5,1,1,0,Loyal Customers,Moderate Attention Needed
+563,2,5,0,0,Highly Engaged Customers,Moderate Attention Needed
+564,5,8,1,0,High-Value Customers,Low Attention Needed
+565,6,2,0,1,Loyal Customers,Moderate Attention Needed
+566,9,4,0,0,Loyal Customers,Moderate Attention Needed
+567,9,7,0,1,High-Value Customers,Low Attention Needed
+568,2,3,0,0,Customers Needing Attention,High Attention Needed
+569,6,5,1,1,High-Value Customers,Low Attention Needed
+570,2,8,0,1,Highly Engaged Customers,Moderate Attention Needed
+571,1,10,1,1,Highly Engaged Customers,Moderate Attention Needed
+572,9,3,0,1,Loyal Customers,Moderate Attention Needed
+573,3,4,0,1,Customers Needing Attention,High Attention Needed
+574,7,9,1,1,High-Value Customers,Low Attention Needed
+575,8,7,1,1,High-Value Customers,Low Attention Needed
+576,6,1,1,1,Loyal Customers,Moderate Attention Needed
+577,0,4,0,0,Customers Needing Attention,High Attention Needed
+578,2,4,0,0,Customers Needing Attention,High Attention Needed
+579,8,9,1,1,High-Value Customers,Low Attention Needed
+580,0,6,1,0,Highly Engaged Customers,Moderate Attention Needed
+581,8,9,0,1,High-Value Customers,Low Attention Needed
+582,7,6,1,1,High-Value Customers,Low Attention Needed
+583,0,6,1,0,Highly Engaged Customers,Moderate Attention Needed
+584,5,5,1,1,High-Value Customers,Low Attention Needed
+585,4,5,0,1,High-Value Customers,Low Attention Needed
+586,5,2,0,0,Loyal Customers,Moderate Attention Needed
+587,9,8,1,1,High-Value Customers,Low Attention Needed
+588,4,8,0,0,High-Value Customers,Low Attention Needed
+589,5,1,0,1,Loyal Customers,Moderate Attention Needed
+590,4,8,1,0,High-Value Customers,Low Attention Needed
+591,4,5,1,0,High-Value Customers,Low Attention Needed
+592,3,2,0,1,Customers Needing Attention,High Attention Needed
+593,2,2,1,0,Customers Needing Attention,High Attention Needed
+594,2,6,1,0,Highly Engaged Customers,Moderate Attention Needed
+595,3,9,1,1,Highly Engaged Customers,Moderate Attention Needed
+596,8,1,1,0,Loyal Customers,Moderate Attention Needed
+597,1,6,1,0,Highly Engaged Customers,Moderate Attention Needed
+598,8,9,0,1,High-Value Customers,Low Attention Needed
+599,0,8,0,0,Highly Engaged Customers,Moderate Attention Needed
+600,0,6,1,1,Highly Engaged Customers,Moderate Attention Needed
+601,4,3,0,0,Loyal Customers,Moderate Attention Needed
+602,5,8,1,0,High-Value Customers,Low Attention Needed
+603,5,9,0,0,High-Value Customers,Low Attention Needed
+604,2,1,0,0,Customers Needing Attention,High Attention Needed
+605,6,9,0,0,High-Value Customers,Low Attention Needed
+606,8,6,0,0,High-Value Customers,Low Attention Needed
+607,9,6,0,1,High-Value Customers,Low Attention Needed
+608,7,4,0,1,Loyal Customers,Moderate Attention Needed
+609,5,1,0,0,Loyal Customers,Moderate Attention Needed
+610,7,10,1,1,High-Value Customers,Low Attention Needed
+611,4,8,1,1,High-Value Customers,Low Attention Needed
+612,7,2,0,0,Loyal Customers,Moderate Attention Needed
+613,9,1,0,1,Loyal Customers,Moderate Attention Needed
+614,3,2,0,1,Customers Needing Attention,High Attention Needed
+615,9,1,0,1,Loyal Customers,Moderate Attention Needed
+616,7,1,0,0,Loyal Customers,Moderate Attention Needed
+617,9,9,1,1,High-Value Customers,Low Attention Needed
+618,1,1,1,1,Customers Needing Attention,High Attention Needed
+619,4,4,0,0,Loyal Customers,Moderate Attention Needed
+620,8,10,1,1,High-Value Customers,Low Attention Needed
+621,3,6,0,0,Highly Engaged Customers,Moderate Attention Needed
+622,5,7,0,1,High-Value Customers,Low Attention Needed
+623,0,2,0,0,Customers Needing Attention,High Attention Needed
+624,8,6,1,1,High-Value Customers,Low Attention Needed
+625,0,7,0,0,Highly Engaged Customers,Moderate Attention Needed
+626,4,10,0,0,High-Value Customers,Low Attention Needed
+627,3,10,1,1,Highly Engaged Customers,Moderate Attention Needed
+628,2,2,1,0,Customers Needing Attention,High Attention Needed
+629,5,2,1,1,Loyal Customers,Moderate Attention Needed
+630,1,10,1,0,Highly Engaged Customers,Moderate Attention Needed
+631,2,7,1,0,Highly Engaged Customers,Moderate Attention Needed
+632,4,1,0,0,Loyal Customers,Moderate Attention Needed
+633,8,8,1,1,High-Value Customers,Low Attention Needed
+634,1,3,1,0,Customers Needing Attention,High Attention Needed
+635,9,6,0,1,High-Value Customers,Low Attention Needed
+636,7,9,1,1,High-Value Customers,Low Attention Needed
+637,1,6,1,0,Highly Engaged Customers,Moderate Attention Needed
+638,4,9,1,1,High-Value Customers,Low Attention Needed
+639,6,7,1,0,High-Value Customers,Low Attention Needed
+640,7,9,0,1,High-Value Customers,Low Attention Needed
+641,0,2,1,0,Customers Needing Attention,High Attention Needed
+642,5,8,1,1,High-Value Customers,Low Attention Needed
+643,0,8,1,0,Highly Engaged Customers,Moderate Attention Needed
+644,1,2,1,0,Customers Needing Attention,High Attention Needed
+645,0,4,1,0,Customers Needing Attention,High Attention Needed
+646,4,7,0,1,High-Value Customers,Low Attention Needed
+647,9,4,1,1,Loyal Customers,Moderate Attention Needed
+648,8,4,0,1,Loyal Customers,Moderate Attention Needed
+649,5,6,1,1,High-Value Customers,Low Attention Needed
+650,0,10,0,1,Highly Engaged Customers,Moderate Attention Needed
+651,0,6,1,0,Highly Engaged Customers,Moderate Attention Needed
+652,1,10,1,0,Highly Engaged Customers,Moderate Attention Needed
+653,8,3,1,1,Loyal Customers,Moderate Attention Needed
+654,2,9,1,0,Highly Engaged Customers,Moderate Attention Needed
+655,0,10,1,0,Highly Engaged Customers,Moderate Attention Needed
+656,4,2,1,0,Loyal Customers,Moderate Attention Needed
+657,6,6,0,1,High-Value Customers,Low Attention Needed
+658,5,7,1,0,High-Value Customers,Low Attention Needed
+659,0,9,1,1,Highly Engaged Customers,Moderate Attention Needed
+660,4,3,1,1,Loyal Customers,Moderate Attention Needed
+661,4,10,1,1,High-Value Customers,Low Attention Needed
+662,5,3,1,1,Loyal Customers,Moderate Attention Needed
+663,2,7,0,0,Highly Engaged Customers,Moderate Attention Needed
+664,4,4,1,0,Loyal Customers,Moderate Attention Needed
+665,6,8,1,1,High-Value Customers,Low Attention Needed
+666,4,7,0,1,High-Value Customers,Low Attention Needed
+667,4,5,1,0,High-Value Customers,Low Attention Needed
+668,4,7,0,1,High-Value Customers,Low Attention Needed
+669,9,3,0,0,Loyal Customers,Moderate Attention Needed
+670,9,2,1,1,Loyal Customers,Moderate Attention Needed
+671,2,6,1,1,Highly Engaged Customers,Moderate Attention Needed
+672,0,2,0,0,Customers Needing Attention,High Attention Needed
+673,4,3,1,0,Loyal Customers,Moderate Attention Needed
+674,8,6,0,0,High-Value Customers,Low Attention Needed
+675,0,5,1,1,Highly Engaged Customers,Moderate Attention Needed
+676,2,8,1,0,Highly Engaged Customers,Moderate Attention Needed
+677,3,9,1,1,Highly Engaged Customers,Moderate Attention Needed
+678,0,3,0,1,Customers Needing Attention,High Attention Needed
+679,0,10,1,0,Highly Engaged Customers,Moderate Attention Needed
+680,7,3,1,1,Loyal Customers,Moderate Attention Needed
+681,1,3,1,1,Customers Needing Attention,High Attention Needed
+682,7,6,0,1,High-Value Customers,Low Attention Needed
+683,6,1,0,1,Loyal Customers,Moderate Attention Needed
+684,9,7,0,0,High-Value Customers,Low Attention Needed
+685,9,1,1,1,Loyal Customers,Moderate Attention Needed
+686,1,5,0,0,Highly Engaged Customers,Moderate Attention Needed
+687,5,10,1,1,High-Value Customers,Low Attention Needed
+688,5,8,1,1,High-Value Customers,Low Attention Needed
+689,2,4,1,1,Customers Needing Attention,High Attention Needed
+690,1,5,0,0,Highly Engaged Customers,Moderate Attention Needed
+691,0,4,1,0,Customers Needing Attention,High Attention Needed
+692,5,4,1,1,Loyal Customers,Moderate Attention Needed
+693,4,8,0,1,High-Value Customers,Low Attention Needed
+694,8,2,0,1,Loyal Customers,Moderate Attention Needed
+695,0,1,1,1,Customers Needing Attention,High Attention Needed
+696,6,3,1,1,Loyal Customers,Moderate Attention Needed
+697,4,9,0,1,High-Value Customers,Low Attention Needed
+698,4,4,1,1,Loyal Customers,Moderate Attention Needed
+699,1,10,1,1,Highly Engaged Customers,Moderate Attention Needed
+700,2,5,1,0,Highly Engaged Customers,Moderate Attention Needed
+701,6,2,0,0,Loyal Customers,Moderate Attention Needed
+702,5,4,0,0,Loyal Customers,Moderate Attention Needed
+703,1,2,1,0,Customers Needing Attention,High Attention Needed
+704,5,2,0,0,Loyal Customers,Moderate Attention Needed
+705,1,4,1,0,Customers Needing Attention,High Attention Needed
+706,1,6,1,0,Highly Engaged Customers,Moderate Attention Needed
+707,1,7,1,0,Highly Engaged Customers,Moderate Attention Needed
+708,2,10,0,1,Highly Engaged Customers,Moderate Attention Needed
+709,1,3,1,0,Customers Needing Attention,High Attention Needed
+710,3,3,0,1,Customers Needing Attention,High Attention Needed
+711,8,10,0,1,High-Value Customers,Low Attention Needed
+712,5,6,1,1,High-Value Customers,Low Attention Needed
+713,0,3,1,1,Customers Needing Attention,High Attention Needed
+714,7,2,0,1,Loyal Customers,Moderate Attention Needed
+715,6,8,1,0,High-Value Customers,Low Attention Needed
+716,9,5,0,1,High-Value Customers,Low Attention Needed
+717,2,1,1,0,Customers Needing Attention,High Attention Needed
+718,0,3,1,0,Customers Needing Attention,High Attention Needed
+719,4,10,0,0,High-Value Customers,Low Attention Needed
+720,3,8,1,1,Highly Engaged Customers,Moderate Attention Needed
+721,9,4,1,1,Loyal Customers,Moderate Attention Needed
+722,7,7,1,1,High-Value Customers,Low Attention Needed
+723,0,10,0,0,Highly Engaged Customers,Moderate Attention Needed
+724,9,2,0,1,Loyal Customers,Moderate Attention Needed
+725,0,7,1,0,Highly Engaged Customers,Moderate Attention Needed
+726,3,5,0,1,Highly Engaged Customers,Moderate Attention Needed
+727,7,5,0,1,High-Value Customers,Low Attention Needed
+728,4,6,1,0,High-Value Customers,Low Attention Needed
+729,1,9,0,1,Highly Engaged Customers,Moderate Attention Needed
+730,5,6,1,1,High-Value Customers,Low Attention Needed
+731,4,8,1,1,High-Value Customers,Low Attention Needed
+732,1,7,1,1,Highly Engaged Customers,Moderate Attention Needed
+733,2,9,0,0,Highly Engaged Customers,Moderate Attention Needed
+734,8,4,1,1,Loyal Customers,Moderate Attention Needed
+735,6,2,0,1,Loyal Customers,Moderate Attention Needed
+736,6,7,0,1,High-Value Customers,Low Attention Needed
+737,5,6,1,1,High-Value Customers,Low Attention Needed
+738,7,1,1,1,Loyal Customers,Moderate Attention Needed
+739,3,9,0,1,Highly Engaged Customers,Moderate Attention Needed
+740,7,9,0,1,High-Value Customers,Low Attention Needed
+741,3,2,0,1,Customers Needing Attention,High Attention Needed
+742,7,3,0,1,Loyal Customers,Moderate Attention Needed
+743,8,5,1,1,High-Value Customers,Low Attention Needed
+744,2,5,0,1,Highly Engaged Customers,Moderate Attention Needed
+745,2,1,1,0,Customers Needing Attention,High Attention Needed
+746,1,8,0,1,Highly Engaged Customers,Moderate Attention Needed
+747,9,8,0,1,High-Value Customers,Low Attention Needed
+748,2,4,0,0,Customers Needing Attention,High Attention Needed
+749,2,7,0,0,Highly Engaged Customers,Moderate Attention Needed
+750,4,10,1,1,High-Value Customers,Low Attention Needed
+751,4,3,1,0,Loyal Customers,Moderate Attention Needed
+752,1,6,1,0,Highly Engaged Customers,Moderate Attention Needed
+753,9,10,0,1,High-Value Customers,Low Attention Needed
+754,5,10,0,0,High-Value Customers,Low Attention Needed
+755,4,9,1,1,High-Value Customers,Low Attention Needed
+756,5,1,0,1,Loyal Customers,Moderate Attention Needed
+757,0,5,0,0,Highly Engaged Customers,Moderate Attention Needed
+758,4,4,1,1,Loyal Customers,Moderate Attention Needed
+759,8,8,0,1,High-Value Customers,Low Attention Needed
+760,9,1,0,1,Loyal Customers,Moderate Attention Needed
+761,1,9,0,0,Highly Engaged Customers,Moderate Attention Needed
+762,0,6,1,0,Highly Engaged Customers,Moderate Attention Needed
+763,9,4,0,1,Loyal Customers,Moderate Attention Needed
+764,8,9,1,1,High-Value Customers,Low Attention Needed
+765,9,5,0,0,High-Value Customers,Low Attention Needed
+766,8,5,0,0,High-Value Customers,Low Attention Needed
+767,8,5,0,0,High-Value Customers,Low Attention Needed
+768,5,1,1,0,Loyal Customers,Moderate Attention Needed
+769,7,1,1,1,Loyal Customers,Moderate Attention Needed
+770,0,8,1,0,Highly Engaged Customers,Moderate Attention Needed
+771,9,8,1,1,High-Value Customers,Low Attention Needed
+772,3,6,0,0,Highly Engaged Customers,Moderate Attention Needed
+773,0,4,0,1,Customers Needing Attention,High Attention Needed
+774,7,2,1,1,Loyal Customers,Moderate Attention Needed
+775,0,2,1,0,Customers Needing Attention,High Attention Needed
+776,2,9,1,1,Highly Engaged Customers,Moderate Attention Needed
+777,3,5,1,0,Highly Engaged Customers,Moderate Attention Needed
+778,7,4,0,0,Loyal Customers,Moderate Attention Needed
+779,5,10,0,1,High-Value Customers,Low Attention Needed
+780,9,1,1,1,Loyal Customers,Moderate Attention Needed
+781,6,7,1,0,High-Value Customers,Low Attention Needed
+782,7,3,0,1,Loyal Customers,Moderate Attention Needed
+783,1,6,0,0,Highly Engaged Customers,Moderate Attention Needed
+784,9,5,0,1,High-Value Customers,Low Attention Needed
+785,7,5,0,0,High-Value Customers,Low Attention Needed
+786,2,5,0,0,Highly Engaged Customers,Moderate Attention Needed
+787,6,1,0,1,Loyal Customers,Moderate Attention Needed
+788,2,1,1,1,Customers Needing Attention,High Attention Needed
+789,6,3,1,1,Loyal Customers,Moderate Attention Needed
+790,1,10,0,1,Highly Engaged Customers,Moderate Attention Needed
+791,9,4,0,0,Loyal Customers,Moderate Attention Needed
+792,5,5,1,0,High-Value Customers,Low Attention Needed
+793,2,2,1,1,Customers Needing Attention,High Attention Needed
+794,2,8,1,1,Highly Engaged Customers,Moderate Attention Needed
+795,8,2,0,1,Loyal Customers,Moderate Attention Needed
+796,6,9,0,1,High-Value Customers,Low Attention Needed
+797,4,2,1,1,Loyal Customers,Moderate Attention Needed
+798,9,9,0,1,High-Value Customers,Low Attention Needed
+799,6,7,1,0,High-Value Customers,Low Attention Needed
+800,8,8,1,1,High-Value Customers,Low Attention Needed
+801,0,2,1,0,Customers Needing Attention,High Attention Needed
+802,6,7,1,0,High-Value Customers,Low Attention Needed
+803,5,6,1,0,High-Value Customers,Low Attention Needed
+804,9,4,0,1,Loyal Customers,Moderate Attention Needed
+805,8,7,0,1,High-Value Customers,Low Attention Needed
+806,0,4,1,0,Customers Needing Attention,High Attention Needed
+807,3,2,1,1,Customers Needing Attention,High Attention Needed
+808,8,10,0,1,High-Value Customers,Low Attention Needed
+809,3,7,0,1,Highly Engaged Customers,Moderate Attention Needed
+810,9,8,0,1,High-Value Customers,Low Attention Needed
+811,2,2,1,1,Customers Needing Attention,High Attention Needed
+812,8,5,0,0,High-Value Customers,Low Attention Needed
+813,1,1,1,1,Customers Needing Attention,High Attention Needed
+814,3,7,1,0,Highly Engaged Customers,Moderate Attention Needed
+815,5,8,0,0,High-Value Customers,Low Attention Needed
+816,1,6,1,1,Highly Engaged Customers,Moderate Attention Needed
+817,7,5,0,0,High-Value Customers,Low Attention Needed
+818,7,6,0,0,High-Value Customers,Low Attention Needed
+819,0,2,1,0,Customers Needing Attention,High Attention Needed
+820,2,1,0,0,Customers Needing Attention,High Attention Needed
+821,9,7,1,1,High-Value Customers,Low Attention Needed
+822,8,7,1,1,High-Value Customers,Low Attention Needed
+823,4,10,1,1,High-Value Customers,Low Attention Needed
+824,5,10,1,1,High-Value Customers,Low Attention Needed
+825,3,2,0,1,Customers Needing Attention,High Attention Needed
+826,9,2,0,0,Loyal Customers,Moderate Attention Needed
+827,1,1,0,1,Customers Needing Attention,High Attention Needed
+828,7,10,1,1,High-Value Customers,Low Attention Needed
+829,5,8,1,1,High-Value Customers,Low Attention Needed
+830,4,8,1,1,High-Value Customers,Low Attention Needed
+831,8,1,0,1,Loyal Customers,Moderate Attention Needed
+832,0,8,0,0,Highly Engaged Customers,Moderate Attention Needed
+833,4,9,1,1,High-Value Customers,Low Attention Needed
+834,5,4,1,0,Loyal Customers,Moderate Attention Needed
+835,4,1,0,1,Loyal Customers,Moderate Attention Needed
+836,5,1,0,0,Loyal Customers,Moderate Attention Needed
+837,5,3,1,1,Loyal Customers,Moderate Attention Needed
+838,6,5,1,1,High-Value Customers,Low Attention Needed
+839,3,5,0,0,Highly Engaged Customers,Moderate Attention Needed
+840,7,9,1,0,High-Value Customers,Low Attention Needed
+841,6,10,1,1,High-Value Customers,Low Attention Needed
+842,8,2,0,1,Loyal Customers,Moderate Attention Needed
+843,6,2,0,0,Loyal Customers,Moderate Attention Needed
+844,2,6,0,0,Highly Engaged Customers,Moderate Attention Needed
+845,2,9,1,1,Highly Engaged Customers,Moderate Attention Needed
+846,7,1,0,1,Loyal Customers,Moderate Attention Needed
+847,4,9,1,1,High-Value Customers,Low Attention Needed
+848,3,9,1,1,Highly Engaged Customers,Moderate Attention Needed
+849,7,9,1,1,High-Value Customers,Low Attention Needed
+850,5,5,0,1,High-Value Customers,Low Attention Needed
+851,1,9,1,0,Highly Engaged Customers,Moderate Attention Needed
+852,3,4,0,0,Customers Needing Attention,High Attention Needed
+853,3,2,1,0,Customers Needing Attention,High Attention Needed
+854,5,6,1,1,High-Value Customers,Low Attention Needed
+855,5,4,1,1,Loyal Customers,Moderate Attention Needed
+856,0,6,1,0,Highly Engaged Customers,Moderate Attention Needed
+857,7,3,1,1,Loyal Customers,Moderate Attention Needed
+858,5,6,1,1,High-Value Customers,Low Attention Needed
+859,2,2,0,1,Customers Needing Attention,High Attention Needed
+860,8,2,1,1,Loyal Customers,Moderate Attention Needed
+861,1,9,1,0,Highly Engaged Customers,Moderate Attention Needed
+862,7,7,1,1,High-Value Customers,Low Attention Needed
+863,9,3,1,0,Loyal Customers,Moderate Attention Needed
+864,2,1,1,1,Customers Needing Attention,High Attention Needed
+865,4,8,0,1,High-Value Customers,Low Attention Needed
+866,5,6,1,0,High-Value Customers,Low Attention Needed
+867,9,7,0,1,High-Value Customers,Low Attention Needed
+868,5,9,1,0,High-Value Customers,Low Attention Needed
+869,3,5,0,1,Highly Engaged Customers,Moderate Attention Needed
+870,2,1,1,0,Customers Needing Attention,High Attention Needed
+871,3,10,0,0,Highly Engaged Customers,Moderate Attention Needed
+872,0,7,1,1,Highly Engaged Customers,Moderate Attention Needed
+873,3,5,0,0,Highly Engaged Customers,Moderate Attention Needed
+874,0,3,0,0,Customers Needing Attention,High Attention Needed
+875,0,9,1,0,Highly Engaged Customers,Moderate Attention Needed
+876,9,1,0,0,Loyal Customers,Moderate Attention Needed
+877,5,1,1,1,Loyal Customers,Moderate Attention Needed
+878,4,1,0,0,Loyal Customers,Moderate Attention Needed
+879,3,3,0,0,Customers Needing Attention,High Attention Needed
+880,2,6,1,0,Highly Engaged Customers,Moderate Attention Needed
+881,0,10,0,0,Highly Engaged Customers,Moderate Attention Needed
+882,5,3,0,1,Loyal Customers,Moderate Attention Needed
+883,1,8,0,0,Highly Engaged Customers,Moderate Attention Needed
+884,7,10,1,1,High-Value Customers,Low Attention Needed
+885,9,2,0,1,Loyal Customers,Moderate Attention Needed
+886,4,9,1,1,High-Value Customers,Low Attention Needed
+887,6,3,0,0,Loyal Customers,Moderate Attention Needed
+888,9,5,0,1,High-Value Customers,Low Attention Needed
+889,1,10,1,0,Highly Engaged Customers,Moderate Attention Needed
+890,7,8,0,0,High-Value Customers,Low Attention Needed
+891,1,2,1,0,Customers Needing Attention,High Attention Needed
+892,3,6,1,0,Highly Engaged Customers,Moderate Attention Needed
+893,0,5,1,1,Highly Engaged Customers,Moderate Attention Needed
+894,4,10,1,1,High-Value Customers,Low Attention Needed
+895,8,9,1,1,High-Value Customers,Low Attention Needed
+896,0,5,0,0,Highly Engaged Customers,Moderate Attention Needed
+897,8,2,1,1,Loyal Customers,Moderate Attention Needed
+898,7,5,1,1,High-Value Customers,Low Attention Needed
+899,5,4,1,1,Loyal Customers,Moderate Attention Needed
+900,6,7,0,1,High-Value Customers,Low Attention Needed
+901,2,6,1,0,Highly Engaged Customers,Moderate Attention Needed
+902,0,2,1,0,Customers Needing Attention,High Attention Needed
+903,4,5,1,1,High-Value Customers,Low Attention Needed
+904,1,7,1,0,Highly Engaged Customers,Moderate Attention Needed
+905,4,7,1,1,High-Value Customers,Low Attention Needed
+906,7,5,0,1,High-Value Customers,Low Attention Needed
+907,8,9,0,1,High-Value Customers,Low Attention Needed
+908,1,4,0,0,Customers Needing Attention,High Attention Needed
+909,2,3,1,0,Customers Needing Attention,High Attention Needed
+910,2,4,0,1,Customers Needing Attention,High Attention Needed
+911,0,5,0,0,Highly Engaged Customers,Moderate Attention Needed
+912,7,6,1,1,High-Value Customers,Low Attention Needed
+913,5,3,1,0,Loyal Customers,Moderate Attention Needed
+914,7,2,1,0,Loyal Customers,Moderate Attention Needed
+915,8,4,1,1,Loyal Customers,Moderate Attention Needed
+916,4,5,0,0,High-Value Customers,Low Attention Needed
+917,2,4,1,0,Customers Needing Attention,High Attention Needed
+918,4,3,0,1,Loyal Customers,Moderate Attention Needed
+919,4,8,1,1,High-Value Customers,Low Attention Needed
+920,4,10,1,1,High-Value Customers,Low Attention Needed
+921,2,4,1,1,Customers Needing Attention,High Attention Needed
+922,9,2,0,0,Loyal Customers,Moderate Attention Needed
+923,3,2,1,0,Customers Needing Attention,High Attention Needed
+924,8,1,0,1,Loyal Customers,Moderate Attention Needed
+925,9,4,0,1,Loyal Customers,Moderate Attention Needed
+926,8,10,1,1,High-Value Customers,Low Attention Needed
+927,1,9,0,1,Highly Engaged Customers,Moderate Attention Needed
+928,7,7,1,0,High-Value Customers,Low Attention Needed
+929,7,10,0,1,High-Value Customers,Low Attention Needed
+930,6,7,0,1,High-Value Customers,Low Attention Needed
+931,7,7,0,0,High-Value Customers,Low Attention Needed
+932,2,8,1,1,Highly Engaged Customers,Moderate Attention Needed
+933,5,1,1,1,Loyal Customers,Moderate Attention Needed
+934,0,10,1,1,Highly Engaged Customers,Moderate Attention Needed
+935,6,10,1,1,High-Value Customers,Low Attention Needed
+936,0,8,1,1,Highly Engaged Customers,Moderate Attention Needed
+937,8,4,1,1,Loyal Customers,Moderate Attention Needed
+938,0,4,1,0,Customers Needing Attention,High Attention Needed
+939,0,4,0,0,Customers Needing Attention,High Attention Needed
+940,6,6,1,0,High-Value Customers,Low Attention Needed
+941,1,7,0,0,Highly Engaged Customers,Moderate Attention Needed
+942,4,6,0,0,High-Value Customers,Low Attention Needed
+943,7,1,0,0,Loyal Customers,Moderate Attention Needed
+944,7,8,0,1,High-Value Customers,Low Attention Needed
+945,2,10,1,1,Highly Engaged Customers,Moderate Attention Needed
+946,6,7,1,1,High-Value Customers,Low Attention Needed
+947,2,6,1,1,Highly Engaged Customers,Moderate Attention Needed
+948,5,6,1,1,High-Value Customers,Low Attention Needed
+949,5,5,0,1,High-Value Customers,Low Attention Needed
+950,2,6,1,1,Highly Engaged Customers,Moderate Attention Needed
+951,6,9,1,1,High-Value Customers,Low Attention Needed
+952,2,10,0,0,Highly Engaged Customers,Moderate Attention Needed
+953,7,9,0,0,High-Value Customers,Low Attention Needed
+954,9,10,0,1,High-Value Customers,Low Attention Needed
+955,3,8,0,1,Highly Engaged Customers,Moderate Attention Needed
+956,0,10,1,0,Highly Engaged Customers,Moderate Attention Needed
+957,3,9,1,1,Highly Engaged Customers,Moderate Attention Needed
+958,6,10,1,0,High-Value Customers,Low Attention Needed
+959,3,8,0,0,Highly Engaged Customers,Moderate Attention Needed
+960,5,8,1,1,High-Value Customers,Low Attention Needed
+961,8,1,1,0,Loyal Customers,Moderate Attention Needed
+962,0,10,1,0,Highly Engaged Customers,Moderate Attention Needed
+963,4,5,1,1,High-Value Customers,Low Attention Needed
+964,6,4,1,1,Loyal Customers,Moderate Attention Needed
+965,0,2,1,0,Customers Needing Attention,High Attention Needed
+966,3,8,1,0,Highly Engaged Customers,Moderate Attention Needed
+967,5,3,0,0,Loyal Customers,Moderate Attention Needed
+968,1,4,1,0,Customers Needing Attention,High Attention Needed
+969,9,7,0,1,High-Value Customers,Low Attention Needed
+970,4,10,0,1,High-Value Customers,Low Attention Needed
+971,9,9,0,0,High-Value Customers,Low Attention Needed
+972,0,2,1,0,Customers Needing Attention,High Attention Needed
+973,5,3,0,1,Loyal Customers,Moderate Attention Needed
+974,5,4,1,1,Loyal Customers,Moderate Attention Needed
+975,3,10,1,1,Highly Engaged Customers,Moderate Attention Needed
+976,7,1,0,0,Loyal Customers,Moderate Attention Needed
+977,3,7,0,0,Highly Engaged Customers,Moderate Attention Needed
+978,7,2,1,1,Loyal Customers,Moderate Attention Needed
+979,7,5,0,1,High-Value Customers,Low Attention Needed
+980,4,1,1,1,Loyal Customers,Moderate Attention Needed
+981,3,3,1,1,Customers Needing Attention,High Attention Needed
+982,1,2,1,1,Customers Needing Attention,High Attention Needed
+983,2,1,1,0,Customers Needing Attention,High Attention Needed
+984,2,7,1,1,Highly Engaged Customers,Moderate Attention Needed
+985,3,5,1,1,Highly Engaged Customers,Moderate Attention Needed
+986,3,1,0,0,Customers Needing Attention,High Attention Needed
+987,9,6,1,1,High-Value Customers,Low Attention Needed
+988,4,5,1,0,High-Value Customers,Low Attention Needed
+989,3,3,1,0,Customers Needing Attention,High Attention Needed
+990,9,7,0,1,High-Value Customers,Low Attention Needed
+991,7,10,1,1,High-Value Customers,Low Attention Needed
+992,5,9,1,1,High-Value Customers,Low Attention Needed
+993,5,9,0,1,High-Value Customers,Low Attention Needed
+994,7,9,1,1,High-Value Customers,Low Attention Needed
+995,6,2,1,0,Loyal Customers,Moderate Attention Needed
+996,9,3,1,1,Loyal Customers,Moderate Attention Needed
+997,9,7,0,0,High-Value Customers,Low Attention Needed
+998,7,5,1,1,High-Value Customers,Low Attention Needed
+999,1,2,1,1,Customers Needing Attention,High Attention Needed
+1000,8,3,1,1,Loyal Customers,Moderate Attention Needed
