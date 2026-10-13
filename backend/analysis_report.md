@@ -198,3 +198,20 @@ These comparisons help identify patterns that may support customer engagement st
 
 ### Limitations
 The results describe the current dataset and do not establish causation. The findings should be validated with additional data before making business decisions.
+
+## 9. Data Validation
+
+Data validation checks were added to assess the quality and consistency of the customer dataset.
+
+The checks include:
+
+- Missing values in dataset columns.
+- Duplicate customer IDs.
+- Invalid purchase values.
+- Invalid discount values.
+- Engagement values outside the expected range of 1 to 10.
+- Negative previous purchase counts.
+
+These checks help identify potential data quality issues before performing further analysis or training machine learning models.
+
+The validation process checks the data without modifying the original dataset.
