@@ -483,4 +483,45 @@ print(f"Saved file: {output_file}")
 print("Original customers.csv remains unchanged.")
 print("=================================================")
 
+
+# ==========================================
+# CUSTOMER LOYALTY CLASSIFICATION
+# ==========================================
+
+print("\n========== CUSTOMER LOYALTY ANALYSIS ==========")
+
+def classify_loyalty(row):
+    if row["previous_purchases"] >= 7:
+        return "Highly Loyal"
+    elif row["previous_purchases"] >= 4:
+        return "Moderately Loyal"
+    else:
+        return "New or Occasional"
+
+df["loyalty_level"] = df.apply(classify_loyalty, axis=1)
+
+loyalty_summary = df.groupby("loyalty_level").agg(
+    customer_count=("customer_id", "count"),
+    purchase_rate=("purchase", "mean")
+)
+
+loyalty_summary["purchase_rate"] *= 100
+
+print("\nLoyalty Summary:")
+print(loyalty_summary.round(2))
+
+plt.figure(figsize=(8, 5))
+plt.bar(
+    loyalty_summary.index,
+    loyalty_summary["customer_count"]
+)
+
+plt.title("Customer Loyalty Distribution")
+plt.xlabel("Loyalty Level")
+plt.ylabel("Number of Customers")
+plt.tight_layout()
+plt.show()
+
+print("\nCustomer loyalty analysis completed!")
+print("==============================================")
     
