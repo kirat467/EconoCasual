@@ -164,3 +164,37 @@ The customer groups are based on simple, rule-based thresholds. The observed rel
 - Use machine learning to evaluate customer purchase predictions.
 - Explore additional customer behavior features.
 - Validate customer segmentation rules using more data.
+
+## 8. Automated Customer Behavior Insights
+
+An automated insights feature was added to summarize important customer behavior patterns.
+
+### Key Metrics
+- Overall customer purchase rate.
+- Average number of previous purchases.
+- Average customer engagement.
+- Comparison between buyers and non-buyers.
+
+### Business Insights
+The analysis compares the purchasing history and engagement levels of buyers and non-buyers.
+
+These comparisons help identify patterns that may support customer engagement strategies.
+
+### Limitations
+The results describe the current dataset and do not establish causation. The findings should be validated with additional data before making business decisions.## 8. Automated Customer Behavior Insights
+
+An automated insights feature was added to summarize important customer behavior patterns.
+
+### Key Metrics
+- Overall customer purchase rate.
+- Average number of previous purchases.
+- Average customer engagement.
+- Comparison between buyers and non-buyers.
+
+### Business Insights
+The analysis compares the purchasing history and engagement levels of buyers and non-buyers.
+
+These comparisons help identify patterns that may support customer engagement strategies.
+
+### Limitations
+The results describe the current dataset and do not establish causation. The findings should be validated with additional data before making business decisions.
