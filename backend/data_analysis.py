@@ -416,4 +416,47 @@ plt.show()
 print("\nCustomer risk analysis completed successfully!")
 print("======================================================")
 
+# ==========================================
+# ENGAGEMENT-BASED PURCHASE INSIGHTS
+# ==========================================
+
+print("\n========== ENGAGEMENT-BASED INSIGHTS ==========")
+
+engagement_summary = df.groupby("engagement").agg(
+    total_customers=("customer_id", "count"),
+    purchases=("purchase", "sum"),
+    purchase_rate=("purchase", "mean")
+)
+
+engagement_summary["purchase_rate"] *= 100
+
+print("\nEngagement Analysis:")
+print(engagement_summary.round(2))
+
+# Find engagement level with the highest purchase rate
+best_engagement = engagement_summary["purchase_rate"].idxmax()
+best_rate = engagement_summary["purchase_rate"].max()
+
+print(f"\nEngagement level with highest observed purchase rate: {best_engagement}")
+print(f"Observed purchase rate at this level: {best_rate:.2f}%")
+
+# Plot purchase rate by engagement
+plt.figure(figsize=(9, 5))
+plt.plot(
+    engagement_summary.index,
+    engagement_summary["purchase_rate"],
+    marker="o"
+)
+
+plt.title("Customer Engagement vs Purchase Rate")
+plt.xlabel("Engagement Level")
+plt.ylabel("Purchase Rate (%)")
+plt.xticks(engagement_summary.index)
+plt.grid(True)
+plt.tight_layout()
+plt.show()
+
+print("\nEngagement-based insights completed!")
+print("==============================================")
+
     
