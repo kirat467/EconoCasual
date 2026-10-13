@@ -374,4 +374,245 @@ plt.show()
 print("\nCustomer segmentation completed successfully!")
 print("============================================")
 
+# ==========================================
+# CUSTOMER PURCHASE RISK ANALYSIS
+# ==========================================
+
+print("\n========== CUSTOMER PURCHASE RISK ANALYSIS ==========")
+
+def identify_risk(row):
+    if row["engagement"] < engagement_median and row["previous_purchases"] < purchase_median:
+        return "High Attention Needed"
+    elif row["engagement"] < engagement_median or row["previous_purchases"] < purchase_median:
+        return "Moderate Attention Needed"
+    else:
+        return "Low Attention Needed"
+
+df["customer_risk"] = df.apply(identify_risk, axis=1)
+
+risk_summary = df.groupby("customer_risk").agg(
+    customer_count=("customer_id", "count"),
+    actual_purchase_rate=("purchase", "mean")
+)
+
+risk_summary["actual_purchase_rate"] *= 100
+
+print("\nCustomer Risk Summary:")
+print(risk_summary.round(2))
+
+plt.figure(figsize=(8, 5))
+plt.bar(
+    risk_summary.index,
+    risk_summary["customer_count"]
+)
+
+plt.title("Customer Distribution by Attention Level")
+plt.xlabel("Customer Attention Level")
+plt.ylabel("Number of Customers")
+plt.xticks(rotation=15, ha="right")
+plt.tight_layout()
+plt.show()
+
+print("\nCustomer risk analysis completed successfully!")
+print("======================================================")
+
+# ==========================================
+# ENGAGEMENT-BASED PURCHASE INSIGHTS
+# ==========================================
+
+print("\n========== ENGAGEMENT-BASED INSIGHTS ==========")
+
+engagement_summary = df.groupby("engagement").agg(
+    total_customers=("customer_id", "count"),
+    purchases=("purchase", "sum"),
+    purchase_rate=("purchase", "mean")
+)
+
+engagement_summary["purchase_rate"] *= 100
+
+print("\nEngagement Analysis:")
+print(engagement_summary.round(2))
+
+# Find engagement level with the highest purchase rate
+best_engagement = engagement_summary["purchase_rate"].idxmax()
+best_rate = engagement_summary["purchase_rate"].max()
+
+print(f"\nEngagement level with highest observed purchase rate: {best_engagement}")
+print(f"Observed purchase rate at this level: {best_rate:.2f}%")
+
+# Plot purchase rate by engagement
+plt.figure(figsize=(9, 5))
+plt.plot(
+    engagement_summary.index,
+    engagement_summary["purchase_rate"],
+    marker="o"
+)
+
+plt.title("Customer Engagement vs Purchase Rate")
+plt.xlabel("Engagement Level")
+plt.ylabel("Purchase Rate (%)")
+plt.xticks(engagement_summary.index)
+plt.grid(True)
+plt.tight_layout()
+plt.show()
+
+print("\nEngagement-based insights completed!")
+print("==============================================")
+
+# ==========================================
+# EXPORT CUSTOMER INSIGHTS
+# ==========================================
+
+import os
+
+print("\n========== EXPORTING CUSTOMER INSIGHTS ==========")
+
+# Create the data folder if it doesn't exist
+os.makedirs("data", exist_ok=True)
+
+# Select useful customer information
+insights = df.copy()
+
+# Save results in a separate file
+output_file = os.path.join("data", "customer_insights.csv")
+insights.to_csv(output_file, index=False)
+
+print("\nCustomer insights exported successfully!")
+print(f"Total customer records: {len(insights)}")
+print(f"Saved file: {output_file}")
+print("Original customers.csv remains unchanged.")
+print("=================================================")
+
+
+# ==========================================
+# CUSTOMER LOYALTY CLASSIFICATION
+# ==========================================
+
+print("\n========== CUSTOMER LOYALTY ANALYSIS ==========")
+
+def classify_loyalty(row):
+    if row["previous_purchases"] >= 7:
+        return "Highly Loyal"
+    elif row["previous_purchases"] >= 4:
+        return "Moderately Loyal"
+    else:
+        return "New or Occasional"
+
+df["loyalty_level"] = df.apply(classify_loyalty, axis=1)
+
+loyalty_summary = df.groupby("loyalty_level").agg(
+    customer_count=("customer_id", "count"),
+    purchase_rate=("purchase", "mean")
+)
+
+loyalty_summary["purchase_rate"] *= 100
+
+print("\nLoyalty Summary:")
+print(loyalty_summary.round(2))
+
+plt.figure(figsize=(8, 5))
+plt.bar(
+    loyalty_summary.index,
+    loyalty_summary["customer_count"]
+)
+
+plt.title("Customer Loyalty Distribution")
+plt.xlabel("Loyalty Level")
+plt.ylabel("Number of Customers")
+plt.tight_layout()
+plt.show()
+
+print("\nCustomer loyalty analysis completed!")
+print("==============================================")
+
+# ==========================================
+# AUTOMATED CUSTOMER BEHAVIOR INSIGHTS
+# ==========================================
+
+print("\n========== CUSTOMER BEHAVIOR INSIGHTS ==========")
+
+# Overall purchase rate
+overall_rate = df["purchase"].mean() * 100
+
+# Average customer behavior
+avg_previous_purchases = df["previous_purchases"].mean()
+avg_engagement = df["engagement"].mean()
+
+# Compare buyers and non-buyers
+buyers = df[df["purchase"] == 1]
+non_buyers = df[df["purchase"] == 0]
+
+print(f"\nOverall Purchase Rate: {overall_rate:.2f}%")
+print(f"Average Previous Purchases: {avg_previous_purchases:.2f}")
+print(f"Average Customer Engagement: {avg_engagement:.2f}")
+
+print("\n--- Buyer vs Non-Buyer Comparison ---")
+print(
+    f"Buyers' Average Previous Purchases: "
+    f"{buyers['previous_purchases'].mean():.2f}"
+)
+print(
+    f"Non-Buyers' Average Previous Purchases: "
+    f"{non_buyers['previous_purchases'].mean():.2f}"
+)
+
+print(
+    f"Buyers' Average Engagement: "
+    f"{buyers['engagement'].mean():.2f}"
+)
+print(
+    f"Non-Buyers' Average Engagement: "
+    f"{non_buyers['engagement'].mean():.2f}"
+)
+
+print("\n--- Business Recommendation ---")
+
+if buyers["previous_purchases"].mean() > non_buyers["previous_purchases"].mean():
+    print("Previous purchase history is associated with purchasing behavior.")
+else:
+    print("Previous purchase history shows no higher average among buyers.")
+
+if buyers["engagement"].mean() > non_buyers["engagement"].mean():
+    print("Higher engagement is associated with purchasing behavior.")
+else:
+    print("Higher engagement is not associated with a higher buyer average.")
+
+print("\nInsight generation completed!")
+print("=================================================")
+
+# ==========================================
+# CUSTOMER DATA VALIDATION
+# ==========================================
+
+print("\n========== CUSTOMER DATA VALIDATION ==========")
+
+# Check for missing values
+missing_values = df.isnull().sum()
+print("\nMissing Values:")
+print(missing_values)
+
+# Check for duplicate customer IDs
+duplicate_ids = df["customer_id"].duplicated().sum()
+print(f"\nDuplicate Customer IDs: {duplicate_ids}")
+
+# Validate purchase values
+invalid_purchases = (~df["purchase"].isin([0, 1])).sum()
+print(f"Invalid Purchase Values: {invalid_purchases}")
+
+# Validate discount values
+invalid_discounts = (~df["discount"].isin([0, 1])).sum()
+print(f"Invalid Discount Values: {invalid_discounts}")
+
+# Validate engagement range
+invalid_engagement = (
+    (~df["engagement"].between(1, 10))
+).sum()
+print(f"Invalid Engagement Values: {invalid_engagement}")
+
+# Validate previous purchases
+invalid_previous = (df["previous_purchases"] < 0).sum()
+print(f"Invalid Previous Purchase Values: {invalid_previous}")
+
+print("\nData validation completed!")
+print("==============================================")
     

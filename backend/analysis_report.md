@@ -94,7 +94,7 @@ The observed correlation values with purchase were:
 
 Previous purchase history had the strongest observed relationship with purchase behavior in this dataset. These correlations do not establish causation.
 
-Customer Purchasing Behavior Analysis Summary
+## Customer Purchasing Behavior Analysis Summary
 
 1. Objective
 
@@ -119,3 +119,99 @@ Matplotlib was used to create graphs and a correlation heatmap to visualize rela
 6. Conclusion
 
 The analysis provides an initial understanding of customer purchasing behavior, engagement, and purchase history. These findings can help guide further analysis of customer engagement and purchasing patterns.
+
+## Customer Analysis
+1. Customer Segmentation
+
+Customers were classified into four groups based on their previous purchase history and engagement levels:
+
+- High-Value Customers
+- Loyal Customers
+- Highly Engaged Customers
+- Customers Needing Attention
+
+Purchase rates were calculated for each group to compare customer behavior.
+
+2. Customer Attention Analysis
+
+Customers were grouped into high, moderate, and low attention categories based on their previous purchases and engagement.
+
+This analysis helps identify customer groups that may benefit from additional engagement efforts.
+
+3. Customer Engagement Insights
+
+Purchase rates were compared across different engagement levels. This analysis helps identify engagement levels associated with higher observed purchase rates.
+
+4. Customer Insights Export
+
+The analysis results were exported to "data/customer_insights.csv" for further examination and potential use by other project modules.
+
+The original "customers.csv" dataset was kept unchanged.
+
+5. Customer Loyalty Classification
+
+Customers were classified as highly loyal, moderately loyal, or new or occasional customers using their previous purchase counts.
+
+The distribution of these groups and their observed purchase rates were analyzed.
+
+6. Limitations
+
+The customer groups are based on simple, rule-based thresholds. The observed relationships do not prove causation, and the attention categories are not validated predictions of future purchases.
+
+7. Future Improvements
+
+- Integrate the analysis results with the frontend dashboard.
+- Use machine learning to evaluate customer purchase predictions.
+- Explore additional customer behavior features.
+- Validate customer segmentation rules using more data.
+
+## 8. Automated Customer Behavior Insights
+
+An automated insights feature was added to summarize important customer behavior patterns.
+
+### Key Metrics
+- Overall customer purchase rate.
+- Average number of previous purchases.
+- Average customer engagement.
+- Comparison between buyers and non-buyers.
+
+### Business Insights
+The analysis compares the purchasing history and engagement levels of buyers and non-buyers.
+
+These comparisons help identify patterns that may support customer engagement strategies.
+
+### Limitations
+The results describe the current dataset and do not establish causation. The findings should be validated with additional data before making business decisions.## 8. Automated Customer Behavior Insights
+
+An automated insights feature was added to summarize important customer behavior patterns.
+
+### Key Metrics
+- Overall customer purchase rate.
+- Average number of previous purchases.
+- Average customer engagement.
+- Comparison between buyers and non-buyers.
+
+### Business Insights
+The analysis compares the purchasing history and engagement levels of buyers and non-buyers.
+
+These comparisons help identify patterns that may support customer engagement strategies.
+
+### Limitations
+The results describe the current dataset and do not establish causation. The findings should be validated with additional data before making business decisions.
+
+## 9. Data Validation
+
+Data validation checks were added to assess the quality and consistency of the customer dataset.
+
+The checks include:
+
+- Missing values in dataset columns.
+- Duplicate customer IDs.
+- Invalid purchase values.
+- Invalid discount values.
+- Engagement values outside the expected range of 1 to 10.
+- Negative previous purchase counts.
+
+These checks help identify potential data quality issues before performing further analysis or training machine learning models.
+
+The validation process checks the data without modifying the original dataset.
