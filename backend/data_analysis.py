@@ -638,4 +638,16 @@ segment_purchase_rate = df.groupby("customer_segment")["purchase"].mean() * 100
 print(segment_purchase_rate.round(2))
 
 print("==============================================")
+
+# Graph: Purchase Rate by Previous Purchases
+purchase_rate = df.groupby("previous_purchases")["purchase"].mean() * 100
+
+plt.figure(figsize=(8, 5))
+plt.plot(purchase_rate.index, purchase_rate.values, marker="o")
+plt.title("Purchase Rate by Previous Purchases")
+plt.xlabel("Number of Previous Purchases")
+plt.ylabel("Purchase Rate (%)")
+plt.grid(True)
+plt.tight_layout()
+plt.show()
     
