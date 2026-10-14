@@ -650,4 +650,18 @@ plt.ylabel("Purchase Rate (%)")
 plt.grid(True)
 plt.tight_layout()
 plt.show()
+
+# Business Insights
+print("\n===== CUSTOMER PURCHASE INSIGHTS =====")
+
+high_previous = df[df["previous_purchases"] >= 5]
+low_previous = df[df["previous_purchases"] < 5]
+
+print(f"Customers with 5+ previous purchases: {len(high_previous)}")
+print(f"Purchase rate: {high_previous['purchase'].mean() * 100:.2f}%")
+
+print(f"\nCustomers with fewer than 5 previous purchases: {len(low_previous)}")
+print(f"Purchase rate: {low_previous['purchase'].mean() * 100:.2f}%")
+
+print("======================================")
     
