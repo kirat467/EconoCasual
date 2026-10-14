@@ -664,4 +664,22 @@ print(f"\nCustomers with fewer than 5 previous purchases: {len(low_previous)}")
 print(f"Purchase rate: {low_previous['purchase'].mean() * 100:.2f}%")
 
 print("======================================")
+
+# Purchase Rate by Discount
+print("\n===== DISCOUNT EFFECT ANALYSIS =====")
+
+discount_rate = df.groupby("discount")["purchase"].mean() * 100
+
+print("Purchase rate by discount (%):")
+print(discount_rate.round(2))
+
+plt.figure(figsize=(7, 5))
+plt.bar(discount_rate.index.astype(str), discount_rate.values)
+plt.title("Purchase Rate by Discount")
+plt.xlabel("Discount (0 = No, 1 = Yes)")
+plt.ylabel("Purchase Rate (%)")
+plt.tight_layout()
+plt.show()
+
+print("====================================")
     
