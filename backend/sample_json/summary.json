@@ -1,0 +1,47 @@
+{
+  "n": 5000,
+  "n_treated": 2513,
+  "naive_difference": 0.2607300901416375,
+  "matching_att": 0.11673306772908366,
+  "matching_att_ci95": [
+    0.1015747541391759,
+    0.17341935981637394
+  ],
+  "matched_treated": 2510,
+  "caliper_logit": 0.14856940712500225,
+  "ipw_ate": 0.16158879376481394,
+  "ipw_ate_ci95": [
+    0.13995031834821925,
+    0.18702526517969228
+  ],
+  "balance": [
+    {
+      "covariate": "previous_purchases",
+      "smd_raw": 0.3985,
+      "smd_matched": -0.0007,
+      "smd_ipw": 0.0001,
+      "ok_raw": false,
+      "ok_matched": true,
+      "ok_ipw": true
+    },
+    {
+      "covariate": "engagement",
+      "smd_raw": 0.5571,
+      "smd_matched": 0.0008,
+      "smd_ipw": -0.0039,
+      "ok_raw": false,
+      "ok_matched": true,
+      "ok_ipw": true
+    }
+  ],
+  "balanced_after_matching": true,
+  "balanced_after_ipw": true,
+  "true_effect": 0.15012564172331316,
+  "avg_predicted_ite": 0.1780446191646558,
+  "segment_counts": {
+    "persuadable": 1125,
+    "sure_thing": 253,
+    "lost_cause": 81,
+    "sleeping_dog": 41
+  }
+}
