@@ -1,228 +1,192 @@
+"""Propensity score matching for EconoCausal (Week 2, Member 2).
+
+Goal (from the brief): "balance historical observational data, simulating a
+randomized A/B test without actually running one."
+
+Idea
+  Discounts were not random, so discounted and non-discounted customers differ.
+  The PROPENSITY SCORE e(X) = P(discount | X) summarises how likely each customer
+  was to be discounted. Customers with similar e(X) but different treatment are
+  comparable "as if" randomised, so we match each discounted customer to a
+  non-discounted lookalike and compare outcomes.
+
+Pipeline
+  1. Fit a propensity model (logistic regression on polynomial features).
+  2. Check OVERLAP (common support) and trim customers with no comparable partner.
+  3. Match 1:1 on the logit of the score, with replacement, inside a CALIPER
+     (0.2 x SD of the logit, Austin 2011).
+  4. Check BALANCE with standardized mean differences (SMD) before vs after.
+     |SMD| < 0.1 is the usual "balanced" threshold.
+  5. Estimate the effect on the treated (ATT) and compare it with the truth,
+     which we know because the data is synthetic.
+
+We compare the $10 discount against no discount (rows with a $20 discount are
+left out so that the treatment is binary). Run from the repo root:
+    python backend/propensity.py
 """
-propensity.py - Propensity score matching (PSM) + IPW with balance checks.
-
-EconoCausal, Week 1/2 deliverable: balance historical observational data so it
-behaves like a randomized A/B test, before / alongside Double ML.
-
-Treatment : discount > 0 (binary, configurable)
-Outcome   : purchase (0/1)
-Covariates: previous_purchases, engagement (add more in COVARIATES)
-
-Usage
------
-    python propensity.py                      # synthetic data (known true effect)
-    python propensity.py --data ../data/customers.csv
-"""
-from __future__ import annotations
-
-import argparse
-import json
-from dataclasses import dataclass, asdict
 from pathlib import Path
 
 import numpy as np
 import pandas as pd
 from sklearn.linear_model import LogisticRegression
-from sklearn.preprocessing import StandardScaler
+from sklearn.neighbors import NearestNeighbors
+from sklearn.pipeline import make_pipeline
+from sklearn.preprocessing import PolynomialFeatures, StandardScaler
 
-COVARIATES = ["previous_purchases", "engagement"]
-TREATMENT = "discount"
-OUTCOME = "purchase"
-SMD_THRESHOLD = 0.1  # |standardized mean difference| < 0.1 = well balanced
+ROOT = Path(__file__).resolve().parent.parent
+COVARIATES = ["previous_purchases", "engagement", "price_sensitivity", "age"]
 
 
-# --------------------------------------------------------------------------- #
-# Data
-# --------------------------------------------------------------------------- #
-def make_synthetic(n: int = 5000, true_effect: float = 0.15, seed: int = 0) -> pd.DataFrame:
-    """Confounded synthetic data: engaged / loyal customers are MORE likely to be
-    offered a discount AND more likely to buy, so a naive comparison is biased."""
-    rng = np.random.default_rng(seed)
-    prev = rng.poisson(3, n).astype(float)
-    eng = rng.normal(0, 1, n)
-    p_treat = 1 / (1 + np.exp(-(0.6 * eng + 0.25 * (prev - 3))))
-    t = rng.binomial(1, p_treat)
-    base = 1 / (1 + np.exp(-(-0.3 + 0.9 * eng + 0.2 * (prev - 3))))
-    # heterogeneous effect: low-engagement customers respond most to a discount
-    effect = true_effect * (1 - 0.8 * np.tanh(eng))
-    p_buy = np.clip(base + effect * t, 0, 1)
-    y = rng.binomial(1, p_buy)
-    df = pd.DataFrame(
-        {
-            "customer_id": np.arange(1, n + 1),
-            "previous_purchases": prev,
-            "engagement": eng,
-            "discount": t * 10.0,
-            "purchase": y,
-        }
+def smd(df, col, treated, weights=None, ref_sd=None):
+    """Standardized mean difference (treated minus control).
+
+    `ref_sd` lets us use the same denominator before and after matching, so the
+    two numbers are comparable.
+    """
+    w = np.ones(len(df)) if weights is None else np.asarray(weights, float)
+    t = np.asarray(treated, bool)
+    x = df[col].values.astype(float)
+    mean_t = np.average(x[t], weights=w[t])
+    mean_c = np.average(x[~t], weights=w[~t])
+    if ref_sd is None:
+        ref_sd = np.sqrt((x[t].var(ddof=1) + x[~t].var(ddof=1)) / 2)
+    return (mean_t - mean_c) / ref_sd
+
+
+def fit_propensity(df, treated):
+    model = make_pipeline(
+        StandardScaler(),
+        PolynomialFeatures(2, include_bias=False),
+        StandardScaler(),
+        LogisticRegression(C=1.0, max_iter=2000),
     )
-    df.attrs["true_effect"] = float(effect.mean())  # average true ITE
-    return df
+    model.fit(df[COVARIATES], treated)
+    return np.clip(model.predict_proba(df[COVARIATES])[:, 1], 1e-4, 1 - 1e-4)
 
 
-def load_data(path: str | None) -> pd.DataFrame:
-    if path is None:
-        return make_synthetic()
-    df = pd.read_csv(path)
-    missing = {TREATMENT, OUTCOME, *COVARIATES} - set(df.columns)
-    if missing:
-        raise ValueError(f"CSV is missing columns: {sorted(missing)}")
-    return df
+def match(logit_ps, treated, caliper):
+    """1:1 nearest-neighbour matching with replacement inside a caliper."""
+    t_idx = np.where(treated)[0]
+    c_idx = np.where(~treated)[0]
+    nn = NearestNeighbors(n_neighbors=1).fit(logit_ps[c_idx].reshape(-1, 1))
+    dist, pos = nn.kneighbors(logit_ps[t_idx].reshape(-1, 1))
+    keep = dist[:, 0] <= caliper
+    return t_idx[keep], c_idx[pos[keep, 0]]
 
 
-# --------------------------------------------------------------------------- #
-# Propensity model
-# --------------------------------------------------------------------------- #
-def fit_propensity(df: pd.DataFrame, covariates=COVARIATES) -> np.ndarray:
-    """Return clipped P(treated | X) for every row."""
-    X = StandardScaler().fit_transform(df[covariates].to_numpy(float))
-    t = (df[TREATMENT] > 0).astype(int).to_numpy()
-    model = LogisticRegression(max_iter=1000).fit(X, t)
-    return np.clip(model.predict_proba(X)[:, 1], 1e-3, 1 - 1e-3)
+def main():
+    full = pd.read_csv(ROOT / "data" / "customers_causal.csv")
+    df = full[full.discount.isin([0, 10])].reset_index(drop=True)
+    treated = (df.discount == 10).values
+    y = df.purchase.values.astype(float)
+    print(f"Comparing $10 discount vs none: {treated.sum()} treated, {(~treated).sum()} controls\n")
 
+    # 1-2. propensity score and overlap
+    ps = fit_propensity(df, treated)
+    logit_ps = np.log(ps / (1 - ps))
+    print("Propensity score range:  treated "
+          f"[{ps[treated].min():.2f}, {ps[treated].max():.2f}]  |  controls "
+          f"[{ps[~treated].min():.2f}, {ps[~treated].max():.2f}]")
 
-def _logit(p):
-    return np.log(p / (1 - p))
+    # 3. matching
+    caliper = 0.2 * logit_ps.std()
+    t_idx, c_idx = match(logit_ps, treated, caliper)
+    dropped = treated.sum() - len(t_idx)
+    print(f"Matched {len(t_idx)} of {treated.sum()} treated customers "
+          f"(dropped {dropped} outside the caliper); "
+          f"{len(np.unique(c_idx))} distinct controls used\n")
 
-
-# --------------------------------------------------------------------------- #
-# Balance diagnostics
-# --------------------------------------------------------------------------- #
-def smd(x: np.ndarray, t: np.ndarray, w: np.ndarray | None = None) -> float:
-    """Standardized mean difference (weighted if w given)."""
-    w = np.ones_like(x, dtype=float) if w is None else w
-    m1 = np.average(x[t == 1], weights=w[t == 1])
-    m0 = np.average(x[t == 0], weights=w[t == 0])
-    v1 = np.average((x[t == 1] - m1) ** 2, weights=w[t == 1])
-    v0 = np.average((x[t == 0] - m0) ** 2, weights=w[t == 0])
-    pooled = np.sqrt((v1 + v0) / 2)
-    return float((m1 - m0) / pooled) if pooled > 0 else 0.0
-
-
-def balance_table(df, t, w_match=None, w_ipw=None, covariates=COVARIATES) -> pd.DataFrame:
-    rows = []
-    for c in covariates:
-        x = df[c].to_numpy(float)
-        row = {"covariate": c, "smd_raw": smd(x, t)}
-        if w_match is not None:
-            row["smd_matched"] = smd(x, t, w_match)
-        if w_ipw is not None:
-            row["smd_ipw"] = smd(x, t, w_ipw)
-        rows.append(row)
-    out = pd.DataFrame(rows)
-    for col in [c for c in out.columns if c.startswith("smd_")]:
-        out[col.replace("smd_", "ok_")] = out[col].abs() < SMD_THRESHOLD
-    return out
-
-
-# --------------------------------------------------------------------------- #
-# Matching (1:1 nearest neighbour on logit PS, caliper, with replacement) -> ATT
-# --------------------------------------------------------------------------- #
-@dataclass
-class MatchResult:
-    att: float
-    n_treated: int
-    n_matched: int
-    caliper: float
-    weights: np.ndarray  # frequency weights of each row in the matched sample
-
-
-def match_att(df: pd.DataFrame, ps: np.ndarray, caliper_sd: float = 0.2) -> MatchResult:
-    t = (df[TREATMENT] > 0).to_numpy()
-    y = df[OUTCOME].to_numpy(float)
-    lp = _logit(ps)
-    caliper = caliper_sd * lp.std()
-
-    treated_idx = np.where(t)[0]
-    control_idx = np.where(~t)[0]
-    order = np.argsort(lp[control_idx])
-    c_sorted_lp = lp[control_idx][order]
-    c_sorted_idx = control_idx[order]
-
+    # 4. balance, measured with the SAME reference SD before and after
     weights = np.zeros(len(df))
-    diffs = []
-    for i in treated_idx:
-        pos = np.searchsorted(c_sorted_lp, lp[i])
-        cands = [p for p in (pos - 1, pos) if 0 <= p < len(c_sorted_lp)]
-        best = min(cands, key=lambda p: abs(c_sorted_lp[p] - lp[i]))
-        if abs(c_sorted_lp[best] - lp[i]) <= caliper:
-            j = c_sorted_idx[best]
-            diffs.append(y[i] - y[j])
-            weights[i] += 1
-            weights[j] += 1
-    att = float(np.mean(diffs)) if diffs else float("nan")
-    return MatchResult(att, len(treated_idx), len(diffs), float(caliper), weights)
+    np.add.at(weights, c_idx, 1.0)       # controls: how many times each was used
+    weights[t_idx] = 1.0                 # matched treated units
+    in_sample = weights > 0
+    rows = []
+    for col in COVARIATES:
+        ref_sd = np.sqrt((df.loc[treated, col].var(ddof=1) + df.loc[~treated, col].var(ddof=1)) / 2)
+        before = smd(df, col, treated, ref_sd=ref_sd)
+        after = smd(df[in_sample], col, treated[in_sample], weights[in_sample], ref_sd=ref_sd)
+        rows.append({"covariate": col, "SMD before": before, "SMD after": after})
+    balance = pd.DataFrame(rows).set_index("covariate").round(3)
+    balance["balanced (<0.1)?"] = np.where(balance["SMD after"].abs() < 0.1, "yes", "NO")
+    print("Covariate balance (standardized mean difference, treated - control):")
+    print(balance.to_string(), "\n")
 
+    # 5. effect on the treated (ATT)
+    pair_diff = y[t_idx] - y[c_idx]
+    att = pair_diff.mean()
+    rng = np.random.default_rng(0)
+    boots = [rng.choice(pair_diff, len(pair_diff)).mean() for _ in range(1000)]
+    lo, hi = np.percentile(boots, [2.5, 97.5])
+    naive = y[treated].mean() - y[~treated].mean()
+    true_att = df.loc[t_idx, "true_ite_10"].mean()
+    true_att_all = df.loc[treated, "true_ite_10"].mean()
 
-# --------------------------------------------------------------------------- #
-# IPW (stabilized, trimmed) -> ATE
-# --------------------------------------------------------------------------- #
-def ipw_ate(df: pd.DataFrame, ps: np.ndarray, trim=(0.02, 0.98)):
-    t = (df[TREATMENT] > 0).to_numpy().astype(int)
-    y = df[OUTCOME].to_numpy(float)
-    keep = (ps > trim[0]) & (ps < trim[1])
-    w = np.where(t == 1, t.mean() / ps, (1 - t.mean()) / (1 - ps)) * keep
-    mu1 = np.sum(w[t == 1] * y[t == 1]) / np.sum(w[t == 1])
-    mu0 = np.sum(w[t == 0] * y[t == 0]) / np.sum(w[t == 0])
-    return float(mu1 - mu0), w
+    # IPW (ATT weights) as a cross-check: controls weighted by e/(1-e)
+    ipw_w = np.where(treated, 1.0, ps / (1 - ps))
+    ipw_att = np.average(y[treated]) - np.average(y[~treated], weights=ipw_w[~treated])
 
+    result = pd.DataFrame({
+        "estimate": [naive, att, ipw_att, true_att],
+    }, index=["Naive difference", "Matched ATT", "IPW ATT (cross-check)",
+              "TRUE ATT (matched treated)"]).round(3)
+    print("Effect of a $10 discount on purchase probability, for discounted customers:")
+    print(result.to_string())
+    print(f"\nPair-bootstrap interval for matched ATT: [{lo:+.3f}, {hi:+.3f}]  "
+          "(ignores uncertainty from fitting the propensity model)")
+    print(f"True ATT over ALL treated customers: {true_att_all:+.3f}")
 
-# --------------------------------------------------------------------------- #
-# Full-pipeline bootstrap (re-fits the PS model inside every resample)
-# --------------------------------------------------------------------------- #
-def bootstrap(df: pd.DataFrame, n_boot: int = 200, seed: int = 0):
-    rng = np.random.default_rng(seed)
-    att, ate = [], []
-    for _ in range(n_boot):
-        s = df.iloc[rng.integers(0, len(df), len(df))].reset_index(drop=True)
-        ps = fit_propensity(s)
-        att.append(match_att(s, ps).att)
-        ate.append(ipw_ate(s, ps)[0])
-    ci = lambda a: [float(np.nanpercentile(a, 2.5)), float(np.nanpercentile(a, 97.5))]
-    return {"att_ci95": ci(att), "ipw_ate_ci95": ci(ate)}
+    # Honest uncertainty: bootstrap the WHOLE pipeline (refit propensity, rematch,
+    # reweight) on resampled customers.
+    def pipeline(sample):
+        t = (sample.discount == 10).values
+        yy = sample.purchase.values.astype(float)
+        e = fit_propensity(sample, t)
+        lg = np.log(e / (1 - e))
+        ti, ci = match(lg, t, 0.2 * lg.std())
+        w = np.where(t, 1.0, e / (1 - e))
+        return (yy[ti] - yy[ci]).mean(), yy[t].mean() - np.average(yy[~t], weights=w[~t])
 
+    n_boot = 200
+    brng = np.random.default_rng(1)
+    boot = np.array([pipeline(df.iloc[brng.integers(0, len(df), len(df))]) for _ in range(n_boot)])
+    print(f"\nFull-pipeline bootstrap ({n_boot} resamples):")
+    for name, col in [("Matched ATT", 0), ("IPW ATT", 1)]:
+        l, h = np.percentile(boot[:, col], [2.5, 97.5])
+        print(f"  {name:12s} SE = {boot[:, col].std():.3f}   95% interval [{l:+.3f}, {h:+.3f}]   "
+              f"covers true ATT ({true_att_all:+.3f}): {l <= true_att_all <= h}")
 
-# --------------------------------------------------------------------------- #
-# Orchestration
-# --------------------------------------------------------------------------- #
-def run(df: pd.DataFrame, n_boot: int = 200) -> dict:
-    t = (df[TREATMENT] > 0).to_numpy().astype(int)
-    y = df[OUTCOME].to_numpy(float)
-    naive = float(y[t == 1].mean() - y[t == 0].mean())
+    # Figures for the report / viva (skipped quietly if matplotlib is missing)
+    try:
+        import matplotlib
+        matplotlib.use("Agg")
+        import matplotlib.pyplot as plt
 
-    ps = fit_propensity(df)
-    m = match_att(df, ps)
-    ate, w_ipw = ipw_ate(df, ps)
-    bal = balance_table(df, t, w_match=m.weights, w_ipw=w_ipw)
-    ci = bootstrap(df, n_boot=n_boot)
+        fig_dir = ROOT / "backend" / "figures"
+        fig_dir.mkdir(exist_ok=True)
 
-    result = {
-        "n": int(len(df)),
-        "n_treated": int(t.sum()),
-        "naive_difference": naive,
-        "matching_att": m.att,
-        "matching_att_ci95": ci["att_ci95"],
-        "matched_treated": m.n_matched,
-        "caliper_logit": m.caliper,
-        "ipw_ate": ate,
-        "ipw_ate_ci95": ci["ipw_ate_ci95"],
-        "balance": bal.round(4).to_dict(orient="records"),
-        "balanced_after_matching": bool(bal["ok_matched"].all()),
-        "balanced_after_ipw": bool(bal["ok_ipw"].all()),
-    }
-    if "true_effect" in df.attrs:
-        result["true_effect"] = df.attrs["true_effect"]
-    return result
+        fig, ax = plt.subplots(figsize=(6, 3.5))
+        ax.hist(ps[treated], bins=30, alpha=0.6, label="discounted ($10)", density=True)
+        ax.hist(ps[~treated], bins=30, alpha=0.6, label="no discount", density=True)
+        ax.set_xlabel("propensity score"); ax.set_ylabel("density")
+        ax.set_title("Overlap of propensity scores"); ax.legend()
+        fig.tight_layout(); fig.savefig(fig_dir / "propensity_overlap.png", dpi=150); plt.close(fig)
+
+        fig, ax = plt.subplots(figsize=(6, 3.2))
+        y_pos = np.arange(len(balance))
+        ax.scatter(balance["SMD before"], y_pos, label="before matching", marker="o")
+        ax.scatter(balance["SMD after"], y_pos, label="after matching", marker="s")
+        ax.axvline(0, color="grey", lw=0.8)
+        for v in (-0.1, 0.1):
+            ax.axvline(v, color="red", ls="--", lw=0.8)
+        ax.set_yticks(y_pos); ax.set_yticklabels(balance.index)
+        ax.set_xlabel("standardized mean difference"); ax.set_title("Covariate balance")
+        ax.legend(); fig.tight_layout()
+        fig.savefig(fig_dir / "balance_love_plot.png", dpi=150); plt.close(fig)
+        print("\nSaved figures to backend/figures/")
+    except Exception as exc:
+        print("\nFigures skipped:", exc)
 
 
 if __name__ == "__main__":
-    ap = argparse.ArgumentParser()
-    ap.add_argument("--data", default=None, help="CSV path; omit for synthetic data")
-    ap.add_argument("--boot", type=int, default=200)
-    ap.add_argument("--out", default=None, help="optional JSON output path")
-    a = ap.parse_args()
-
-    res = run(load_data(a.data), n_boot=a.boot)
-    print(json.dumps(res, indent=2))
-    if a.out:
-        Path(a.out).write_text(json.dumps(res, indent=2))
+    main()
