@@ -629,4 +629,13 @@ print("\nDataset Shape:")
 print(df.shape)
 
 print("==============================")
+
+# Purchase Rate by Customer Segment
+print("\n===== PURCHASE RATE BY CUSTOMER SEGMENT =====")
+
+segment_purchase_rate = df.groupby("customer_segment")["purchase"].mean() * 100
+
+print(segment_purchase_rate.round(2))
+
+print("==============================================")
     
