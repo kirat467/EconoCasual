@@ -682,4 +682,21 @@ plt.tight_layout()
 plt.show()
 
 print("====================================")
+
+# Purchase Rate by Engagement
+print("\n===== ENGAGEMENT ANALYSIS =====")
+
+engagement_rate = df.groupby("engagement")["purchase"].mean() * 100
+print(engagement_rate.round(2))
+
+plt.figure(figsize=(8, 5))
+plt.plot(engagement_rate.index, engagement_rate.values, marker="o")
+plt.title("Purchase Rate by Customer Engagement")
+plt.xlabel("Engagement Level")
+plt.ylabel("Purchase Rate (%)")
+plt.grid(True)
+plt.tight_layout()
+plt.show()
+
+print("================================")
     
