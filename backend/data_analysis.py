@@ -615,4 +615,18 @@ print(f"Invalid Previous Purchase Values: {invalid_previous}")
 
 print("\nData validation completed!")
 print("==============================================")
+
+# Data Quality Check
+print("\n===== DATA QUALITY CHECK =====")
+
+print("\nMissing Values:")
+print(df.isnull().sum())
+
+print("\nDuplicate Customer IDs:")
+print(df["customer_id"].duplicated().sum())
+
+print("\nDataset Shape:")
+print(df.shape)
+
+print("==============================")
     
