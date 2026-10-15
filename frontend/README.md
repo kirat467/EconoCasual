@@ -16,6 +16,9 @@ Open `index.html` in a browser. There are no dependencies: charts are plain DOM 
 - Purchase rate by engagement score, split by discount, with customer counts so thin data is visible. Works with the keyboard (arrow keys) and redraws at the real screen width
 - Discount comparison with a 95% range, so a small gap is not mistaken for a real pattern, plus the gap within similar engagement bands
 - "Try a customer": sliders for engagement, past purchases and discount give an estimated chance of purchase from a logistic regression fitted in the browser (trained on 800 records, checked on 200 unseen ones, compared with a simple guess), plus what similar real customers did
+- Model check: accuracy, a simple-guess baseline and AUC, all measured on the 200 unseen records
+- Shareable views: the group, outcome filter, search, sort and predictor values are stored in the page address, and "Copy link to this view" returns to the same state
+- Click any customer ID in the table to load that customer into "Try a customer"
 - Purchase rate by past purchases, a plain-language readout that changes with the data, a sortable and searchable table, and CSV export
 
 ## Data
@@ -23,3 +26,8 @@ Open `index.html` in a browser. There are no dependencies: charts are plain DOM 
 
 ## Limitation
 All comparisons are descriptive. Customers were not randomly assigned discounts, so the dashboard does not claim that a discount caused a purchase. The purchase estimate is a small in-browser model on synthetic data, so treat it as a demonstration; a backend model is future work.
+
+## Roadmap
+- CSV upload with column checks
+- Interaction term (engagement x discount) and adjusted-effect model
+- Dark mode, self-hosted fonts, unit tests for the statistics
