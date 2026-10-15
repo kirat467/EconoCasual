@@ -731,6 +731,29 @@ print(f"Overall Purchase Rate: {purchase_rate:.2f}%")
 
 print("==========================================")
 
+# Purchase Rate by Engagement Level
+print("\n===== PURCHASE RATE BY ENGAGEMENT =====")
+
+engagement_purchase_rate = df.groupby("engagement")["purchase"].mean() * 100
+
+print(engagement_purchase_rate.round(2))
+
+import matplotlib.pyplot as plt
+
+plt.figure(figsize=(8, 5))
+plt.plot(
+    engagement_purchase_rate.index,
+    engagement_purchase_rate.values,
+    marker="o"
+)
+plt.title("Purchase Rate by Customer Engagement")
+plt.xlabel("Engagement Level")
+plt.ylabel("Purchase Rate (%)")
+plt.xticks(range(1, 11))
+plt.grid(True)
+plt.tight_layout()
+plt.show()
+
 
 
 
