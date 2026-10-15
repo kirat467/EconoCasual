@@ -227,17 +227,27 @@ Data quality checks were performed to verify the reliability of the customer dat
 
 These checks help ensure that the dataset is suitable for the project's initial analysis.
 
-Limitations of Current Analysis
+## Limitations of Current Analysis
 
 - The analysis uses a synthetic customer dataset and may not represent real customer behavior.
 - Correlation indicates association and does not prove causation.
 - Purchase-rate comparisons describe observed patterns and do not guarantee future purchases.
 - Further testing on real-world data is required before applying these findings in business decisions.
 
-Future Improvements
+## Future Improvements
 
 - Evaluate the analysis using real-world customer data when available.
 - Improve purchase prediction by evaluating the machine learning models developed by the team.
 - Compare model performance using suitable evaluation metrics.
 - Explore customer engagement and previous purchase patterns to improve customer targeting.
 - Integrate the analysis results with the project dashboard for easier interpretation.
+
+## Key Business Recommendations
+
+- Give attention to customers with low engagement and fewer previous purchases.
+- Use previous purchase history to understand customer purchasing patterns.
+- Monitor engagement levels to identify differences in observed purchase rates.
+- Evaluate discount strategies using further data before making business decisions.
+- Validate future purchase predictions using the team's machine learning models.
+
+These recommendations are preliminary and should be validated with additional data and model evaluation.
