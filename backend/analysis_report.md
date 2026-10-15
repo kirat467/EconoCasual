@@ -251,3 +251,14 @@ These checks help ensure that the dataset is suitable for the project's initial 
 - Validate future purchase predictions using the team's machine learning models.
 
 These recommendations are preliminary and should be validated with additional data and model evaluation.
+
+## Customer Purchase Rate Summary
+
+The customer purchase analysis examines the relationship between previous purchases, customer engagement, and discounts.
+
+- Total customers: Check the actual dataset.
+- Total purchases: Check the analysis output.
+- Overall purchase rate: Check the analysis output.
+- Customer engagement and previous purchase history are analyzed to understand purchasing behavior.
+
+These findings can help identify customer groups for further analysis. The results describe observed patterns and do not establish causation.
