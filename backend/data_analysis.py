@@ -769,6 +769,26 @@ print(f"Average Previous Purchases (Non-Buyers): {non_buyers['previous_purchases
 print(f"Average Engagement (Buyers): {buyers['engagement'].mean():.2f}")
 print(f"Average Engagement (Non-Buyers): {non_buyers['engagement'].mean():.2f}")
 
+# Purchase Rate by Discount
+print("\n===== PURCHASE RATE BY DISCOUNT =====")
+
+discount_purchase_rate = df.groupby("discount")["purchase"].mean() * 100
+
+print(discount_purchase_rate.round(2))
+
+import matplotlib.pyplot as plt
+
+plt.figure(figsize=(7, 5))
+plt.bar(
+    discount_purchase_rate.index.astype(str),
+    discount_purchase_rate.values
+)
+plt.title("Purchase Rate by Discount")
+plt.xlabel("Discount (0 = No, 1 = Yes)")
+plt.ylabel("Purchase Rate (%)")
+plt.tight_layout()
+plt.show()
+
 
 
 
