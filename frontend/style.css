@@ -343,3 +343,14 @@ td.id { font-weight: 600; }
   html { scroll-behavior: auto; }
   *, *::before, *::after { transition: none !important; animation: none !important; }
 }
+
+/* ---------- Additions: header actions, row links, print ---------- */
+.actions { display: flex; gap: 8px; align-items: center; }
+.row-load { background: none; border: 0; padding: 0; font: inherit; font-weight: inherit; color: inherit; text-decoration: underline dotted; text-underline-offset: 3px; }
+.row-load:hover { color: var(--teal); text-decoration-style: solid; }
+@media (max-width: 720px) { #share { display: none; } }
+@media print {
+  .site-header, .segments, .filters, .pager, #toast, .pred-actions { display: none !important; }
+  body { background: #fff; }
+  .table-scroll { overflow: visible; }
+}
