@@ -754,6 +754,21 @@ plt.grid(True)
 plt.tight_layout()
 plt.show()
 
+# Compare Buyers and Non-Buyers
+print("\n===== BUYER VS NON-BUYER COMPARISON =====")
+
+buyers = df[df["purchase"] == 1]
+non_buyers = df[df["purchase"] == 0]
+
+print(f"Total Buyers: {len(buyers)}")
+print(f"Total Non-Buyers: {len(non_buyers)}")
+
+print(f"Average Previous Purchases (Buyers): {buyers['previous_purchases'].mean():.2f}")
+print(f"Average Previous Purchases (Non-Buyers): {non_buyers['previous_purchases'].mean():.2f}")
+
+print(f"Average Engagement (Buyers): {buyers['engagement'].mean():.2f}")
+print(f"Average Engagement (Non-Buyers): {non_buyers['engagement'].mean():.2f}")
+
 
 
 
