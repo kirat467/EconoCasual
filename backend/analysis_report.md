@@ -233,3 +233,11 @@ Limitations of Current Analysis
 - Correlation indicates association and does not prove causation.
 - Purchase-rate comparisons describe observed patterns and do not guarantee future purchases.
 - Further testing on real-world data is required before applying these findings in business decisions.
+
+Future Improvements
+
+- Evaluate the analysis using real-world customer data when available.
+- Improve purchase prediction by evaluating the machine learning models developed by the team.
+- Compare model performance using suitable evaluation metrics.
+- Explore customer engagement and previous purchase patterns to improve customer targeting.
+- Integrate the analysis results with the project dashboard for easier interpretation.
