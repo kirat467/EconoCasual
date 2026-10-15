@@ -717,4 +717,24 @@ plt.show()
 
 print("================================")
 
+# Customer Purchase Rate Summary
+print("\n===== CUSTOMER PURCHASE RATE SUMMARY =====")
+
+total_customers = len(df)
+total_purchases = df["purchase"].sum()
+purchase_rate = df["purchase"].mean() * 100
+
+print(f"Total Customers: {total_customers}")
+print(f"Total Purchases: {total_purchases}")
+print(f"Total Non-Purchases: {total_customers - total_purchases}")
+print(f"Overall Purchase Rate: {purchase_rate:.2f}%")
+
+print("==========================================")
+
+
+
+
+
+
+
     
