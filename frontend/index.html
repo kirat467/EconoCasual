@@ -5,6 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>EconoCasual: customer intelligence</title>
   <meta name="description" content="Explore who buys, how engaged customers are, and how discounts line up with purchases.">
+  <meta name="theme-color" content="#0a6b5f">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="EconoCasual: customer intelligence">
+  <meta property="og:description" content="Explore who buys, how engaged customers are, and how discounts line up with purchases.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cg fill='%230a6b5f'%3E%3Crect x='2' y='12' width='5' height='10' rx='1.5'/%3E%3Crect x='9.5' y='6' width='5' height='16' rx='1.5'/%3E%3Crect x='17' y='2' width='5' height='20' rx='1.5'/%3E%3C/g%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
@@ -28,7 +33,10 @@
       <a href="#predict">Try a customer</a>
       <a href="#customers">Customer records</a>
     </nav>
-    <button class="btn" id="export" type="button">Export CSV</button>
+    <div class="actions">
+      <button class="btn-ghost" id="share" type="button">Copy link to this view</button>
+      <button class="btn" id="export" type="button">Export CSV</button>
+    </div>
   </div>
 </header>
 
@@ -149,7 +157,7 @@
     <div class="rec-head">
       <div class="sec-head">
         <h2 id="rec-title">Customer records</h2>
-        <p>Search by ID, filter by outcome, and click a column to sort. Records follow the group chosen at the top.</p>
+        <p>Search by ID, filter by outcome, and click a column to sort, and click a customer ID to try that customer in the predictor. Records follow the group chosen at the top.</p>
       </div>
       <div class="filters">
         <label class="sr-only" for="search">Search customer ID</label>
