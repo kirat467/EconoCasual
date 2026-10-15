@@ -215,3 +215,21 @@ The checks include:
 These checks help identify potential data quality issues before performing further analysis or training machine learning models.
 
 The validation process checks the data without modifying the original dataset.
+
+10. Data Quality Validation
+
+Data quality checks were performed to verify the reliability of the customer dataset.
+
+- Missing Values: Checked all columns for missing data.
+- Duplicate Customer IDs: Checked for repeated customer IDs.
+- Dataset Shape: Verified the number of rows and columns.
+- Validation: The dataset was reviewed before using it for customer behavior analysis.
+
+These checks help ensure that the dataset is suitable for the project's initial analysis.
+
+Limitations of Current Analysis
+
+- The analysis uses a synthetic customer dataset and may not represent real customer behavior.
+- Correlation indicates association and does not prove causation.
+- Purchase-rate comparisons describe observed patterns and do not guarantee future purchases.
+- Further testing on real-world data is required before applying these findings in business decisions.

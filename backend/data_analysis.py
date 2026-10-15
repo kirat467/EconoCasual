@@ -629,4 +629,92 @@ print("\nDataset Shape:")
 print(df.shape)
 
 print("==============================")
+
+# Purchase Rate by Customer Segment
+print("\n===== PURCHASE RATE BY CUSTOMER SEGMENT =====")
+
+segment_purchase_rate = df.groupby("customer_segment")["purchase"].mean() * 100
+
+print(segment_purchase_rate.round(2))
+
+print("==============================================")
+
+# Graph: Purchase Rate by Previous Purchases
+purchase_rate = df.groupby("previous_purchases")["purchase"].mean() * 100
+
+plt.figure(figsize=(8, 5))
+plt.plot(purchase_rate.index, purchase_rate.values, marker="o")
+plt.title("Purchase Rate by Previous Purchases")
+plt.xlabel("Number of Previous Purchases")
+plt.ylabel("Purchase Rate (%)")
+plt.grid(True)
+plt.tight_layout()
+plt.show()
+
+# Business Insights
+print("\n===== CUSTOMER PURCHASE INSIGHTS =====")
+
+high_previous = df[df["previous_purchases"] >= 5]
+low_previous = df[df["previous_purchases"] < 5]
+
+print(f"Customers with 5+ previous purchases: {len(high_previous)}")
+print(f"Purchase rate: {high_previous['purchase'].mean() * 100:.2f}%")
+
+print(f"\nCustomers with fewer than 5 previous purchases: {len(low_previous)}")
+print(f"Purchase rate: {low_previous['purchase'].mean() * 100:.2f}%")
+
+print("======================================")
+
+# Purchase Rate by Discount
+print("\n===== DISCOUNT EFFECT ANALYSIS =====")
+
+discount_rate = df.groupby("discount")["purchase"].mean() * 100
+
+print("Purchase rate by discount (%):")
+print(discount_rate.round(2))
+
+plt.figure(figsize=(7, 5))
+plt.bar(discount_rate.index.astype(str), discount_rate.values)
+plt.title("Purchase Rate by Discount")
+plt.xlabel("Discount (0 = No, 1 = Yes)")
+plt.ylabel("Purchase Rate (%)")
+plt.tight_layout()
+plt.show()
+
+print("====================================")
+
+# Purchase Rate by Engagement
+print("\n===== ENGAGEMENT ANALYSIS =====")
+
+engagement_rate = df.groupby("engagement")["purchase"].mean() * 100
+print(engagement_rate.round(2))
+
+plt.figure(figsize=(8, 5))
+plt.plot(engagement_rate.index, engagement_rate.values, marker="o")
+plt.title("Purchase Rate by Customer Engagement")
+plt.xlabel("Engagement Level")
+plt.ylabel("Purchase Rate (%)")
+plt.grid(True)
+plt.tight_layout()
+plt.show()
+
+print("================================")
+
+# Purchase Rate by Engagement
+print("\n===== ENGAGEMENT ANALYSIS =====")
+
+engagement_rate = df.groupby("engagement")["purchase"].mean() * 100
+print(engagement_rate.round(2))
+
+plt.figure(figsize=(8, 5))
+plt.plot(engagement_rate.index, engagement_rate.values, marker="o")
+plt.title("Purchase Rate by Customer Engagement")
+plt.xlabel("Engagement Level")
+plt.ylabel("Purchase Rate (%)")
+plt.grid(True)
+plt.tight_layout()
+plt.show()
+
+print("================================")
+
     
