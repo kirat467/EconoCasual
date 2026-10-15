@@ -226,3 +226,10 @@ Data quality checks were performed to verify the reliability of the customer dat
 - Validation: The dataset was reviewed before using it for customer behavior analysis.
 
 These checks help ensure that the dataset is suitable for the project's initial analysis.
+
+Limitations of Current Analysis
+
+- The analysis uses a synthetic customer dataset and may not represent real customer behavior.
+- Correlation indicates association and does not prove causation.
+- Purchase-rate comparisons describe observed patterns and do not guarantee future purchases.
+- Further testing on real-world data is required before applying these findings in business decisions.
