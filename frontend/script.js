@@ -393,7 +393,7 @@
     const slice = rows.slice(start, start + state.size);
 
     $("rows").innerHTML = slice.map((c) =>
-      `<tr><td class="id">${idLabel(c)}</td>` +
+      `<tr><td class="id"><button type="button" class="row-load" data-id="${c.customer_id}" title="Try this customer in the predictor">${idLabel(c)}</button></td>` +
       `<td class="num">${c.previous_purchases}</td>` +
       `<td><span class="meter"><span>${c.engagement}/10</span><i style="--v:${c.engagement}"></i></span></td>` +
       `<td>${c.discount ? '<span class="tag offer">Offered</span>' : '<span class="tag no">Not offered</span>'}</td>` +
@@ -404,6 +404,7 @@
       ? `Showing ${start + 1}–${Math.min(start + state.size, rows.length)} of ${plural(rows.length, "customer")}`
       : "No customers found";
     $("pageText").textContent = `${state.page} / ${pages}`;
+    syncUrl();
     $("prev").disabled = state.page <= 1;
     $("next").disabled = state.page >= pages;
 
@@ -461,7 +462,13 @@
     const predict = (e, p, d) => sig(dot(w, feat(e, p, d)));
     const right = test.filter((c) => (predict(c.engagement, c.previous_purchases, c.discount) >= 0.5 ? 1 : 0) === c.purchase).length;
     const bought = test.filter((c) => c.purchase === 1).length;
-    return { predict, accuracy: right / test.length, baseline: Math.max(bought, test.length - bought) / test.length, tested: test.length };
+    // AUC: chance that a random buyer is scored above a random non-buyer (0.5 = coin flip)
+    const sc = (c) => predict(c.engagement, c.previous_purchases, c.discount);
+    const pos = test.filter((c) => c.purchase === 1).map(sc), neg = test.filter((c) => c.purchase === 0).map(sc);
+    let wins = 0;
+    pos.forEach((a) => neg.forEach((b) => { wins += a > b ? 1 : a === b ? 0.5 : 0; }));
+    const auc = pos.length && neg.length ? wins / (pos.length * neg.length) : null;
+    return { predict, auc, accuracy: right / test.length, baseline: Math.max(bought, test.length - bought) / test.length, tested: test.length };
   })();
 
   const avgRate = rate(customers);
@@ -487,7 +494,9 @@
       }
     }
     $("pSimilar").textContent = text;
-    $("pModel").textContent = `Checked on ${fmt(model.tested)} customers the model never saw, it called the outcome right ${pct(model.accuracy)} of the time. Always guessing the more common outcome would be right ${pct(model.baseline)}.`;
+    $("pModel").textContent = `Checked on ${fmt(model.tested)} customers the model never saw, it called the outcome right ${pct(model.accuracy)} of the time. Always guessing the more common outcome would be right ${pct(model.baseline)}.` +
+      (model.auc == null ? "" : ` Its AUC is ${model.auc.toFixed(2)} (0.50 is a coin flip, 1.00 is perfect).`);
+    syncUrl();
   }
   const clearActual = () => { $("pActual").hidden = true; };
   [els.eng, els.prev, els.disc].forEach((el) => el.addEventListener("input", () => { clearActual(); renderPredict(); }));
@@ -496,13 +505,46 @@
     els.prev.value = Math.round(customers.reduce((a, c) => a + c.previous_purchases, 0) / customers.length);
     els.disc.checked = false; clearActual(); renderPredict();
   });
-  $("pLoad").addEventListener("click", () => {
-    const c = customers[Math.floor(Math.random() * customers.length)];
+  function loadCustomer(c) {
     els.eng.value = c.engagement; els.prev.value = c.previous_purchases; els.disc.checked = c.discount === 1;
     renderPredict();
     $("pActual").hidden = false;
     $("pActual").textContent = `${idLabel(c)} is a real record: this customer ${c.purchase ? "bought" : "did not buy"}. The model said ${pct(model.predict(c.engagement, c.previous_purchases, c.discount))}.`;
-  });
+  }
+  $("pLoad").addEventListener("click", () => loadCustomer(customers[Math.floor(Math.random() * customers.length)]));
+
+  /* ---------- Shareable view: state lives in the query string ---------- */
+  const DEFAULTS = { eng: 5, prev: 3 };
+  function syncUrl() {
+    const q = new URLSearchParams();
+    if (state.seg !== "all") q.set("seg", state.seg);
+    if (state.outcome !== "all") q.set("out", state.outcome);
+    if (state.search) q.set("q", state.search);
+    if (state.sort !== "customer_id" || state.dir !== 1) { q.set("sort", state.sort); q.set("dir", state.dir === 1 ? "asc" : "desc"); }
+    if (Number(els.eng.value) !== DEFAULTS.eng) q.set("e", els.eng.value);
+    if (Number(els.prev.value) !== DEFAULTS.prev) q.set("p", els.prev.value);
+    if (els.disc.checked) q.set("d", "1");
+    const qs = q.toString();
+    try { history.replaceState(null, "", location.pathname + (qs ? "?" + qs : "") + location.hash); } catch (e) { /* file:// may block this */ }
+  }
+  (function readUrl() {
+    const q = new URLSearchParams(location.search);
+    const int = (k, lo, hi) => { const v = Number(q.get(k)); return q.has(k) && Number.isInteger(v) && v >= lo && v <= hi ? v : null; };
+    if (Object.prototype.hasOwnProperty.call(SEGMENTS, q.get("seg"))) state.seg = q.get("seg");
+    if (["0", "1"].includes(q.get("out"))) state.outcome = q.get("out");
+    if (q.get("q")) state.search = q.get("q").replace(/\D/g, "").slice(0, 4);
+    if (["customer_id", "previous_purchases", "engagement", "discount", "purchase"].includes(q.get("sort"))) {
+      state.sort = q.get("sort"); state.dir = q.get("dir") === "desc" ? -1 : 1;
+    }
+    const e = int("e", 0, 10), p = int("p", 0, 10);
+    if (e !== null) els.eng.value = e;
+    if (p !== null) els.prev.value = p;
+    els.disc.checked = q.get("d") === "1";
+    document.querySelectorAll(".seg").forEach((s) => {
+      const on = s.dataset.seg === state.seg; s.classList.toggle("is-on", on); s.setAttribute("aria-pressed", String(on));
+    });
+    $("search").value = state.search; $("purchaseFilter").value = state.outcome;
+  })();
   renderPredict();
 
   /* ---------- Wiring ---------- */
@@ -516,6 +558,7 @@
       });
       hideDotTip();
       renderAll();
+      syncUrl();
     });
   });
 
@@ -524,6 +567,18 @@
   $("prev").addEventListener("click", () => { state.page--; renderTable(); });
   $("next").addEventListener("click", () => { state.page++; renderTable(); });
   $("export").addEventListener("click", exportCsv);
+  $("rows").addEventListener("click", (ev) => {
+    const b = ev.target.closest(".row-load");
+    if (!b) return;
+    loadCustomer(customers[Number(b.dataset.id) - 1]);
+    const calm = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+    $("predict").scrollIntoView({ behavior: calm ? "auto" : "smooth" });
+  });
+  $("share").addEventListener("click", async () => {
+    syncUrl();
+    try { await navigator.clipboard.writeText(location.href); toast("Link copied. It opens this same view."); }
+    catch (e) { toast("Copy this address from the browser bar to share the view."); }
+  });
   document.querySelectorAll("th button").forEach((b) =>
     b.addEventListener("click", () => {
       const k = b.dataset.sort;
