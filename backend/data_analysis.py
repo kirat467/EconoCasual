@@ -789,6 +789,37 @@ plt.ylabel("Purchase Rate (%)")
 plt.tight_layout()
 plt.show()
 
+# Purchase Rate by Customer Segment
+print("\n===== PURCHASE RATE BY CUSTOMER SEGMENT =====")
+
+df["customer_segment"] = df.apply(
+    lambda row: (
+        "Loyal Customers"
+        if row["previous_purchases"] >= 7
+        else "Highly Engaged Customers"
+        if row["engagement"] >= 8
+        else "Other Customers"
+    ),
+    axis=1
+)
+
+segment_purchase_rate = (
+    df.groupby("customer_segment")["purchase"].mean() * 100
+)
+
+print(segment_purchase_rate.round(2))
+
+import matplotlib.pyplot as plt
+
+plt.figure(figsize=(8, 5))
+plt.bar(segment_purchase_rate.index, segment_purchase_rate.values)
+plt.title("Purchase Rate by Customer Segment")
+plt.xlabel("Customer Segment")
+plt.ylabel("Purchase Rate (%)")
+plt.xticks(rotation=15)
+plt.tight_layout()
+plt.show()
+
 
 
 
