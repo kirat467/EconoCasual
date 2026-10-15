@@ -820,6 +820,33 @@ plt.xticks(rotation=15)
 plt.tight_layout()
 plt.show()
 
+# Customer Behavior Correlation Heatmap
+import matplotlib.pyplot as plt
+
+print("\n===== CUSTOMER BEHAVIOR CORRELATION =====")
+
+correlation = df[
+    ["previous_purchases", "engagement", "discount", "purchase"]
+].corr()
+
+print(correlation.round(2))
+
+plt.figure(figsize=(8, 6))
+plt.imshow(correlation, cmap="coolwarm", vmin=-1, vmax=1)
+
+plt.colorbar(label="Correlation")
+plt.xticks(range(len(correlation.columns)), correlation.columns, rotation=30)
+plt.yticks(range(len(correlation.columns)), correlation.columns)
+
+for i in range(len(correlation.columns)):
+    for j in range(len(correlation.columns)):
+        plt.text(j, i, f"{correlation.iloc[i, j]:.2f}",
+                 ha="center", va="center")
+
+plt.title("Customer Behavior Correlation Heatmap")
+plt.tight_layout()
+plt.show()
+
 
 
 
