@@ -60,6 +60,7 @@ def generate(n=5000, seed=42):
 
     # Ground-truth individual effect of a $10 discount (probability scale)
     true_ite_10 = sigmoid(base_logit + effect_per_dollar * 10) - sigmoid(base_logit)
+    true_ite_20 = sigmoid(base_logit + effect_per_dollar * 20) - sigmoid(base_logit)
 
     return pd.DataFrame({
         "customer_id": np.arange(1, n + 1),
@@ -70,6 +71,7 @@ def generate(n=5000, seed=42):
         "discount": discount,                 # dollars: 0, 10 or 20
         "purchase": purchase,
         "true_ite_10": true_ite_10.round(5),  # validation only; not a model input
+        "true_ite_20": true_ite_20.round(5),  # validation only; not a model input
     })
 
 
