@@ -717,4 +717,158 @@ plt.show()
 
 print("================================")
 
+# Customer Purchase Rate Summary
+print("\n===== CUSTOMER PURCHASE RATE SUMMARY =====")
+
+total_customers = len(df)
+total_purchases = df["purchase"].sum()
+purchase_rate = df["purchase"].mean() * 100
+
+print(f"Total Customers: {total_customers}")
+print(f"Total Purchases: {total_purchases}")
+print(f"Total Non-Purchases: {total_customers - total_purchases}")
+print(f"Overall Purchase Rate: {purchase_rate:.2f}%")
+
+print("==========================================")
+
+# Purchase Rate by Engagement Level
+print("\n===== PURCHASE RATE BY ENGAGEMENT =====")
+
+engagement_purchase_rate = df.groupby("engagement")["purchase"].mean() * 100
+
+print(engagement_purchase_rate.round(2))
+
+import matplotlib.pyplot as plt
+
+plt.figure(figsize=(8, 5))
+plt.plot(
+    engagement_purchase_rate.index,
+    engagement_purchase_rate.values,
+    marker="o"
+)
+plt.title("Purchase Rate by Customer Engagement")
+plt.xlabel("Engagement Level")
+plt.ylabel("Purchase Rate (%)")
+plt.xticks(range(1, 11))
+plt.grid(True)
+plt.tight_layout()
+plt.show()
+
+# Compare Buyers and Non-Buyers
+print("\n===== BUYER VS NON-BUYER COMPARISON =====")
+
+buyers = df[df["purchase"] == 1]
+non_buyers = df[df["purchase"] == 0]
+
+print(f"Total Buyers: {len(buyers)}")
+print(f"Total Non-Buyers: {len(non_buyers)}")
+
+print(f"Average Previous Purchases (Buyers): {buyers['previous_purchases'].mean():.2f}")
+print(f"Average Previous Purchases (Non-Buyers): {non_buyers['previous_purchases'].mean():.2f}")
+
+print(f"Average Engagement (Buyers): {buyers['engagement'].mean():.2f}")
+print(f"Average Engagement (Non-Buyers): {non_buyers['engagement'].mean():.2f}")
+
+# Purchase Rate by Discount
+print("\n===== PURCHASE RATE BY DISCOUNT =====")
+
+discount_purchase_rate = df.groupby("discount")["purchase"].mean() * 100
+
+print(discount_purchase_rate.round(2))
+
+import matplotlib.pyplot as plt
+
+plt.figure(figsize=(7, 5))
+plt.bar(
+    discount_purchase_rate.index.astype(str),
+    discount_purchase_rate.values
+)
+plt.title("Purchase Rate by Discount")
+plt.xlabel("Discount (0 = No, 1 = Yes)")
+plt.ylabel("Purchase Rate (%)")
+plt.tight_layout()
+plt.show()
+
+# Purchase Rate by Customer Segment
+print("\n===== PURCHASE RATE BY CUSTOMER SEGMENT =====")
+
+df["customer_segment"] = df.apply(
+    lambda row: (
+        "Loyal Customers"
+        if row["previous_purchases"] >= 7
+        else "Highly Engaged Customers"
+        if row["engagement"] >= 8
+        else "Other Customers"
+    ),
+    axis=1
+)
+
+segment_purchase_rate = (
+    df.groupby("customer_segment")["purchase"].mean() * 100
+)
+
+print(segment_purchase_rate.round(2))
+
+import matplotlib.pyplot as plt
+
+plt.figure(figsize=(8, 5))
+plt.bar(segment_purchase_rate.index, segment_purchase_rate.values)
+plt.title("Purchase Rate by Customer Segment")
+plt.xlabel("Customer Segment")
+plt.ylabel("Purchase Rate (%)")
+plt.xticks(rotation=15)
+plt.tight_layout()
+plt.show()
+
+# Customer Behavior Correlation Heatmap
+import matplotlib.pyplot as plt
+
+print("\n===== CUSTOMER BEHAVIOR CORRELATION =====")
+
+correlation = df[
+    ["previous_purchases", "engagement", "discount", "purchase"]
+].corr()
+
+print(correlation.round(2))
+
+plt.figure(figsize=(8, 6))
+plt.imshow(correlation, cmap="coolwarm", vmin=-1, vmax=1)
+
+plt.colorbar(label="Correlation")
+plt.xticks(range(len(correlation.columns)), correlation.columns, rotation=30)
+plt.yticks(range(len(correlation.columns)), correlation.columns)
+
+for i in range(len(correlation.columns)):
+    for j in range(len(correlation.columns)):
+        plt.text(j, i, f"{correlation.iloc[i, j]:.2f}",
+                 ha="center", va="center")
+
+plt.title("Customer Behavior Correlation Heatmap")
+plt.tight_layout()
+plt.show()
+
+# Export Correlation Matrix
+import os
+
+print("\n===== CORRELATION MATRIX EXPORT =====")
+
+correlation_matrix = df[
+    ["previous_purchases", "engagement", "discount", "purchase"]
+].corr()
+
+os.makedirs("data", exist_ok=True)
+
+correlation_matrix.to_csv("data/correlation_matrix.csv")
+
+print("Correlation matrix saved successfully!")
+print(correlation_matrix.round(2))
+
+print("=====================================")
+
+
+
+
+
+
+
     
