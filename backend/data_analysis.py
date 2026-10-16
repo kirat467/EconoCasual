@@ -847,6 +847,24 @@ plt.title("Customer Behavior Correlation Heatmap")
 plt.tight_layout()
 plt.show()
 
+# Export Correlation Matrix
+import os
+
+print("\n===== CORRELATION MATRIX EXPORT =====")
+
+correlation_matrix = df[
+    ["previous_purchases", "engagement", "discount", "purchase"]
+].corr()
+
+os.makedirs("data", exist_ok=True)
+
+correlation_matrix.to_csv("data/correlation_matrix.csv")
+
+print("Correlation matrix saved successfully!")
+print(correlation_matrix.round(2))
+
+print("=====================================")
+
 
 
 
