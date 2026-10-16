@@ -21,6 +21,10 @@ Open `index.html` in a browser. There are no dependencies: charts are plain DOM 
 - Click any customer ID in the table to load that customer into "Try a customer"
 - Purchase rate by past purchases, a plain-language readout that changes with the data, a sortable and searchable table, and CSV export
 
+- Dark mode: follows the system setting, with a header toggle that remembers your choice
+- Upload CSV: drop a file anywhere or use the header button. Columns are checked, the first 5 rows are previewed, invalid rows are counted, and nothing leaves the browser
+- Who should get a discount: pick a share of customers and see the extra purchases the model expects when discounts go to the highest estimated lift versus no ranking. The target list exports to CSV
+
 ## Data
 1,000 synthetic records with the fields `customer_id`, `previous_purchases`, `engagement`, `discount`, `purchase`. The data is generated with a fixed seed, so results are the same on every load.
 
@@ -28,6 +32,5 @@ Open `index.html` in a browser. There are no dependencies: charts are plain DOM 
 All comparisons are descriptive. Customers were not randomly assigned discounts, so the dashboard does not claim that a discount caused a purchase. The purchase estimate is a small in-browser model on synthetic data, so treat it as a demonstration; a backend model is future work.
 
 ## Roadmap
-- CSV upload with column checks
 - Interaction term (engagement x discount) and adjusted-effect model
-- Dark mode, self-hosted fonts, unit tests for the statistics
+- Self-hosted fonts, unit tests for the statistics
