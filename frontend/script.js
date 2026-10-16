@@ -20,7 +20,7 @@
   };
   const clamp = (x, lo, hi) => Math.min(hi, Math.max(lo, x));
 
-  const customers = Array.from({ length: 1000 }, (_, i) => {
+  const makeSample = () => Array.from({ length: 1000 }, (_, i) => {
     const engagement = Math.round(clamp(normal(5.2, 2.5), 0, 10));
     const previous_purchases = Math.round(clamp(normal(3.2 + engagement * 0.15, 2.4), 0, 10));
     // Low-engagement customers were a little more likely to get an offer.
@@ -29,6 +29,10 @@
     const purchase = rand() < 1 / (1 + Math.exp(-z)) ? 1 : 0;
     return { customer_id: i + 1, previous_purchases, engagement, discount, purchase };
   });
+  const sampleData = makeSample();
+  let customers = sampleData;
+  let usingCustom = false;
+  const SAMPLE_LABEL = "Sample data: 1,000 generated customers";
 
   /* ---------- Helpers ---------- */
   const $ = (id) => document.getElementById(id);
@@ -106,13 +110,15 @@
   const bandGap = (rows) => { const a = adjustedGap(rows); return a && a.bands > 1 ? a : null; };
 
   /* ---------- One square per customer ---------- */
-  const dotEls = [];
+  let dotEls = [];
   const GROUPS = [
     { key: 1, cls: "with", name: "Offered a discount" },
     { key: 0, cls: "without", name: "No discount" },
   ];
 
   function buildPeople() {
+    dotEls = [];
+    $("peopleGroups").setAttribute("aria-label", `One square for each of the ${fmt(customers.length)} customers, grouped by whether they were offered a discount. Filled squares bought. The same numbers appear in the headline and the figures below.`);
     $("peopleGroups").innerHTML = GROUPS.map((g) => {
       const list = customers
         .filter((c) => c.discount === g.key)
@@ -408,7 +414,7 @@
     $("prev").disabled = state.page <= 1;
     $("next").disabled = state.page >= pages;
 
-    document.querySelectorAll("th").forEach((th) => {
+    document.querySelectorAll("#customers th").forEach((th) => {
       const k = th.querySelector("button").dataset.sort;
       th.setAttribute("aria-sort", k === state.sort ? (state.dir === 1 ? "ascending" : "descending") : "none");
     });
@@ -418,7 +424,7 @@
     const rows = segmentRows();
     currentRows = rows;
     renderHero(rows); renderPeople(rows); renderTrend(rows);
-    renderCompare(rows); renderPrev(rows); renderNotes(rows); renderTable();
+    renderCompare(rows); renderPrev(rows); renderNotes(rows); renderTarget(rows); renderTable();
   }
 
   /* ---------- Actions ---------- */
@@ -444,7 +450,7 @@
   /* ---------- Purchase model: logistic regression, fitted here in the browser ----------
      Fitted on 80% of the records and checked on the other 20%, so the accuracy
      shown is for customers the model has not seen. */
-  const model = (() => {
+  const buildModel = () => {
     const feat = (e, p, d) => [1, e / 10, p / 10, d];
     const sig = (z) => 1 / (1 + Math.exp(-z));
     const dot = (w, x) => w.reduce((a, wi, i) => a + wi * x[i], 0);
@@ -469,9 +475,10 @@
     pos.forEach((a) => neg.forEach((b) => { wins += a > b ? 1 : a === b ? 0.5 : 0; }));
     const auc = pos.length && neg.length ? wins / (pos.length * neg.length) : null;
     return { predict, auc, accuracy: right / test.length, baseline: Math.max(bought, test.length - bought) / test.length, tested: test.length };
-  })();
+  };
+  let model = buildModel();
 
-  const avgRate = rate(customers);
+  let avgRate = rate(customers);
   const els = { eng: $("pEng"), prev: $("pPrev"), disc: $("pDisc") };
 
   function renderPredict() {
@@ -513,6 +520,226 @@
   }
   $("pLoad").addEventListener("click", () => loadCustomer(customers[Math.floor(Math.random() * customers.length)]));
 
+
+  /* ---------- Who should get a discount? ----------
+     Lift = model chance with a discount minus chance without, per customer.
+     Targeting the highest lifts is compared with giving the same number of
+     discounts to customers picked without any ranking. */
+  const tPct = $("tPct");
+  let targetRows = [];
+  const gainFmt = (g) => "+" + (g >= 10 ? fmt(Math.round(g)) : g.toFixed(1));
+  const mean = (a) => a.reduce((x, y) => x + y, 0) / (a.length || 1);
+
+  function renderTarget(rows) {
+    const n = rows.length;
+    const share = Number(tPct.value);
+    $("tPctOut").textContent = share + "%";
+    if (n < MIN_N) {
+      targetRows = [];
+      $("tBig").textContent = "–";
+      $("tSummary").textContent = "Pick a group with more customers to plan discounts.";
+      ["tCompare", "tTop"].forEach((id) => ($(id).innerHTML = ""));
+      $("tProfile").textContent = "";
+      return;
+    }
+    const scored = rows.map((c) => {
+      const base = model.predict(c.engagement, c.previous_purchases, 0);
+      return { c, base, lift: model.predict(c.engagement, c.previous_purchases, 1) - base };
+    }).sort((a, b) => b.lift - a.lift || a.c.customer_id - b.c.customer_id);
+
+    const k = Math.round((n * share) / 100);
+    const chosen = scored.slice(0, k);
+    targetRows = chosen;
+    const targeted = chosen.reduce((a, s) => a + s.lift, 0);
+    const even = k * mean(scored.map((s) => s.lift));
+    const top = Math.max(targeted, even, 1e-9);
+
+    $("tBig").textContent = gainFmt(targeted);
+    $("tSummary").textContent = k
+      ? `Offering a discount to ${plural(k, "customer")} (${share}% of ${fmt(n)}). With no discounts the model expects about ${fmt(Math.round(scored.reduce((a, s) => a + s.base, 0)))} purchases from this group.`
+      : "Move the slider to choose how many customers get a discount.";
+
+    const bar = (cls, label, g, note) =>
+      `<li class="${cls}"><div class="row"><span>${label}</span><b>${gainFmt(g)}</b></div>` +
+      `<div class="track"><span class="fill" style="width:${(g / top) * 100}%"></span></div><small>${note}</small></li>`;
+    $("tCompare").innerHTML = k
+      ? bar("with", "Targeted by the model", targeted, "Customers with the largest estimated lift") +
+        bar("cmp-even", "Spread evenly", even, even > 0 && targeted > 0 ? `Targeting gives ${(targeted / even).toFixed(1)}× as many extra purchases as picking without a ranking` : "Same number of discounts, no ranking")
+      : "";
+
+    $("tProfile").textContent = k
+      ? `Targeted customers average engagement ${mean(chosen.map((s) => s.c.engagement)).toFixed(1)} and ${mean(chosen.map((s) => s.c.previous_purchases)).toFixed(1)} past purchases, against ${mean(rows.map((c) => c.engagement)).toFixed(1)} and ${mean(rows.map((c) => c.previous_purchases)).toFixed(1)} for the whole group.`
+      : "";
+    $("tTop").innerHTML = chosen.slice(0, 5).map((s) =>
+      `<li><button type="button" class="row-load" data-id="${s.c.customer_id}">${idLabel(s.c)}</button>: engagement ${s.c.engagement}/10, ${plural(s.c.previous_purchases, "past purchase")}. Chance of buying ${pct(s.base)} without a discount, ${pct(s.base + s.lift)} with one.</li>`
+    ).join("");
+  }
+
+  const saveCsv = (name, csv) => {
+    const url = URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8" }));
+    const a = document.createElement("a");
+    a.href = url; a.download = name;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  };
+  tPct.addEventListener("input", () => renderTarget(currentRows));
+  $("tExport").addEventListener("click", () => {
+    if (!targetRows.length) { toast("Choose a share above 0% first."); return; }
+    const head = "customer_id,engagement,previous_purchases,offered_discount,chance_without,chance_with,estimated_lift\n";
+    const body = targetRows.map((s) => [s.c.customer_id, s.c.engagement, s.c.previous_purchases, s.c.discount, s.base.toFixed(4), (s.base + s.lift).toFixed(4), s.lift.toFixed(4)].join(",")).join("\n");
+    saveCsv("econocasual-discount-targets.csv", head + body + "\n");
+    toast(`Exported ${plural(targetRows.length, "customer")} ranked by estimated lift`);
+  });
+  $("tTop").addEventListener("click", (ev) => {
+    const b = ev.target.closest(".row-load");
+    if (!b) return;
+    loadCustomer(customers[Number(b.dataset.id) - 1]);
+    $("predict").scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+  });
+
+  /* ---------- Your own data: CSV upload with checks ---------- */
+  const REQUIRED = ["previous_purchases", "engagement", "discount", "purchase"];
+  const ALIASES = { customerid: "customer_id", id: "customer_id", previouspurchases: "previous_purchases", past_purchases: "previous_purchases", pastpurchases: "previous_purchases", engagement_score: "engagement", discount_offered: "discount", offered_discount: "discount", purchased: "purchase", bought: "purchase" };
+  const MAX_ROWS = 5000, MIN_ROWS = 50;
+  const esc = (s) => String(s).replace(/[&<>"']/g, (m) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[m]));
+  const normHead = (h) => { const s = h.replace(/^\ufeff/, "").trim().toLowerCase().replace(/[\s-]+/g, "_"); return ALIASES[s] || s; };
+  const toBit = (v) => { const s = String(v).trim().toLowerCase(); return ["1", "yes", "y", "true", "t"].includes(s) ? 1 : ["0", "no", "n", "false", "f"].includes(s) ? 0 : null; };
+
+  function parseCsv(text) {
+    text = text.replace(/^\ufeff/, "");
+    const first = text.split(/\r?\n/, 1)[0];
+    const delim = [",", ";", "\t"].map((d) => [d, first.split(d).length]).sort((a, b) => b[1] - a[1])[0][0];
+    const out = []; let row = [], cell = "", q = false;
+    const push = () => { row.push(cell); cell = ""; if (row.some((x) => x.trim() !== "")) out.push(row); row = []; };
+    for (let i = 0; i < text.length; i++) {
+      const ch = text[i];
+      if (q) { if (ch === '"') { if (text[i + 1] === '"') { cell += '"'; i++; } else q = false; } else cell += ch; }
+      else if (ch === '"') q = true;
+      else if (ch === delim) { row.push(cell); cell = ""; }
+      else if (ch === "\n" || ch === "\r") { if (ch === "\r" && text[i + 1] === "\n") i++; push(); }
+      else cell += ch;
+    }
+    push();
+    return out;
+  }
+
+  function validateCsv(text) {
+    const table = parseCsv(text);
+    if (table.length < 2) return { error: "The file has a header but no data rows, or is empty." };
+    const heads = table[0].map(normHead);
+    const missing = REQUIRED.filter((c) => !heads.includes(c));
+    if (missing.length)
+      return { error: `Missing ${missing.length === 1 ? "column" : "columns"}: ${missing.join(", ")}. Columns found: ${heads.join(", ")}. Needed: ${REQUIRED.join(", ")} (customer_id is optional).` };
+    const at = Object.fromEntries(REQUIRED.map((c) => [c, heads.indexOf(c)]));
+    const rows = [], issues = [], why = {};
+    const bad = (line, reason) => { why[reason] = (why[reason] || 0) + 1; if (issues.length < 3) issues.push(`Row ${line}: ${reason}`); };
+    for (let i = 1; i < table.length; i++) {
+      const r = table[i];
+      const e = Number(r[at.engagement]), p = Number(r[at.previous_purchases]);
+      const d = toBit(r[at.discount]), b = toBit(r[at.purchase]);
+      if (r[at.engagement] === undefined || r[at.engagement].trim() === "" || !Number.isFinite(e) || e < 0 || e > 10) { bad(i + 1, "engagement must be a number from 0 to 10"); continue; }
+      if (r[at.previous_purchases] === undefined || r[at.previous_purchases].trim() === "" || !Number.isFinite(p) || p < 0 || p > 10) { bad(i + 1, "previous_purchases must be a number from 0 to 10"); continue; }
+      if (d === null) { bad(i + 1, "discount must be 0/1 or yes/no"); continue; }
+      if (b === null) { bad(i + 1, "purchase must be 0/1 or yes/no"); continue; }
+      if (rows.length < MAX_ROWS) rows.push({ customer_id: rows.length + 1, previous_purchases: Math.round(p), engagement: Math.round(e), discount: d, purchase: b });
+    }
+    const skipped = Object.values(why).reduce((a, x) => a + x, 0);
+    if (rows.length < MIN_ROWS) return { error: `Only ${rows.length} usable ${rows.length === 1 ? "row" : "rows"} found. At least ${MIN_ROWS} are needed for the statistics and the model to mean anything.`, issues };
+    const warnings = [];
+    if (new Set(rows.map((c) => c.discount)).size < 2) warnings.push("Every customer has the same discount value, so discount comparisons will be empty.");
+    if (new Set(rows.map((c) => c.purchase)).size < 2) warnings.push("Every customer has the same purchase outcome, so the model has nothing to learn from.");
+    if (table.length - 1 - skipped > MAX_ROWS) warnings.push(`Only the first ${fmt(MAX_ROWS)} valid rows are used.`);
+    return { rows, skipped, issues, warnings };
+  }
+
+  const dlg = $("uploadDlg"), fileIn = $("fileIn");
+  let pending = null;
+  const openDlg = () => { if (dlg.showModal) { if (!dlg.open) dlg.showModal(); } else dlg.setAttribute("open", ""); };
+  const closeDlg = () => { if (dlg.close) dlg.close(); else dlg.removeAttribute("open"); };
+
+  function showUpload(res, name) {
+    pending = res.rows ? { rows: res.rows, name } : null;
+    $("uTitle").textContent = res.rows ? "Check your file" : "This file can't be used yet";
+    let html = `<p class="u-file">${esc(name)}</p>`;
+    if (res.error) html += `<p class="u-err">${esc(res.error)}</p>`;
+    if (res.rows) {
+      html += `<p><b>${plural(res.rows.length, "customer")}</b> ready to load.` + (res.skipped ? ` ${plural(res.skipped, "row")} skipped because of invalid values.` : "") + ` Customers are numbered CUST-0001 onwards in file order.</p>`;
+      html += `<div class="table-scroll u-prev"><table><thead><tr><th>Customer</th><th class="num">Past purchases</th><th>Engagement</th><th>Discount</th><th>Purchase</th></tr></thead><tbody>` +
+        res.rows.slice(0, 5).map((c) => `<tr><td>${idLabel(c)}</td><td class="num">${c.previous_purchases}</td><td>${c.engagement}/10</td><td>${c.discount ? "Offered" : "Not offered"}</td><td>${c.purchase ? "Purchased" : "Did not purchase"}</td></tr>`).join("") +
+        `</tbody></table></div><p class="u-note">First 5 rows as the dashboard will read them.</p>`;
+    }
+    const notes = [...(res.warnings || []), ...(res.issues || [])];
+    if (notes.length) html += `<ul class="u-list">${notes.map((t) => `<li>${esc(t)}</li>`).join("")}</ul>`;
+    $("uBody").innerHTML = html;
+    $("uUse").hidden = !res.rows;
+    openDlg();
+  }
+
+  function openFile(file) {
+    if (!file) return;
+    if (file.size > 5 * 1024 * 1024) { showUpload({ error: "The file is larger than 5 MB. Remove unused columns or split it." }, file.name); return; }
+    const r = new FileReader();
+    r.onload = () => showUpload(validateCsv(String(r.result)), file.name);
+    r.onerror = () => showUpload({ error: "The browser could not read this file." }, file.name);
+    r.readAsText(file);
+  }
+
+  function updateSegCounts() {
+    document.querySelectorAll(".seg").forEach((b) => { b.querySelector(".seg-n").textContent = fmt(customers.filter(SEGMENTS[b.dataset.seg]).length); });
+  }
+
+  function setData(rows, label) {
+    customers = rows; usingCustom = rows !== sampleData;
+    Object.assign(state, { seg: "all", search: "", outcome: "all", page: 1 });
+    $("search").value = ""; $("purchaseFilter").value = "all";
+    document.querySelectorAll(".seg").forEach((s) => { const on = s.dataset.seg === "all"; s.classList.toggle("is-on", on); s.setAttribute("aria-pressed", String(on)); });
+    model = buildModel(); avgRate = rate(customers);
+    buildPeople(); updateSegCounts(); hideDotTip(); hideTrendTip();
+    $("sourceText").textContent = label; $("useSample").hidden = !usingCustom;
+    $("pReset").click();
+    renderAll(); syncUrl();
+  }
+
+  $("upload").addEventListener("click", () => fileIn.click());
+  fileIn.addEventListener("change", () => { openFile(fileIn.files[0]); fileIn.value = ""; });
+  $("uUse").addEventListener("click", () => {
+    if (!pending) return;
+    setData(pending.rows, `${pending.name}: ${fmt(pending.rows.length)} customers`);
+    closeDlg(); toast(`Loaded ${plural(pending.rows.length, "customer")} from ${pending.name}. Nothing leaves your browser.`);
+  });
+  $("uCancel").addEventListener("click", closeDlg);
+  $("uAgain").addEventListener("click", () => { closeDlg(); fileIn.click(); });
+  $("uTemplate").addEventListener("click", () => saveCsv("econocasual-template.csv", "customer_id,previous_purchases,engagement,discount,purchase\n1,3,6,1,1\n2,0,2,0,0\n3,7,8,0,1\n4,2,4,1,0\n5,5,5,0,1\n"));
+  $("useSample").addEventListener("click", () => { setData(sampleData, SAMPLE_LABEL); toast("Back to the sample data."); });
+
+  // Drag a file anywhere on the page
+  let dragDepth = 0;
+  const hasFiles = (ev) => ev.dataTransfer && [...ev.dataTransfer.types].includes("Files");
+  window.addEventListener("dragenter", (ev) => { if (hasFiles(ev)) { dragDepth++; document.body.classList.add("dropping"); } });
+  window.addEventListener("dragleave", (ev) => { if (hasFiles(ev) && --dragDepth <= 0) { dragDepth = 0; document.body.classList.remove("dropping"); } });
+  window.addEventListener("dragover", (ev) => { if (hasFiles(ev)) ev.preventDefault(); });
+  window.addEventListener("drop", (ev) => {
+    if (!hasFiles(ev)) return;
+    ev.preventDefault(); dragDepth = 0; document.body.classList.remove("dropping");
+    openFile(ev.dataTransfer.files[0]);
+  });
+
+  /* ---------- Light / dark theme ---------- */
+  const themeBtn = $("theme"), darkQuery = matchMedia("(prefers-color-scheme: dark)");
+  const isDark = () => (document.documentElement.dataset.theme ? document.documentElement.dataset.theme === "dark" : darkQuery.matches);
+  function paintTheme() {
+    const d = isDark();
+    themeBtn.setAttribute("aria-pressed", String(d));
+    document.querySelector('meta[name="theme-color"]').setAttribute("content", d ? "#0f1714" : "#0a6b5f");
+  }
+  themeBtn.addEventListener("click", () => {
+    const next = isDark() ? "light" : "dark";
+    document.documentElement.dataset.theme = next;
+    try { localStorage.setItem("ec-theme", next); } catch (e) { /* storage may be blocked */ }
+    paintTheme();
+  });
+  if (darkQuery.addEventListener) darkQuery.addEventListener("change", paintTheme);
+
   /* ---------- Shareable view: state lives in the query string ---------- */
   const DEFAULTS = { eng: 5, prev: 3 };
   function syncUrl() {
@@ -550,7 +777,6 @@
   /* ---------- Wiring ---------- */
   buildPeople();
   document.querySelectorAll(".seg").forEach((b) => {
-    b.querySelector(".seg-n").textContent = fmt(customers.filter(SEGMENTS[b.dataset.seg]).length);
     b.addEventListener("click", () => {
       state.seg = b.dataset.seg; state.page = 1;
       document.querySelectorAll(".seg").forEach((s) => {
@@ -576,7 +802,7 @@
   });
   $("share").addEventListener("click", async () => {
     syncUrl();
-    try { await navigator.clipboard.writeText(location.href); toast("Link copied. It opens this same view."); }
+    try { await navigator.clipboard.writeText(location.href); toast(usingCustom ? "Link copied. Uploaded data stays in your browser, so the link opens with the sample data." : "Link copied. It opens this same view."); }
     catch (e) { toast("Copy this address from the browser bar to share the view."); }
   });
   document.querySelectorAll("th button").forEach((b) =>
@@ -626,9 +852,11 @@
         if (en.isIntersecting) links.forEach((a) => a.classList.toggle("active", a.getAttribute("href") === "#" + en.target.id));
       });
     }, { rootMargin: "-40% 0px -55% 0px" });
-    ["summary", "drivers", "predict", "customers"].forEach((id) => io.observe($(id)));
+    ["summary", "drivers", "predict", "target", "customers"].forEach((id) => io.observe($(id)));
   }
 
+  updateSegCounts();
+  paintTheme();
   renderAll();
 
   // One-time reveal: the squares fill in when the page loads
