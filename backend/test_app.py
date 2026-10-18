@@ -11,6 +11,7 @@ class TestEconoCasualAPI(unittest.TestCase):
     def test_home(self):
         response = self.client.get("/")
         self.assertEqual(response.status_code, 200)
+
         self.assertEqual(
             response.get_json()["project"],
             "EconoCasual"
@@ -19,6 +20,7 @@ class TestEconoCasualAPI(unittest.TestCase):
     def test_health(self):
         response = self.client.get("/health")
         self.assertEqual(response.status_code, 200)
+
         self.assertEqual(
             response.get_json()["status"],
             "healthy"
@@ -29,24 +31,33 @@ class TestEconoCasualAPI(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
 
         data = response.get_json()
+
         self.assertEqual(data["total_customers"], 1000)
         self.assertLessEqual(len(data["customers"]), 20)
+
+        self.assertIn("customer_id", data["columns"])
+        self.assertIn("purchase", data["columns"])
 
     def test_purchase_summary(self):
         response = self.client.get("/purchase-summary")
         self.assertEqual(response.status_code, 200)
 
         data = response.get_json()
+
         self.assertEqual(data["total_customers"], 1000)
+
         self.assertEqual(
             data["total_purchases"] + data["non_purchases"],
             data["total_customers"]
         )
-        self.assertEqual(data["purchase_rate_percent"], 57.3)
+
+        self.assertEqual(
+            data["purchase_rate_percent"],
+            57.3
+        )
 
     def test_purchase_summary_response_structure(self):
         response = self.client.get("/purchase-summary")
-
         self.assertEqual(response.status_code, 200)
 
         data = response.get_json()
