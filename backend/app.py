@@ -1,47 +1,4 @@
 from flask import Flask, jsonify
-
-app = Flask(__name__)
-
-@app.route("/")
-def home():
-    return jsonify({
-        "project": "EconoCasual",
-        "status": "Backend is running successfully"
-    })
-
-@app.route("/health")
-def health():
-    return jsonify({
-        "status": "healthy"
-    })
-@app.route("/purchase-summary")
-def purchase_summary():
-    if not DATA_FILE.exists():
-        return jsonify({"error": "Customer dataset not found"}), 404
-
-    with open(DATA_FILE, "r", newline="", encoding="utf-8") as file:
-        reader = csv.DictReader(file)
-        data = list(reader)
-
-    total = len(data)
-
-    if total == 0:
-        return jsonify({"error": "Dataset is empty"}), 400
-
-    purchases = sum(int(row["purchase"]) for row in data)
-    purchase_rate = round((purchases / total) * 100, 2)
-
-    return jsonify({
-        "total_customers": total,
-        "total_purchases": purchases,
-        "non_purchases": total - purchases,
-        "purchase_rate_percent": purchase_rate
-    }) 
-
-if __name__ == "__main__":
-    app.run(debug=True)
-
-    from flask import Flask, jsonify
 import csv
 from pathlib import Path
 
@@ -81,6 +38,35 @@ def customers():
         "total_customers": len(data),
         "columns": list(data[0].keys()) if data else [],
         "customers": data[:20]
+    })
+
+
+@app.route("/purchase-summary")
+def purchase_summary():
+    if not DATA_FILE.exists():
+        return jsonify({
+            "error": "Customer dataset not found"
+        }), 404
+
+    with open(DATA_FILE, "r", newline="", encoding="utf-8") as file:
+        reader = csv.DictReader(file)
+        data = list(reader)
+
+    total = len(data)
+
+    if total == 0:
+        return jsonify({
+            "error": "Dataset is empty"
+        }), 400
+
+    purchases = sum(int(row["purchase"]) for row in data)
+    purchase_rate = round((purchases / total) * 100, 2)
+
+    return jsonify({
+        "total_customers": total,
+        "total_purchases": purchases,
+        "non_purchases": total - purchases,
+        "purchase_rate_percent": purchase_rate
     })
 
 
