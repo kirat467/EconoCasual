@@ -412,3 +412,177 @@ body.dropping::after {
 }
 @media (max-width: 720px) { #theme { display: none; } }
 @media print { dialog, #theme, #upload { display: none !important; } }
+
+
+/* ==========================================
+   ECONOCASUAL - FRONTEND ENHANCEMENTS
+   ========================================== */
+
+/* Data quality panel */
+
+.quality-section {
+    margin-top: 36px;
+    margin-bottom: 36px;
+}
+
+.quality-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.section-eyebrow {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    color: var(--teal);
+}
+
+.quality-header h2 {
+    margin: 0 0 8px;
+}
+
+.quality-header p {
+    margin: 0;
+    color: var(--ink-3);
+    font-size: 14px;
+}
+
+.quality-badge {
+    padding: 9px 13px;
+    border: 1px solid var(--rule);
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.quality-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.quality-card {
+    padding: 22px;
+    border: 1px solid var(--rule);
+    border-radius: 18px;
+    background: var(--surface);
+    box-shadow: 0 12px 28px rgba(20, 33, 29, 0.07);
+    transition: transform 180ms ease, border-color 180ms ease;
+}
+
+.quality-card:hover {
+    transform: translateY(-3px);
+}
+
+.quality-label {
+    display: block;
+    margin-bottom: 14px;
+    color: var(--ink-3);
+    font-size: 13px;
+}
+
+.quality-card strong {
+    display: block;
+    font-size: clamp(26px, 3vw, 36px);
+    letter-spacing: -1px;
+}
+
+.quality-card p {
+    margin: 10px 0 0;
+    color: var(--ink-3);
+    font-size: 12px;
+}
+
+.quality-note {
+    margin-top: 15px;
+    padding: 13px 16px;
+    border-left: 3px solid var(--teal);
+    border-radius: 0 10px 10px 0;
+    background: var(--surface);
+    color: var(--ink-3);
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+/* Advanced filters */
+
+.advanced-filters {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: end;
+    gap: 12px;
+    margin: 18px 0;
+}
+
+.advanced-filters label {
+    display: grid;
+    gap: 7px;
+    min-width: 165px;
+    flex: 1;
+}
+
+.advanced-filters label span {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--ink-3);
+}
+
+.advanced-filters select {
+    width: 100%;
+    min-height: 42px;
+    padding: 10px 12px;
+    border: 1px solid var(--rule);
+    border-radius: 10px;
+    background: var(--surface);
+    color: var(--ink);
+    font: inherit;
+}
+
+.advanced-filters select:focus-visible,
+.advanced-filters button:focus-visible {
+    outline: 3px solid var(--teal);
+    outline-offset: 3px;
+}
+
+/* Mobile layout */
+
+@media (max-width: 700px) {
+    .quality-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .quality-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .advanced-filters {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .advanced-filters label {
+        min-width: 0;
+    }
+
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .quality-card {
+        transition: none !important;
+    }
+
+    .quality-card:hover {
+        transform: none;
+    }
+}
+/* Records section (restored) */
+.records .advanced-filters { margin-top: 18px; }
+.segments .link#resetDashboard { margin-left: auto; align-self: center; }
+@media (max-width: 700px) { .filters { width: 100%; flex-wrap: wrap; } .filters input, .filters select { min-width: 0; flex: 1 1 150px; } }
