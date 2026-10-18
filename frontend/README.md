@@ -20,6 +20,9 @@ Open `index.html` in a browser. There are no dependencies: charts are plain DOM 
 - Shareable views: the group, outcome filter, search, sort and predictor values are stored in the page address, and "Copy link to this view" returns to the same state
 - Click any customer ID in the table to load that customer into "Try a customer"
 - Purchase rate by past purchases, a plain-language readout that changes with the data, a sortable and searchable table, and CSV export
+- Extra table filters (engagement band, past purchases, discount). They sit in the same state as the search, so they work with paging, the shareable link and CSV export
+- Data quality panel: checks every loaded record (missing and out-of-range values) and reports rows skipped when a CSV was uploaded
+- "Reset view" button: puts the group, filters, sorting, predictor and discount share back to their defaults
 
 - Dark mode: follows the system setting, with a header toggle that remembers your choice
 - Upload CSV: drop a file anywhere or use the header button. Columns are checked, the first 5 rows are previewed, invalid rows are counted, and nothing leaves the browser
@@ -34,3 +37,4 @@ All comparisons are descriptive. Customers were not randomly assigned discounts,
 ## Roadmap
 - Interaction term (engagement x discount) and adjusted-effect model
 - Self-hosted fonts, unit tests for the statistics
+- Calibration chart and chart export (PNG)
