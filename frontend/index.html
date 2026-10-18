@@ -55,6 +55,7 @@
       <button type="button" class="seg" data-seg="high" aria-pressed="false">High engagement (7–10) <span class="seg-n"></span></button>
       <button type="button" class="seg" data-seg="low" aria-pressed="false">Low engagement (0–3) <span class="seg-n"></span></button>
       <button type="button" class="seg" data-seg="repeat" aria-pressed="false">Repeat buyers (5+ before) <span class="seg-n"></span></button>
+      <button type="button" class="link" id="resetDashboard">Reset view</button>
     </div>
 
     <figure class="people" id="people">
@@ -189,18 +190,42 @@
     <div class="rec-head">
       <div class="sec-head">
         <h2 id="rec-title">Customer records</h2>
-        <p>Search by ID, filter by outcome, and click a column to sort, and click a customer ID to try that customer in the predictor. Records follow the group chosen at the top.</p>
+        <p>Search by ID, filter by outcome, engagement, history or discount, and click a column to sort. Click a customer ID to try that customer in the predictor. Records follow the group chosen at the top.</p>
       </div>
       <div class="filters">
-        <label class="sr-only" for="search">Search customer ID</label>
-        <input id="search" type="search" placeholder="Customer ID, e.g. 0042" autocomplete="off" inputmode="numeric">
-        <label class="sr-only" for="purchaseFilter">Purchase outcome</label>
-        <select id="purchaseFilter">
+        <input type="search" id="search" inputmode="numeric" placeholder="Search by ID, e.g. 0042" aria-label="Search by customer ID" autocomplete="off">
+        <select id="purchaseFilter" aria-label="Filter by outcome">
           <option value="all">All outcomes</option>
           <option value="1">Purchased</option>
           <option value="0">Did not purchase</option>
         </select>
       </div>
+    </div>
+
+    <div class="advanced-filters" role="group" aria-label="More customer filters">
+      <label><span>Engagement</span>
+        <select id="engagementFilter">
+          <option value="all">All engagement levels</option>
+          <option value="high">High (7–10)</option>
+          <option value="medium">Medium (4–6)</option>
+          <option value="low">Low (0–3)</option>
+        </select>
+      </label>
+      <label><span>Past purchases</span>
+        <select id="historyFilter">
+          <option value="all">All customers</option>
+          <option value="repeat">5 or more</option>
+          <option value="few">0–4 purchases</option>
+        </select>
+      </label>
+      <label><span>Discount</span>
+        <select id="discountFilter">
+          <option value="all">All discount statuses</option>
+          <option value="1">Offered a discount</option>
+          <option value="0">Not offered</option>
+        </select>
+      </label>
+      <button type="button" class="btn-ghost" id="clearAdvancedFilters">Clear filters</button>
     </div>
 
     <div class="table-scroll" tabindex="0" role="region" aria-label="Customer records table">
@@ -217,16 +242,54 @@
         <tbody id="rows"></tbody>
       </table>
     </div>
-
     <div class="pager">
-      <span id="summaryText">–</span>
+      <span id="summaryText" aria-live="polite"></span>
       <div class="pager-ctl">
-        <button type="button" id="prev" aria-label="Previous page">Previous</button>
-        <span id="pageText">1 / 1</span>
-        <button type="button" id="next" aria-label="Next page">Next</button>
+        <button type="button" id="prev">Previous</button>
+        <span id="pageText"></span>
+        <button type="button" id="next">Next</button>
       </div>
     </div>
   </section>
+
+<!-- EconoCasual: Data Quality Panel -->
+<section class="wrap quality-section" id="data-quality" aria-labelledby="quality-title">
+    <div class="quality-header">
+        <div>
+            <span class="section-eyebrow">DATA QUALITY</span>
+            <h2 id="quality-title">Customer data overview</h2>
+            <p>Checks run on every record in the loaded dataset, not just the rows on screen.</p>
+        </div>
+
+        <span class="quality-badge" id="quality-status">
+            Awaiting analysis
+        </span>
+    </div>
+
+    <div class="quality-grid">
+        <article class="quality-card">
+            <span class="quality-label">Records checked</span>
+            <strong id="quality-visible">0</strong>
+            <p>In the loaded dataset</p>
+        </article>
+
+        <article class="quality-card">
+            <span class="quality-label">Missing values</span>
+            <strong id="quality-missing">—</strong>
+            <p>Empty or non-numeric fields</p>
+        </article>
+
+        <article class="quality-card">
+            <span class="quality-label">Invalid or skipped</span>
+            <strong id="quality-invalid">—</strong>
+            <p>Out of range, plus rows skipped on upload</p>
+        </article>
+    </div>
+
+    <p class="quality-note" id="quality-note" aria-live="polite">
+        Quality checks run when data loads.
+    </p>
+</section>
 </main>
 
 <footer class="site-footer">
@@ -254,4 +317,3 @@
 <script src="script.js"></script>
 </body>
 </html>
-
