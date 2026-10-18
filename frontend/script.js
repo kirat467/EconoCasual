@@ -57,17 +57,22 @@
     repeat: (c) => c.previous_purchases >= 5,
   };
 
-  const state = { seg: "all", search: "", outcome: "all", sort: "customer_id", dir: 1, page: 1, size: 10 };
+  const state = { seg: "all", search: "", outcome: "all", eng: "all", hist: "all", disc: "all", sort: "customer_id", dir: 1, page: 1, size: 10 };
+  let loadInfo = { skipped: 0 }; // rows dropped when a CSV was uploaded
   let toastTimer;
   let currentRows = customers;
 
   const segmentRows = () => customers.filter(SEGMENTS[state.seg]);
+  const ENG_FILTERS = { all: () => true, high: (c) => c.engagement >= 7, medium: (c) => c.engagement >= 4 && c.engagement <= 6, low: (c) => c.engagement <= 3 };
+  const HIST_FILTERS = { all: () => true, repeat: (c) => c.previous_purchases >= 5, few: (c) => c.previous_purchases <= 4 };
+  const DISC_FILTERS = { all: () => true, 1: (c) => c.discount === 1, 0: (c) => c.discount === 0 };
   const tableRows = () => {
     const q = state.search.replace(/\D/g, "");
     const rows = segmentRows().filter(
       (c) =>
         (!q || String(c.customer_id).padStart(4, "0").includes(q)) &&
-        (state.outcome === "all" || String(c.purchase) === state.outcome)
+        (state.outcome === "all" || String(c.purchase) === state.outcome) &&
+        ENG_FILTERS[state.eng](c) && HIST_FILTERS[state.hist](c) && DISC_FILTERS[state.disc](c)
     );
     const k = state.sort;
     return rows.sort((a, b) => (a[k] - b[k] || a.customer_id - b.customer_id) * state.dir);
@@ -420,6 +425,29 @@
     });
   }
 
+  /* ---------- Data quality: checks every loaded record ---------- */
+  function renderQuality() {
+    const num = (v) => typeof v === "number" && Number.isFinite(v);
+    let missing = 0, invalid = 0;
+    customers.forEach((c) => {
+      ["previous_purchases", "engagement", "discount", "purchase"].forEach((k) => { if (!num(c[k])) missing++; });
+      if (num(c.engagement) && (c.engagement < 0 || c.engagement > 10)) invalid++;
+      if (num(c.previous_purchases) && (c.previous_purchases < 0 || c.previous_purchases > 10 || !Number.isInteger(c.previous_purchases))) invalid++;
+      if (num(c.discount) && c.discount !== 0 && c.discount !== 1) invalid++;
+      if (num(c.purchase) && c.purchase !== 0 && c.purchase !== 1) invalid++;
+    });
+    const skipped = loadInfo.skipped;
+    const problems = missing + invalid + skipped;
+    $("quality-visible").textContent = fmt(customers.length);
+    $("quality-missing").textContent = fmt(missing);
+    $("quality-invalid").textContent = fmt(invalid + skipped);
+    $("quality-status").textContent = problems === 0 ? "Basic checks passed" : "Review suggested";
+    $("quality-note").textContent =
+      `Checked all ${fmt(customers.length)} records: ${plural(missing, "missing value")}, ${plural(invalid, "out-of-range value")}` +
+      (skipped ? `, and ${plural(skipped, "row")} skipped during upload because of invalid values.` : ".") +
+      (usingCustom ? "" : " This is generated sample data, so it is clean by design.");
+  }
+
   function renderAll() {
     const rows = segmentRows();
     currentRows = rows;
@@ -444,7 +472,7 @@
     a.href = url; a.download = "econocasual-customers.csv";
     document.body.appendChild(a); a.click(); a.remove();
     setTimeout(() => URL.revokeObjectURL(url), 1000);
-    toast(`Exported ${plural(rows.length, "record")} from the table, with the group, search and outcome filters applied`);
+    toast(`Exported ${plural(rows.length, "record")} from the table, with the group, search and all filters applied`);
   }
 
   /* ---------- Purchase model: logistic regression, fitted here in the browser ----------
@@ -658,7 +686,7 @@
   const closeDlg = () => { if (dlg.close) dlg.close(); else dlg.removeAttribute("open"); };
 
   function showUpload(res, name) {
-    pending = res.rows ? { rows: res.rows, name } : null;
+    pending = res.rows ? { rows: res.rows, name, skipped: res.skipped || 0 } : null;
     $("uTitle").textContent = res.rows ? "Check your file" : "This file can't be used yet";
     let html = `<p class="u-file">${esc(name)}</p>`;
     if (res.error) html += `<p class="u-err">${esc(res.error)}</p>`;
@@ -684,27 +712,36 @@
     r.readAsText(file);
   }
 
+  function syncFilterControls() {
+    $("search").value = state.search;
+    $("purchaseFilter").value = state.outcome;
+    $("engagementFilter").value = state.eng;
+    $("historyFilter").value = state.hist;
+    $("discountFilter").value = state.disc;
+  }
+
   function updateSegCounts() {
     document.querySelectorAll(".seg").forEach((b) => { b.querySelector(".seg-n").textContent = fmt(customers.filter(SEGMENTS[b.dataset.seg]).length); });
   }
 
-  function setData(rows, label) {
+  function setData(rows, label, skipped = 0) {
     customers = rows; usingCustom = rows !== sampleData;
-    Object.assign(state, { seg: "all", search: "", outcome: "all", page: 1 });
-    $("search").value = ""; $("purchaseFilter").value = "all";
+    Object.assign(state, { seg: "all", search: "", outcome: "all", eng: "all", hist: "all", disc: "all", page: 1 });
+    loadInfo = { skipped };
+    syncFilterControls();
     document.querySelectorAll(".seg").forEach((s) => { const on = s.dataset.seg === "all"; s.classList.toggle("is-on", on); s.setAttribute("aria-pressed", String(on)); });
     model = buildModel(); avgRate = rate(customers);
     buildPeople(); updateSegCounts(); hideDotTip(); hideTrendTip();
     $("sourceText").textContent = label; $("useSample").hidden = !usingCustom;
     $("pReset").click();
-    renderAll(); syncUrl();
+    renderAll(); renderQuality(); syncUrl();
   }
 
   $("upload").addEventListener("click", () => fileIn.click());
   fileIn.addEventListener("change", () => { openFile(fileIn.files[0]); fileIn.value = ""; });
   $("uUse").addEventListener("click", () => {
     if (!pending) return;
-    setData(pending.rows, `${pending.name}: ${fmt(pending.rows.length)} customers`);
+    setData(pending.rows, `${pending.name}: ${fmt(pending.rows.length)} customers`, pending.skipped);
     closeDlg(); toast(`Loaded ${plural(pending.rows.length, "customer")} from ${pending.name}. Nothing leaves your browser.`);
   });
   $("uCancel").addEventListener("click", closeDlg);
@@ -747,6 +784,9 @@
     if (state.seg !== "all") q.set("seg", state.seg);
     if (state.outcome !== "all") q.set("out", state.outcome);
     if (state.search) q.set("q", state.search);
+    if (state.eng !== "all") q.set("fe", state.eng);
+    if (state.hist !== "all") q.set("fh", state.hist);
+    if (state.disc !== "all") q.set("fd", state.disc);
     if (state.sort !== "customer_id" || state.dir !== 1) { q.set("sort", state.sort); q.set("dir", state.dir === 1 ? "asc" : "desc"); }
     if (Number(els.eng.value) !== DEFAULTS.eng) q.set("e", els.eng.value);
     if (Number(els.prev.value) !== DEFAULTS.prev) q.set("p", els.prev.value);
@@ -760,6 +800,9 @@
     if (Object.prototype.hasOwnProperty.call(SEGMENTS, q.get("seg"))) state.seg = q.get("seg");
     if (["0", "1"].includes(q.get("out"))) state.outcome = q.get("out");
     if (q.get("q")) state.search = q.get("q").replace(/\D/g, "").slice(0, 4);
+    if (Object.prototype.hasOwnProperty.call(ENG_FILTERS, q.get("fe"))) state.eng = q.get("fe");
+    if (Object.prototype.hasOwnProperty.call(HIST_FILTERS, q.get("fh"))) state.hist = q.get("fh");
+    if (["0", "1"].includes(q.get("fd"))) state.disc = q.get("fd");
     if (["customer_id", "previous_purchases", "engagement", "discount", "purchase"].includes(q.get("sort"))) {
       state.sort = q.get("sort"); state.dir = q.get("dir") === "desc" ? -1 : 1;
     }
@@ -770,7 +813,7 @@
     document.querySelectorAll(".seg").forEach((s) => {
       const on = s.dataset.seg === state.seg; s.classList.toggle("is-on", on); s.setAttribute("aria-pressed", String(on));
     });
-    $("search").value = state.search; $("purchaseFilter").value = state.outcome;
+    syncFilterControls();
   })();
   renderPredict();
 
@@ -792,6 +835,25 @@
   $("purchaseFilter").addEventListener("change", (e) => { state.outcome = e.target.value; state.page = 1; renderTable(); });
   $("prev").addEventListener("click", () => { state.page--; renderTable(); });
   $("next").addEventListener("click", () => { state.page++; renderTable(); });
+  [["engagementFilter", "eng"], ["historyFilter", "hist"], ["discountFilter", "disc"]].forEach(([id, key]) =>
+    $(id).addEventListener("change", (e) => { state[key] = e.target.value; state.page = 1; renderTable(); })
+  );
+  $("clearAdvancedFilters").addEventListener("click", () => {
+    Object.assign(state, { eng: "all", hist: "all", disc: "all", page: 1 });
+    syncFilterControls(); renderTable();
+  });
+  $("resetDashboard").addEventListener("click", () => {
+    Object.assign(state, { seg: "all", search: "", outcome: "all", eng: "all", hist: "all", disc: "all", sort: "customer_id", dir: 1, page: 1 });
+    document.querySelectorAll(".seg").forEach((s) => { const on = s.dataset.seg === "all"; s.classList.toggle("is-on", on); s.setAttribute("aria-pressed", String(on)); });
+    syncFilterControls();
+    $("pReset").click();
+    tPct.value = 20;
+    hideDotTip(); hideTrendTip();
+    renderAll(); syncUrl();
+    const calm = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+    $("summary").scrollIntoView({ behavior: calm ? "auto" : "smooth" });
+    toast("View reset: group, filters, sorting, predictor and discount share are back to their defaults.");
+  });
   $("export").addEventListener("click", exportCsv);
   $("rows").addEventListener("click", (ev) => {
     const b = ev.target.closest(".row-load");
@@ -858,6 +920,7 @@
   updateSegCounts();
   paintTheme();
   renderAll();
+  renderQuality();
 
   // One-time reveal: the squares fill in when the page loads
   $("people").classList.add("intro");
