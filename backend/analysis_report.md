@@ -262,3 +262,7 @@ The customer purchase analysis examines the relationship between previous purcha
 - Customer engagement and previous purchase history are analyzed to understand purchasing behavior.
 
 These findings can help identify customer groups for further analysis. The results describe observed patterns and do not establish causation.
+
+## 16. Conclusion
+
+This project analyzed customer purchasing behavior using Python, Pandas, and Matplotlib. The analysis explored previous purchases, customer engagement, discounts, and their relationships with purchase behavior. Customer segmentation and data quality validation provided additional insights into customer groups and dataset reliability. These findings can support future development of machine learning models for customer purchase prediction.

@@ -1,0 +1,13 @@
+
+ECONOCASUAL - CUSTOMER INSIGHTS SUMMARY
+
+Total Customers: 1000
+Total Purchases: 573
+Total Non-Purchases: 427
+Overall Purchase Rate: 57.30%
+
+Average Previous Purchases: 4.45
+Average Customer Engagement: 5.47
+
+This summary describes observed customer behavior.
+It does not establish causal relationships.
