@@ -44,6 +44,18 @@ class TestEconoCasualAPI(unittest.TestCase):
         )
         self.assertEqual(data["purchase_rate_percent"], 57.3)
 
+    def test_purchase_summary_response_structure(self):
+        response = self.client.get("/purchase-summary")
+
+        self.assertEqual(response.status_code, 200)
+
+        data = response.get_json()
+
+        self.assertIn("total_customers", data)
+        self.assertIn("total_purchases", data)
+        self.assertIn("non_purchases", data)
+        self.assertIn("purchase_rate_percent", data)
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)
