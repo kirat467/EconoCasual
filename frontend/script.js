@@ -168,6 +168,25 @@
   const hideDotTip = () => { dotTip.hidden = true; };
 
   /* ---------- Hero + stats ---------- */
+  /* ---------- Motion helpers ---------- */
+  const calm = window.matchMedia("(prefers-reduced-motion: reduce)");
+  function countTo(id, to, format) {
+    const el = $(id), from = el._v == null ? 0 : el._v;
+    el._v = to;
+    cancelAnimationFrame(el._raf);
+    if (calm.matches || from === to) { el.textContent = format(to); return; }
+    const t0 = performance.now(), ms = 650;
+    const step = (now) => {
+      const k = Math.min(1, (now - t0) / ms), e = 1 - Math.pow(1 - k, 3);
+      el.textContent = format(from + (to - from) * e);
+      if (k < 1) el._raf = requestAnimationFrame(step);
+    };
+    el._raf = requestAnimationFrame(step);
+  }
+  function swapIn(el) {
+    el.classList.remove("swap"); void el.offsetWidth; el.classList.add("swap");
+  }
+
   function renderHero(rows) {
     const n = rows.length;
     const [d, nd] = split(rows);
@@ -182,6 +201,7 @@
     }
 
     const dr = rateMin(d), nr = rateMin(nd);
+    const prevHead = $("headline").textContent;
     $("headline").innerHTML =
       `${fmt(bought)} of ${fmt(n)} customers bought. ` +
       (dr != null && nr != null
@@ -197,13 +217,14 @@
       if (adj) sub += ` Among customers with similar engagement the difference is ${pts(adj.est)} points.`;
     }
     $("subline").textContent = sub;
+    if ($("headline").textContent !== prevHead && prevHead !== "Loading customer sample…") swapIn($("headline"));
 
-    $("sTotal").textContent = fmt(n);
+    countTo("sTotal", n, (v) => fmt(Math.round(v)));
     $("sTotalNote").textContent = state.seg === "all" ? "full sample" : `of ${fmt(customers.length)} in the sample`;
-    $("sRate").textContent = pct(bought / n, 1);
+    countTo("sRate", bought / n, (v) => pct(v, 1));
     $("sRateNote").textContent = `${fmt(bought)} purchases recorded`;
-    $("sEng").textContent = (rows.reduce((a, c) => a + c.engagement, 0) / n).toFixed(1);
-    $("sDisc").textContent = pct(d.length / n, 1);
+    countTo("sEng", rows.reduce((a, c) => a + c.engagement, 0) / n, (v) => v.toFixed(1));
+    countTo("sDisc", d.length / n, (v) => pct(v, 1));
     $("sDiscNote").textContent = plural(d.length, "customer");
   }
 
@@ -263,7 +284,7 @@
         d += `${pen ? "L" : "M"}${xAt(p.e).toFixed(1)} ${yAt(p.r).toFixed(1)} `;
         pen = true;
       });
-      out += `<path class="ln ${s.cls}" d="${d}"/>`;
+      out += `<path class="ln ${s.cls}" pathLength="1" d="${d}"/>`;
       s.pts.forEach((p) => {
         if (p.r != null) out += `<circle class="dot ${s.cls}" cx="${xAt(p.e)}" cy="${yAt(p.r)}" r="3.5"/>`;
       });
@@ -451,6 +472,7 @@
   function renderAll() {
     const rows = segmentRows();
     currentRows = rows;
+    const tr = $("trend"); tr.classList.add("draw"); clearTimeout(tr._t); tr._t = setTimeout(() => tr.classList.remove("draw"), 1300);
     renderHero(rows); renderPeople(rows); renderTrend(rows);
     renderCompare(rows); renderPrev(rows); renderNotes(rows); renderTarget(rows); renderTable();
   }
@@ -921,6 +943,25 @@
   paintTheme();
   renderAll();
   renderQuality();
+
+  /* ---------- Optional backend: set apiBase in config.js ----------
+     Expects GET {apiBase}/api/customers -> JSON array (see docs/API.md).
+     If it is empty or unreachable, the dashboard keeps the built-in sample data. */
+  const apiBase = ((window.ECONO_CONFIG || {}).apiBase || "").replace(/\/$/, "");
+  if (apiBase) {
+    fetch(apiBase + "/api/customers", { headers: { Accept: "application/json" } })
+      .then((r) => { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
+      .then((list) => {
+        const ok = (c) => c && Number.isFinite(+c.previous_purchases) && +c.previous_purchases >= 0 &&
+          Number.isInteger(+c.engagement) && +c.engagement >= 0 && +c.engagement <= 10 &&
+          (+c.discount === 0 || +c.discount === 1) && (+c.purchase === 0 || +c.purchase === 1);
+        const good = (Array.isArray(list) ? list : []).filter(ok);
+        if (!good.length) throw new Error("no valid rows");
+        const rows = good.map((c, i) => ({ customer_id: i + 1, previous_purchases: +c.previous_purchases, engagement: +c.engagement, discount: +c.discount, purchase: +c.purchase }));
+        setData(rows, `Live data from the API: ${fmt(rows.length)} customers`, list.length - good.length);
+      })
+      .catch(() => toast("Could not reach the data server, showing sample data."));
+  }
 
   // One-time reveal: the squares fill in when the page loads
   $("people").classList.add("intro");
