@@ -68,6 +68,26 @@ class TestEconoCasualAPI(unittest.TestCase):
         self.assertIn("purchase_rate_percent", data)
 
 
+
+
+    def test_purchase_rate_is_valid(self):
+        response = self.client.get("/purchase-summary")
+        self.assertEqual(response.status_code, 200)
+
+        data = response.get_json()
+        self.assertGreaterEqual(data["purchase_rate_percent"], 0)
+        self.assertLessEqual(data["purchase_rate_percent"], 100) 
+        response = self.client.get("/purchase-summary") 
+
+        self.assertEqual(response.status_code, 200)
+ 
+        data = response.get_json()
+        self.assertGreaterEqual(data["purchase_rate_percent"], 0)
+        self.assertLessEqual(data["purchase_rate_percent"], 100)
+
+
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)
 
