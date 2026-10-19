@@ -5,7 +5,16 @@ A responsive dashboard that shows who buys, how engagement relates to buying, an
 ## Run
 Open `index.html` in a browser. There are no dependencies: charts are plain DOM and SVG, and only the Google Fonts load online (the page falls back to system fonts offline).
 
+## Deploy (GitHub Pages)
+Push to `main`. In the repository go to Settings, then Pages, and set the source to "GitHub Actions". `.github/workflows/pages.yml` publishes the site on every push.
+
+## Connect a backend
+Set `apiBase` in `config.js`. The expected response is described in `docs/API.md`. With no `apiBase`, or if the server cannot be reached, the dashboard uses the built-in sample data.
+
 ## Files
+- `config.js`: backend address (optional)
+- `docs/API.md`: data contract for the backend
+- `CONTRIBUTING.md`: branch and commit rules for the team
 - `index.html`: page structure
 - `style.css`: layout and visual design (colour tokens at the top)
 - `script.js`: seeded sample data, statistics, charts, table, CSV export
