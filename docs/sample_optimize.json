@@ -1,0 +1,1811 @@
+{
+  "budget": 5000,
+  "total_cost": 5000.0,
+  "expected_incremental_purchases": 75.36,
+  "cautious_incremental_purchases": 40.54,
+  "expected_incremental_revenue": 3014.24,
+  "average_order_value_assumed": 40.0,
+  "blanket_expected_incremental_purchases": 17.87,
+  "lift_vs_blanket": 4.22,
+  "blanket_cost_for_same_result": null,
+  "savings_vs_blanket": null,
+  "objective": "lower_confidence_bound",
+  "customers_per_discount": {
+    "10": 12,
+    "20": 244
+  },
+  "allocation": [
+    {
+      "customer_id": 4019,
+      "discount": 20,
+      "expected_uplift": 0.682,
+      "cautious_uplift": 0.5649,
+      "cost": 20
+    },
+    {
+      "customer_id": 4552,
+      "discount": 20,
+      "expected_uplift": 0.8127,
+      "cautious_uplift": 0.5383,
+      "cost": 20
+    },
+    {
+      "customer_id": 4410,
+      "discount": 20,
+      "expected_uplift": 0.5476,
+      "cautious_uplift": 0.4764,
+      "cost": 20
+    },
+    {
+      "customer_id": 3436,
+      "discount": 20,
+      "expected_uplift": 0.522,
+      "cautious_uplift": 0.4725,
+      "cost": 20
+    },
+    {
+      "customer_id": 3997,
+      "discount": 20,
+      "expected_uplift": 0.5898,
+      "cautious_uplift": 0.455,
+      "cost": 20
+    },
+    {
+      "customer_id": 2089,
+      "discount": 20,
+      "expected_uplift": 0.5719,
+      "cautious_uplift": 0.4198,
+      "cost": 20
+    },
+    {
+      "customer_id": 1506,
+      "discount": 20,
+      "expected_uplift": 0.5356,
+      "cautious_uplift": 0.3971,
+      "cost": 20
+    },
+    {
+      "customer_id": 221,
+      "discount": 20,
+      "expected_uplift": 0.5718,
+      "cautious_uplift": 0.3681,
+      "cost": 20
+    },
+    {
+      "customer_id": 547,
+      "discount": 20,
+      "expected_uplift": 0.3922,
+      "cautious_uplift": 0.3652,
+      "cost": 20
+    },
+    {
+      "customer_id": 855,
+      "discount": 20,
+      "expected_uplift": 0.5212,
+      "cautious_uplift": 0.3616,
+      "cost": 20
+    },
+    {
+      "customer_id": 1076,
+      "discount": 20,
+      "expected_uplift": 0.5403,
+      "cautious_uplift": 0.358,
+      "cost": 20
+    },
+    {
+      "customer_id": 1413,
+      "discount": 20,
+      "expected_uplift": 0.5255,
+      "cautious_uplift": 0.3544,
+      "cost": 20
+    },
+    {
+      "customer_id": 3096,
+      "discount": 20,
+      "expected_uplift": 0.4026,
+      "cautious_uplift": 0.351,
+      "cost": 20
+    },
+    {
+      "customer_id": 1711,
+      "discount": 20,
+      "expected_uplift": 0.4722,
+      "cautious_uplift": 0.3476,
+      "cost": 20
+    },
+    {
+      "customer_id": 1221,
+      "discount": 20,
+      "expected_uplift": 0.3725,
+      "cautious_uplift": 0.3394,
+      "cost": 20
+    },
+    {
+      "customer_id": 2312,
+      "discount": 20,
+      "expected_uplift": 0.5398,
+      "cautious_uplift": 0.3316,
+      "cost": 20
+    },
+    {
+      "customer_id": 4218,
+      "discount": 20,
+      "expected_uplift": 0.4566,
+      "cautious_uplift": 0.3282,
+      "cost": 20
+    },
+    {
+      "customer_id": 2607,
+      "discount": 20,
+      "expected_uplift": 0.4071,
+      "cautious_uplift": 0.3279,
+      "cost": 20
+    },
+    {
+      "customer_id": 1532,
+      "discount": 20,
+      "expected_uplift": 0.6176,
+      "cautious_uplift": 0.3239,
+      "cost": 20
+    },
+    {
+      "customer_id": 1368,
+      "discount": 20,
+      "expected_uplift": 0.4766,
+      "cautious_uplift": 0.3194,
+      "cost": 20
+    },
+    {
+      "customer_id": 309,
+      "discount": 20,
+      "expected_uplift": 0.4789,
+      "cautious_uplift": 0.3158,
+      "cost": 20
+    },
+    {
+      "customer_id": 4547,
+      "discount": 20,
+      "expected_uplift": 0.4865,
+      "cautious_uplift": 0.309,
+      "cost": 20
+    },
+    {
+      "customer_id": 31,
+      "discount": 20,
+      "expected_uplift": 0.4308,
+      "cautious_uplift": 0.3069,
+      "cost": 20
+    },
+    {
+      "customer_id": 3287,
+      "discount": 20,
+      "expected_uplift": 0.5168,
+      "cautious_uplift": 0.2993,
+      "cost": 20
+    },
+    {
+      "customer_id": 385,
+      "discount": 20,
+      "expected_uplift": 0.5131,
+      "cautious_uplift": 0.2979,
+      "cost": 20
+    },
+    {
+      "customer_id": 2753,
+      "discount": 20,
+      "expected_uplift": 0.3893,
+      "cautious_uplift": 0.2977,
+      "cost": 20
+    },
+    {
+      "customer_id": 795,
+      "discount": 20,
+      "expected_uplift": 0.4136,
+      "cautious_uplift": 0.2955,
+      "cost": 20
+    },
+    {
+      "customer_id": 3808,
+      "discount": 20,
+      "expected_uplift": 0.418,
+      "cautious_uplift": 0.2899,
+      "cost": 20
+    },
+    {
+      "customer_id": 1331,
+      "discount": 20,
+      "expected_uplift": 0.4475,
+      "cautious_uplift": 0.289,
+      "cost": 20
+    },
+    {
+      "customer_id": 3288,
+      "discount": 20,
+      "expected_uplift": 0.4368,
+      "cautious_uplift": 0.2871,
+      "cost": 20
+    },
+    {
+      "customer_id": 844,
+      "discount": 20,
+      "expected_uplift": 0.5586,
+      "cautious_uplift": 0.2865,
+      "cost": 20
+    },
+    {
+      "customer_id": 3756,
+      "discount": 20,
+      "expected_uplift": 0.4295,
+      "cautious_uplift": 0.2837,
+      "cost": 20
+    },
+    {
+      "customer_id": 1816,
+      "discount": 20,
+      "expected_uplift": 0.4075,
+      "cautious_uplift": 0.2802,
+      "cost": 20
+    },
+    {
+      "customer_id": 752,
+      "discount": 20,
+      "expected_uplift": 0.4779,
+      "cautious_uplift": 0.2777,
+      "cost": 20
+    },
+    {
+      "customer_id": 950,
+      "discount": 20,
+      "expected_uplift": 0.4193,
+      "cautious_uplift": 0.2765,
+      "cost": 20
+    },
+    {
+      "customer_id": 1204,
+      "discount": 20,
+      "expected_uplift": 0.3154,
+      "cautious_uplift": 0.2747,
+      "cost": 20
+    },
+    {
+      "customer_id": 4926,
+      "discount": 20,
+      "expected_uplift": 0.5465,
+      "cautious_uplift": 0.268,
+      "cost": 20
+    },
+    {
+      "customer_id": 2333,
+      "discount": 20,
+      "expected_uplift": 0.3909,
+      "cautious_uplift": 0.2679,
+      "cost": 20
+    },
+    {
+      "customer_id": 4595,
+      "discount": 20,
+      "expected_uplift": 0.2662,
+      "cautious_uplift": 0.2662,
+      "cost": 20
+    },
+    {
+      "customer_id": 1300,
+      "discount": 20,
+      "expected_uplift": 0.4627,
+      "cautious_uplift": 0.2654,
+      "cost": 20
+    },
+    {
+      "customer_id": 4651,
+      "discount": 20,
+      "expected_uplift": 0.4057,
+      "cautious_uplift": 0.2641,
+      "cost": 20
+    },
+    {
+      "customer_id": 4561,
+      "discount": 20,
+      "expected_uplift": 0.4397,
+      "cautious_uplift": 0.2634,
+      "cost": 20
+    },
+    {
+      "customer_id": 2810,
+      "discount": 20,
+      "expected_uplift": 0.3842,
+      "cautious_uplift": 0.2628,
+      "cost": 20
+    },
+    {
+      "customer_id": 3759,
+      "discount": 20,
+      "expected_uplift": 0.4908,
+      "cautious_uplift": 0.2625,
+      "cost": 20
+    },
+    {
+      "customer_id": 2197,
+      "discount": 20,
+      "expected_uplift": 0.3654,
+      "cautious_uplift": 0.2611,
+      "cost": 20
+    },
+    {
+      "customer_id": 4305,
+      "discount": 20,
+      "expected_uplift": 0.2947,
+      "cautious_uplift": 0.2589,
+      "cost": 20
+    },
+    {
+      "customer_id": 2551,
+      "discount": 20,
+      "expected_uplift": 0.258,
+      "cautious_uplift": 0.258,
+      "cost": 20
+    },
+    {
+      "customer_id": 246,
+      "discount": 20,
+      "expected_uplift": 0.5228,
+      "cautious_uplift": 0.2488,
+      "cost": 20
+    },
+    {
+      "customer_id": 4631,
+      "discount": 20,
+      "expected_uplift": 0.4259,
+      "cautious_uplift": 0.2485,
+      "cost": 20
+    },
+    {
+      "customer_id": 2491,
+      "discount": 20,
+      "expected_uplift": 0.362,
+      "cautious_uplift": 0.2452,
+      "cost": 20
+    },
+    {
+      "customer_id": 2832,
+      "discount": 20,
+      "expected_uplift": 0.2577,
+      "cautious_uplift": 0.2439,
+      "cost": 20
+    },
+    {
+      "customer_id": 732,
+      "discount": 20,
+      "expected_uplift": 0.3615,
+      "cautious_uplift": 0.2429,
+      "cost": 20
+    },
+    {
+      "customer_id": 2745,
+      "discount": 20,
+      "expected_uplift": 0.3783,
+      "cautious_uplift": 0.2428,
+      "cost": 20
+    },
+    {
+      "customer_id": 813,
+      "discount": 20,
+      "expected_uplift": 0.3914,
+      "cautious_uplift": 0.2425,
+      "cost": 20
+    },
+    {
+      "customer_id": 2780,
+      "discount": 20,
+      "expected_uplift": 0.4179,
+      "cautious_uplift": 0.2405,
+      "cost": 20
+    },
+    {
+      "customer_id": 4053,
+      "discount": 20,
+      "expected_uplift": 0.5357,
+      "cautious_uplift": 0.2404,
+      "cost": 20
+    },
+    {
+      "customer_id": 1372,
+      "discount": 20,
+      "expected_uplift": 0.4322,
+      "cautious_uplift": 0.2349,
+      "cost": 20
+    },
+    {
+      "customer_id": 537,
+      "discount": 20,
+      "expected_uplift": 0.4533,
+      "cautious_uplift": 0.2344,
+      "cost": 20
+    },
+    {
+      "customer_id": 3810,
+      "discount": 20,
+      "expected_uplift": 0.3469,
+      "cautious_uplift": 0.2334,
+      "cost": 20
+    },
+    {
+      "customer_id": 2972,
+      "discount": 20,
+      "expected_uplift": 0.4149,
+      "cautious_uplift": 0.2315,
+      "cost": 20
+    },
+    {
+      "customer_id": 4484,
+      "discount": 20,
+      "expected_uplift": 0.4115,
+      "cautious_uplift": 0.2313,
+      "cost": 20
+    },
+    {
+      "customer_id": 1820,
+      "discount": 20,
+      "expected_uplift": 0.4138,
+      "cautious_uplift": 0.231,
+      "cost": 20
+    },
+    {
+      "customer_id": 96,
+      "discount": 20,
+      "expected_uplift": 0.3844,
+      "cautious_uplift": 0.2308,
+      "cost": 20
+    },
+    {
+      "customer_id": 3308,
+      "discount": 20,
+      "expected_uplift": 0.3558,
+      "cautious_uplift": 0.2307,
+      "cost": 20
+    },
+    {
+      "customer_id": 4644,
+      "discount": 20,
+      "expected_uplift": 0.3775,
+      "cautious_uplift": 0.229,
+      "cost": 20
+    },
+    {
+      "customer_id": 3775,
+      "discount": 20,
+      "expected_uplift": 0.2572,
+      "cautious_uplift": 0.2272,
+      "cost": 20
+    },
+    {
+      "customer_id": 4267,
+      "discount": 20,
+      "expected_uplift": 0.3636,
+      "cautious_uplift": 0.2212,
+      "cost": 20
+    },
+    {
+      "customer_id": 2398,
+      "discount": 20,
+      "expected_uplift": 0.3774,
+      "cautious_uplift": 0.2183,
+      "cost": 20
+    },
+    {
+      "customer_id": 1120,
+      "discount": 20,
+      "expected_uplift": 0.3183,
+      "cautious_uplift": 0.2132,
+      "cost": 20
+    },
+    {
+      "customer_id": 1523,
+      "discount": 20,
+      "expected_uplift": 0.3468,
+      "cautious_uplift": 0.2114,
+      "cost": 20
+    },
+    {
+      "customer_id": 4238,
+      "discount": 20,
+      "expected_uplift": 0.3359,
+      "cautious_uplift": 0.211,
+      "cost": 20
+    },
+    {
+      "customer_id": 3178,
+      "discount": 20,
+      "expected_uplift": 0.3564,
+      "cautious_uplift": 0.2109,
+      "cost": 20
+    },
+    {
+      "customer_id": 568,
+      "discount": 20,
+      "expected_uplift": 0.3167,
+      "cautious_uplift": 0.2097,
+      "cost": 20
+    },
+    {
+      "customer_id": 1526,
+      "discount": 20,
+      "expected_uplift": 0.4298,
+      "cautious_uplift": 0.2084,
+      "cost": 20
+    },
+    {
+      "customer_id": 219,
+      "discount": 20,
+      "expected_uplift": 0.4479,
+      "cautious_uplift": 0.2084,
+      "cost": 20
+    },
+    {
+      "customer_id": 4160,
+      "discount": 20,
+      "expected_uplift": 0.4429,
+      "cautious_uplift": 0.208,
+      "cost": 20
+    },
+    {
+      "customer_id": 4844,
+      "discount": 20,
+      "expected_uplift": 0.3377,
+      "cautious_uplift": 0.206,
+      "cost": 20
+    },
+    {
+      "customer_id": 826,
+      "discount": 20,
+      "expected_uplift": 0.4049,
+      "cautious_uplift": 0.2055,
+      "cost": 20
+    },
+    {
+      "customer_id": 1161,
+      "discount": 20,
+      "expected_uplift": 0.2676,
+      "cautious_uplift": 0.2003,
+      "cost": 20
+    },
+    {
+      "customer_id": 1329,
+      "discount": 20,
+      "expected_uplift": 0.369,
+      "cautious_uplift": 0.1985,
+      "cost": 20
+    },
+    {
+      "customer_id": 3343,
+      "discount": 20,
+      "expected_uplift": 0.3386,
+      "cautious_uplift": 0.1962,
+      "cost": 20
+    },
+    {
+      "customer_id": 2079,
+      "discount": 20,
+      "expected_uplift": 0.2921,
+      "cautious_uplift": 0.1948,
+      "cost": 20
+    },
+    {
+      "customer_id": 4745,
+      "discount": 20,
+      "expected_uplift": 0.1946,
+      "cautious_uplift": 0.1946,
+      "cost": 20
+    },
+    {
+      "customer_id": 4645,
+      "discount": 20,
+      "expected_uplift": 0.3476,
+      "cautious_uplift": 0.1931,
+      "cost": 20
+    },
+    {
+      "customer_id": 4138,
+      "discount": 20,
+      "expected_uplift": 0.306,
+      "cautious_uplift": 0.1926,
+      "cost": 20
+    },
+    {
+      "customer_id": 661,
+      "discount": 20,
+      "expected_uplift": 0.3101,
+      "cautious_uplift": 0.1873,
+      "cost": 20
+    },
+    {
+      "customer_id": 2183,
+      "discount": 20,
+      "expected_uplift": 0.3584,
+      "cautious_uplift": 0.1863,
+      "cost": 20
+    },
+    {
+      "customer_id": 688,
+      "discount": 20,
+      "expected_uplift": 0.3351,
+      "cautious_uplift": 0.1844,
+      "cost": 20
+    },
+    {
+      "customer_id": 736,
+      "discount": 20,
+      "expected_uplift": 0.3274,
+      "cautious_uplift": 0.1837,
+      "cost": 20
+    },
+    {
+      "customer_id": 458,
+      "discount": 20,
+      "expected_uplift": 0.2879,
+      "cautious_uplift": 0.1835,
+      "cost": 20
+    },
+    {
+      "customer_id": 3433,
+      "discount": 20,
+      "expected_uplift": 0.3473,
+      "cautious_uplift": 0.1832,
+      "cost": 20
+    },
+    {
+      "customer_id": 327,
+      "discount": 20,
+      "expected_uplift": 0.2941,
+      "cautious_uplift": 0.1825,
+      "cost": 20
+    },
+    {
+      "customer_id": 4502,
+      "discount": 20,
+      "expected_uplift": 0.3135,
+      "cautious_uplift": 0.1819,
+      "cost": 20
+    },
+    {
+      "customer_id": 3911,
+      "discount": 20,
+      "expected_uplift": 0.2762,
+      "cautious_uplift": 0.1797,
+      "cost": 20
+    },
+    {
+      "customer_id": 1116,
+      "discount": 20,
+      "expected_uplift": 0.3167,
+      "cautious_uplift": 0.1787,
+      "cost": 20
+    },
+    {
+      "customer_id": 1433,
+      "discount": 20,
+      "expected_uplift": 0.2855,
+      "cautious_uplift": 0.1784,
+      "cost": 20
+    },
+    {
+      "customer_id": 4573,
+      "discount": 20,
+      "expected_uplift": 0.2895,
+      "cautious_uplift": 0.1769,
+      "cost": 20
+    },
+    {
+      "customer_id": 2473,
+      "discount": 20,
+      "expected_uplift": 0.2712,
+      "cautious_uplift": 0.1728,
+      "cost": 20
+    },
+    {
+      "customer_id": 1291,
+      "discount": 20,
+      "expected_uplift": 0.327,
+      "cautious_uplift": 0.1703,
+      "cost": 20
+    },
+    {
+      "customer_id": 305,
+      "discount": 20,
+      "expected_uplift": 0.2755,
+      "cautious_uplift": 0.1683,
+      "cost": 20
+    },
+    {
+      "customer_id": 3584,
+      "discount": 20,
+      "expected_uplift": 0.3027,
+      "cautious_uplift": 0.168,
+      "cost": 20
+    },
+    {
+      "customer_id": 1768,
+      "discount": 20,
+      "expected_uplift": 0.2902,
+      "cautious_uplift": 0.1637,
+      "cost": 20
+    },
+    {
+      "customer_id": 1415,
+      "discount": 20,
+      "expected_uplift": 0.2861,
+      "cautious_uplift": 0.1596,
+      "cost": 20
+    },
+    {
+      "customer_id": 4996,
+      "discount": 20,
+      "expected_uplift": 0.2843,
+      "cautious_uplift": 0.1585,
+      "cost": 20
+    },
+    {
+      "customer_id": 2890,
+      "discount": 20,
+      "expected_uplift": 0.2672,
+      "cautious_uplift": 0.1509,
+      "cost": 20
+    },
+    {
+      "customer_id": 2986,
+      "discount": 20,
+      "expected_uplift": 0.324,
+      "cautious_uplift": 0.1505,
+      "cost": 20
+    },
+    {
+      "customer_id": 380,
+      "discount": 20,
+      "expected_uplift": 0.2553,
+      "cautious_uplift": 0.1499,
+      "cost": 20
+    },
+    {
+      "customer_id": 1249,
+      "discount": 20,
+      "expected_uplift": 0.3118,
+      "cautious_uplift": 0.149,
+      "cost": 20
+    },
+    {
+      "customer_id": 4591,
+      "discount": 20,
+      "expected_uplift": 0.2916,
+      "cautious_uplift": 0.1484,
+      "cost": 20
+    },
+    {
+      "customer_id": 2975,
+      "discount": 20,
+      "expected_uplift": 0.2921,
+      "cautious_uplift": 0.1479,
+      "cost": 20
+    },
+    {
+      "customer_id": 3877,
+      "discount": 20,
+      "expected_uplift": 0.2525,
+      "cautious_uplift": 0.1467,
+      "cost": 20
+    },
+    {
+      "customer_id": 3562,
+      "discount": 20,
+      "expected_uplift": 0.3542,
+      "cautious_uplift": 0.1466,
+      "cost": 20
+    },
+    {
+      "customer_id": 4719,
+      "discount": 20,
+      "expected_uplift": 0.2624,
+      "cautious_uplift": 0.1463,
+      "cost": 20
+    },
+    {
+      "customer_id": 729,
+      "discount": 20,
+      "expected_uplift": 0.2393,
+      "cautious_uplift": 0.145,
+      "cost": 20
+    },
+    {
+      "customer_id": 4099,
+      "discount": 20,
+      "expected_uplift": 0.1496,
+      "cautious_uplift": 0.1445,
+      "cost": 20
+    },
+    {
+      "customer_id": 4977,
+      "discount": 20,
+      "expected_uplift": 0.2465,
+      "cautious_uplift": 0.1436,
+      "cost": 20
+    },
+    {
+      "customer_id": 685,
+      "discount": 20,
+      "expected_uplift": 0.2884,
+      "cautious_uplift": 0.1431,
+      "cost": 20
+    },
+    {
+      "customer_id": 1616,
+      "discount": 20,
+      "expected_uplift": 0.3211,
+      "cautious_uplift": 0.1367,
+      "cost": 20
+    },
+    {
+      "customer_id": 679,
+      "discount": 20,
+      "expected_uplift": 0.2474,
+      "cautious_uplift": 0.1324,
+      "cost": 20
+    },
+    {
+      "customer_id": 2346,
+      "discount": 20,
+      "expected_uplift": 0.2217,
+      "cautious_uplift": 0.1288,
+      "cost": 20
+    },
+    {
+      "customer_id": 1854,
+      "discount": 20,
+      "expected_uplift": 0.2692,
+      "cautious_uplift": 0.1283,
+      "cost": 20
+    },
+    {
+      "customer_id": 4115,
+      "discount": 20,
+      "expected_uplift": 0.2288,
+      "cautious_uplift": 0.1282,
+      "cost": 20
+    },
+    {
+      "customer_id": 4741,
+      "discount": 20,
+      "expected_uplift": 0.2393,
+      "cautious_uplift": 0.1276,
+      "cost": 20
+    },
+    {
+      "customer_id": 3312,
+      "discount": 20,
+      "expected_uplift": 0.2642,
+      "cautious_uplift": 0.127,
+      "cost": 20
+    },
+    {
+      "customer_id": 3586,
+      "discount": 20,
+      "expected_uplift": 0.2925,
+      "cautious_uplift": 0.1238,
+      "cost": 20
+    },
+    {
+      "customer_id": 2800,
+      "discount": 20,
+      "expected_uplift": 0.2637,
+      "cautious_uplift": 0.1235,
+      "cost": 20
+    },
+    {
+      "customer_id": 664,
+      "discount": 20,
+      "expected_uplift": 0.2648,
+      "cautious_uplift": 0.123,
+      "cost": 20
+    },
+    {
+      "customer_id": 3142,
+      "discount": 20,
+      "expected_uplift": 0.2207,
+      "cautious_uplift": 0.1226,
+      "cost": 20
+    },
+    {
+      "customer_id": 3760,
+      "discount": 20,
+      "expected_uplift": 0.2703,
+      "cautious_uplift": 0.1224,
+      "cost": 20
+    },
+    {
+      "customer_id": 3275,
+      "discount": 20,
+      "expected_uplift": 0.3239,
+      "cautious_uplift": 0.1215,
+      "cost": 20
+    },
+    {
+      "customer_id": 2189,
+      "discount": 20,
+      "expected_uplift": 0.1981,
+      "cautious_uplift": 0.1214,
+      "cost": 20
+    },
+    {
+      "customer_id": 3926,
+      "discount": 20,
+      "expected_uplift": 0.2251,
+      "cautious_uplift": 0.1188,
+      "cost": 20
+    },
+    {
+      "customer_id": 3234,
+      "discount": 20,
+      "expected_uplift": 0.2786,
+      "cautious_uplift": 0.1185,
+      "cost": 20
+    },
+    {
+      "customer_id": 2601,
+      "discount": 20,
+      "expected_uplift": 0.3191,
+      "cautious_uplift": 0.118,
+      "cost": 20
+    },
+    {
+      "customer_id": 2308,
+      "discount": 20,
+      "expected_uplift": 0.2946,
+      "cautious_uplift": 0.1174,
+      "cost": 20
+    },
+    {
+      "customer_id": 4614,
+      "discount": 20,
+      "expected_uplift": 0.2205,
+      "cautious_uplift": 0.1167,
+      "cost": 20
+    },
+    {
+      "customer_id": 4913,
+      "discount": 20,
+      "expected_uplift": 0.2945,
+      "cautious_uplift": 0.1153,
+      "cost": 20
+    },
+    {
+      "customer_id": 4075,
+      "discount": 20,
+      "expected_uplift": 0.2267,
+      "cautious_uplift": 0.1153,
+      "cost": 20
+    },
+    {
+      "customer_id": 1927,
+      "discount": 20,
+      "expected_uplift": 0.2076,
+      "cautious_uplift": 0.1152,
+      "cost": 20
+    },
+    {
+      "customer_id": 4348,
+      "discount": 20,
+      "expected_uplift": 0.2166,
+      "cautious_uplift": 0.115,
+      "cost": 20
+    },
+    {
+      "customer_id": 3227,
+      "discount": 20,
+      "expected_uplift": 0.2184,
+      "cautious_uplift": 0.1143,
+      "cost": 20
+    },
+    {
+      "customer_id": 1537,
+      "discount": 20,
+      "expected_uplift": 0.2329,
+      "cautious_uplift": 0.1137,
+      "cost": 20
+    },
+    {
+      "customer_id": 3336,
+      "discount": 20,
+      "expected_uplift": 0.2144,
+      "cautious_uplift": 0.1121,
+      "cost": 20
+    },
+    {
+      "customer_id": 186,
+      "discount": 20,
+      "expected_uplift": 0.2107,
+      "cautious_uplift": 0.1117,
+      "cost": 20
+    },
+    {
+      "customer_id": 2703,
+      "discount": 20,
+      "expected_uplift": 0.21,
+      "cautious_uplift": 0.1115,
+      "cost": 20
+    },
+    {
+      "customer_id": 1709,
+      "discount": 20,
+      "expected_uplift": 0.2221,
+      "cautious_uplift": 0.1114,
+      "cost": 20
+    },
+    {
+      "customer_id": 1570,
+      "discount": 20,
+      "expected_uplift": 0.3593,
+      "cautious_uplift": 0.1109,
+      "cost": 20
+    },
+    {
+      "customer_id": 4303,
+      "discount": 20,
+      "expected_uplift": 0.2239,
+      "cautious_uplift": 0.1108,
+      "cost": 20
+    },
+    {
+      "customer_id": 1500,
+      "discount": 20,
+      "expected_uplift": 0.1994,
+      "cautious_uplift": 0.1105,
+      "cost": 20
+    },
+    {
+      "customer_id": 2307,
+      "discount": 20,
+      "expected_uplift": 0.2057,
+      "cautious_uplift": 0.1096,
+      "cost": 20
+    },
+    {
+      "customer_id": 1388,
+      "discount": 20,
+      "expected_uplift": 0.2301,
+      "cautious_uplift": 0.1094,
+      "cost": 20
+    },
+    {
+      "customer_id": 629,
+      "discount": 20,
+      "expected_uplift": 0.2966,
+      "cautious_uplift": 0.1088,
+      "cost": 20
+    },
+    {
+      "customer_id": 4903,
+      "discount": 20,
+      "expected_uplift": 0.2122,
+      "cautious_uplift": 0.1086,
+      "cost": 20
+    },
+    {
+      "customer_id": 2251,
+      "discount": 20,
+      "expected_uplift": 0.204,
+      "cautious_uplift": 0.1077,
+      "cost": 20
+    },
+    {
+      "customer_id": 379,
+      "discount": 20,
+      "expected_uplift": 0.2011,
+      "cautious_uplift": 0.1076,
+      "cost": 20
+    },
+    {
+      "customer_id": 105,
+      "discount": 20,
+      "expected_uplift": 0.2451,
+      "cautious_uplift": 0.1065,
+      "cost": 20
+    },
+    {
+      "customer_id": 1913,
+      "discount": 20,
+      "expected_uplift": 0.2384,
+      "cautious_uplift": 0.1058,
+      "cost": 20
+    },
+    {
+      "customer_id": 4578,
+      "discount": 20,
+      "expected_uplift": 0.2418,
+      "cautious_uplift": 0.1051,
+      "cost": 20
+    },
+    {
+      "customer_id": 4389,
+      "discount": 20,
+      "expected_uplift": 0.2189,
+      "cautious_uplift": 0.1041,
+      "cost": 20
+    },
+    {
+      "customer_id": 3152,
+      "discount": 20,
+      "expected_uplift": 0.1963,
+      "cautious_uplift": 0.103,
+      "cost": 20
+    },
+    {
+      "customer_id": 4203,
+      "discount": 20,
+      "expected_uplift": 0.2345,
+      "cautious_uplift": 0.1023,
+      "cost": 20
+    },
+    {
+      "customer_id": 3564,
+      "discount": 20,
+      "expected_uplift": 0.1986,
+      "cautious_uplift": 0.1018,
+      "cost": 20
+    },
+    {
+      "customer_id": 1520,
+      "discount": 20,
+      "expected_uplift": 0.2467,
+      "cautious_uplift": 0.1009,
+      "cost": 20
+    },
+    {
+      "customer_id": 2637,
+      "discount": 20,
+      "expected_uplift": 0.2068,
+      "cautious_uplift": 0.1001,
+      "cost": 20
+    },
+    {
+      "customer_id": 4821,
+      "discount": 20,
+      "expected_uplift": 0.3415,
+      "cautious_uplift": 0.097,
+      "cost": 20
+    },
+    {
+      "customer_id": 2502,
+      "discount": 20,
+      "expected_uplift": 0.2618,
+      "cautious_uplift": 0.096,
+      "cost": 20
+    },
+    {
+      "customer_id": 3957,
+      "discount": 20,
+      "expected_uplift": 0.2155,
+      "cautious_uplift": 0.0959,
+      "cost": 20
+    },
+    {
+      "customer_id": 3248,
+      "discount": 20,
+      "expected_uplift": 0.2531,
+      "cautious_uplift": 0.0958,
+      "cost": 20
+    },
+    {
+      "customer_id": 4531,
+      "discount": 20,
+      "expected_uplift": 0.28,
+      "cautious_uplift": 0.0957,
+      "cost": 20
+    },
+    {
+      "customer_id": 2874,
+      "discount": 20,
+      "expected_uplift": 0.2015,
+      "cautious_uplift": 0.0955,
+      "cost": 20
+    },
+    {
+      "customer_id": 1922,
+      "discount": 20,
+      "expected_uplift": 0.2502,
+      "cautious_uplift": 0.0946,
+      "cost": 20
+    },
+    {
+      "customer_id": 1181,
+      "discount": 20,
+      "expected_uplift": 0.2249,
+      "cautious_uplift": 0.094,
+      "cost": 20
+    },
+    {
+      "customer_id": 3882,
+      "discount": 20,
+      "expected_uplift": 0.2235,
+      "cautious_uplift": 0.0935,
+      "cost": 20
+    },
+    {
+      "customer_id": 1641,
+      "discount": 20,
+      "expected_uplift": 0.2151,
+      "cautious_uplift": 0.0916,
+      "cost": 20
+    },
+    {
+      "customer_id": 4004,
+      "discount": 20,
+      "expected_uplift": 0.1855,
+      "cautious_uplift": 0.0907,
+      "cost": 20
+    },
+    {
+      "customer_id": 23,
+      "discount": 20,
+      "expected_uplift": 0.2239,
+      "cautious_uplift": 0.0902,
+      "cost": 20
+    },
+    {
+      "customer_id": 3652,
+      "discount": 20,
+      "expected_uplift": 0.2882,
+      "cautious_uplift": 0.0897,
+      "cost": 20
+    },
+    {
+      "customer_id": 1658,
+      "discount": 20,
+      "expected_uplift": 0.238,
+      "cautious_uplift": 0.0889,
+      "cost": 20
+    },
+    {
+      "customer_id": 2440,
+      "discount": 20,
+      "expected_uplift": 0.2234,
+      "cautious_uplift": 0.0883,
+      "cost": 20
+    },
+    {
+      "customer_id": 2841,
+      "discount": 20,
+      "expected_uplift": 0.184,
+      "cautious_uplift": 0.0877,
+      "cost": 20
+    },
+    {
+      "customer_id": 3408,
+      "discount": 20,
+      "expected_uplift": 0.3062,
+      "cautious_uplift": 0.0873,
+      "cost": 20
+    },
+    {
+      "customer_id": 131,
+      "discount": 20,
+      "expected_uplift": 0.1842,
+      "cautious_uplift": 0.0867,
+      "cost": 20
+    },
+    {
+      "customer_id": 3673,
+      "discount": 20,
+      "expected_uplift": 0.1857,
+      "cautious_uplift": 0.0864,
+      "cost": 20
+    },
+    {
+      "customer_id": 2877,
+      "discount": 20,
+      "expected_uplift": 0.1865,
+      "cautious_uplift": 0.0861,
+      "cost": 20
+    },
+    {
+      "customer_id": 4400,
+      "discount": 20,
+      "expected_uplift": 0.2424,
+      "cautious_uplift": 0.086,
+      "cost": 20
+    },
+    {
+      "customer_id": 3485,
+      "discount": 20,
+      "expected_uplift": 0.1916,
+      "cautious_uplift": 0.0853,
+      "cost": 20
+    },
+    {
+      "customer_id": 4461,
+      "discount": 20,
+      "expected_uplift": 0.1952,
+      "cautious_uplift": 0.0848,
+      "cost": 20
+    },
+    {
+      "customer_id": 3254,
+      "discount": 20,
+      "expected_uplift": 0.2156,
+      "cautious_uplift": 0.0842,
+      "cost": 20
+    },
+    {
+      "customer_id": 143,
+      "discount": 20,
+      "expected_uplift": 0.195,
+      "cautious_uplift": 0.0838,
+      "cost": 20
+    },
+    {
+      "customer_id": 138,
+      "discount": 20,
+      "expected_uplift": 0.3015,
+      "cautious_uplift": 0.0824,
+      "cost": 20
+    },
+    {
+      "customer_id": 2867,
+      "discount": 10,
+      "expected_uplift": 0.2064,
+      "cautious_uplift": 0.0817,
+      "cost": 10
+    },
+    {
+      "customer_id": 465,
+      "discount": 20,
+      "expected_uplift": 0.2371,
+      "cautious_uplift": 0.0811,
+      "cost": 20
+    },
+    {
+      "customer_id": 3268,
+      "discount": 20,
+      "expected_uplift": 0.1882,
+      "cautious_uplift": 0.0806,
+      "cost": 20
+    },
+    {
+      "customer_id": 1359,
+      "discount": 20,
+      "expected_uplift": 0.2415,
+      "cautious_uplift": 0.0795,
+      "cost": 20
+    },
+    {
+      "customer_id": 1394,
+      "discount": 20,
+      "expected_uplift": 0.2061,
+      "cautious_uplift": 0.0781,
+      "cost": 20
+    },
+    {
+      "customer_id": 4797,
+      "discount": 20,
+      "expected_uplift": 0.2233,
+      "cautious_uplift": 0.0779,
+      "cost": 20
+    },
+    {
+      "customer_id": 4929,
+      "discount": 20,
+      "expected_uplift": 0.1764,
+      "cautious_uplift": 0.0779,
+      "cost": 20
+    },
+    {
+      "customer_id": 4923,
+      "discount": 20,
+      "expected_uplift": 0.2309,
+      "cautious_uplift": 0.0777,
+      "cost": 20
+    },
+    {
+      "customer_id": 3636,
+      "discount": 20,
+      "expected_uplift": 0.2411,
+      "cautious_uplift": 0.0749,
+      "cost": 20
+    },
+    {
+      "customer_id": 2593,
+      "discount": 20,
+      "expected_uplift": 0.1677,
+      "cautious_uplift": 0.0748,
+      "cost": 20
+    },
+    {
+      "customer_id": 1970,
+      "discount": 20,
+      "expected_uplift": 0.3825,
+      "cautious_uplift": 0.0737,
+      "cost": 20
+    },
+    {
+      "customer_id": 4080,
+      "discount": 20,
+      "expected_uplift": 0.1738,
+      "cautious_uplift": 0.0723,
+      "cost": 20
+    },
+    {
+      "customer_id": 3197,
+      "discount": 20,
+      "expected_uplift": 0.1626,
+      "cautious_uplift": 0.0719,
+      "cost": 20
+    },
+    {
+      "customer_id": 614,
+      "discount": 20,
+      "expected_uplift": 0.163,
+      "cautious_uplift": 0.0715,
+      "cost": 20
+    },
+    {
+      "customer_id": 2866,
+      "discount": 20,
+      "expected_uplift": 0.2158,
+      "cautious_uplift": 0.0706,
+      "cost": 20
+    },
+    {
+      "customer_id": 2720,
+      "discount": 20,
+      "expected_uplift": 0.2091,
+      "cautious_uplift": 0.0701,
+      "cost": 20
+    },
+    {
+      "customer_id": 43,
+      "discount": 20,
+      "expected_uplift": 0.1723,
+      "cautious_uplift": 0.0684,
+      "cost": 20
+    },
+    {
+      "customer_id": 631,
+      "discount": 20,
+      "expected_uplift": 0.1702,
+      "cautious_uplift": 0.0678,
+      "cost": 20
+    },
+    {
+      "customer_id": 2339,
+      "discount": 20,
+      "expected_uplift": 0.2418,
+      "cautious_uplift": 0.0678,
+      "cost": 20
+    },
+    {
+      "customer_id": 1352,
+      "discount": 20,
+      "expected_uplift": 0.2071,
+      "cautious_uplift": 0.0673,
+      "cost": 20
+    },
+    {
+      "customer_id": 3867,
+      "discount": 20,
+      "expected_uplift": 0.1783,
+      "cautious_uplift": 0.0667,
+      "cost": 20
+    },
+    {
+      "customer_id": 1907,
+      "discount": 20,
+      "expected_uplift": 0.2215,
+      "cautious_uplift": 0.065,
+      "cost": 20
+    },
+    {
+      "customer_id": 3813,
+      "discount": 20,
+      "expected_uplift": 0.1569,
+      "cautious_uplift": 0.0634,
+      "cost": 20
+    },
+    {
+      "customer_id": 1825,
+      "discount": 20,
+      "expected_uplift": 0.1788,
+      "cautious_uplift": 0.0633,
+      "cost": 20
+    },
+    {
+      "customer_id": 406,
+      "discount": 20,
+      "expected_uplift": 0.1592,
+      "cautious_uplift": 0.0628,
+      "cost": 20
+    },
+    {
+      "customer_id": 667,
+      "discount": 20,
+      "expected_uplift": 0.2016,
+      "cautious_uplift": 0.0625,
+      "cost": 20
+    },
+    {
+      "customer_id": 1671,
+      "discount": 20,
+      "expected_uplift": 0.1953,
+      "cautious_uplift": 0.0619,
+      "cost": 20
+    },
+    {
+      "customer_id": 3935,
+      "discount": 20,
+      "expected_uplift": 0.1595,
+      "cautious_uplift": 0.0618,
+      "cost": 20
+    },
+    {
+      "customer_id": 3145,
+      "discount": 20,
+      "expected_uplift": 0.2603,
+      "cautious_uplift": 0.0617,
+      "cost": 20
+    },
+    {
+      "customer_id": 4179,
+      "discount": 20,
+      "expected_uplift": 0.169,
+      "cautious_uplift": 0.0612,
+      "cost": 20
+    },
+    {
+      "customer_id": 136,
+      "discount": 10,
+      "expected_uplift": 0.2698,
+      "cautious_uplift": 0.0609,
+      "cost": 10
+    },
+    {
+      "customer_id": 2977,
+      "discount": 10,
+      "expected_uplift": 0.272,
+      "cautious_uplift": 0.0603,
+      "cost": 10
+    },
+    {
+      "customer_id": 1162,
+      "discount": 20,
+      "expected_uplift": 0.1761,
+      "cautious_uplift": 0.0596,
+      "cost": 20
+    },
+    {
+      "customer_id": 4880,
+      "discount": 20,
+      "expected_uplift": 0.2856,
+      "cautious_uplift": 0.058,
+      "cost": 20
+    },
+    {
+      "customer_id": 1794,
+      "discount": 20,
+      "expected_uplift": 0.1837,
+      "cautious_uplift": 0.0574,
+      "cost": 20
+    },
+    {
+      "customer_id": 2943,
+      "discount": 20,
+      "expected_uplift": 0.1656,
+      "cautious_uplift": 0.0554,
+      "cost": 20
+    },
+    {
+      "customer_id": 1868,
+      "discount": 20,
+      "expected_uplift": 0.1663,
+      "cautious_uplift": 0.0552,
+      "cost": 20
+    },
+    {
+      "customer_id": 2217,
+      "discount": 20,
+      "expected_uplift": 0.2239,
+      "cautious_uplift": 0.0548,
+      "cost": 20
+    },
+    {
+      "customer_id": 1997,
+      "discount": 20,
+      "expected_uplift": 0.1499,
+      "cautious_uplift": 0.0548,
+      "cost": 20
+    },
+    {
+      "customer_id": 1367,
+      "discount": 10,
+      "expected_uplift": 0.2336,
+      "cautious_uplift": 0.0542,
+      "cost": 10
+    },
+    {
+      "customer_id": 4241,
+      "discount": 20,
+      "expected_uplift": 0.1453,
+      "cautious_uplift": 0.0538,
+      "cost": 20
+    },
+    {
+      "customer_id": 1240,
+      "discount": 20,
+      "expected_uplift": 0.1848,
+      "cautious_uplift": 0.0525,
+      "cost": 20
+    },
+    {
+      "customer_id": 1052,
+      "discount": 20,
+      "expected_uplift": 0.1517,
+      "cautious_uplift": 0.0516,
+      "cost": 20
+    },
+    {
+      "customer_id": 707,
+      "discount": 20,
+      "expected_uplift": 0.1856,
+      "cautious_uplift": 0.0507,
+      "cost": 20
+    },
+    {
+      "customer_id": 3892,
+      "discount": 20,
+      "expected_uplift": 0.2268,
+      "cautious_uplift": 0.05,
+      "cost": 20
+    },
+    {
+      "customer_id": 1534,
+      "discount": 20,
+      "expected_uplift": 0.1583,
+      "cautious_uplift": 0.05,
+      "cost": 20
+    },
+    {
+      "customer_id": 3481,
+      "discount": 20,
+      "expected_uplift": 0.163,
+      "cautious_uplift": 0.0497,
+      "cost": 20
+    },
+    {
+      "customer_id": 4994,
+      "discount": 20,
+      "expected_uplift": 0.1602,
+      "cautious_uplift": 0.0497,
+      "cost": 20
+    },
+    {
+      "customer_id": 471,
+      "discount": 20,
+      "expected_uplift": 0.1457,
+      "cautious_uplift": 0.0483,
+      "cost": 20
+    },
+    {
+      "customer_id": 13,
+      "discount": 20,
+      "expected_uplift": 0.1793,
+      "cautious_uplift": 0.0474,
+      "cost": 20
+    },
+    {
+      "customer_id": 1412,
+      "discount": 20,
+      "expected_uplift": 0.1414,
+      "cautious_uplift": 0.0459,
+      "cost": 20
+    },
+    {
+      "customer_id": 1276,
+      "discount": 20,
+      "expected_uplift": 0.2191,
+      "cautious_uplift": 0.044,
+      "cost": 20
+    },
+    {
+      "customer_id": 2215,
+      "discount": 20,
+      "expected_uplift": 0.1398,
+      "cautious_uplift": 0.0434,
+      "cost": 20
+    },
+    {
+      "customer_id": 1392,
+      "discount": 20,
+      "expected_uplift": 0.1476,
+      "cautious_uplift": 0.0421,
+      "cost": 20
+    },
+    {
+      "customer_id": 1238,
+      "discount": 20,
+      "expected_uplift": 0.1452,
+      "cautious_uplift": 0.0409,
+      "cost": 20
+    },
+    {
+      "customer_id": 125,
+      "discount": 20,
+      "expected_uplift": 0.226,
+      "cautious_uplift": 0.0393,
+      "cost": 20
+    },
+    {
+      "customer_id": 3780,
+      "discount": 20,
+      "expected_uplift": 0.1398,
+      "cautious_uplift": 0.0391,
+      "cost": 20
+    },
+    {
+      "customer_id": 1365,
+      "discount": 10,
+      "expected_uplift": 0.1563,
+      "cautious_uplift": 0.0389,
+      "cost": 10
+    },
+    {
+      "customer_id": 4125,
+      "discount": 20,
+      "expected_uplift": 0.2915,
+      "cautious_uplift": 0.0387,
+      "cost": 20
+    },
+    {
+      "customer_id": 1177,
+      "discount": 10,
+      "expected_uplift": 0.1603,
+      "cautious_uplift": 0.0369,
+      "cost": 10
+    },
+    {
+      "customer_id": 3697,
+      "discount": 10,
+      "expected_uplift": 0.136,
+      "cautious_uplift": 0.0353,
+      "cost": 10
+    },
+    {
+      "customer_id": 966,
+      "discount": 10,
+      "expected_uplift": 0.1744,
+      "cautious_uplift": 0.0341,
+      "cost": 10
+    },
+    {
+      "customer_id": 284,
+      "discount": 10,
+      "expected_uplift": 0.1193,
+      "cautious_uplift": 0.0282,
+      "cost": 10
+    },
+    {
+      "customer_id": 2947,
+      "discount": 10,
+      "expected_uplift": 0.1216,
+      "cautious_uplift": 0.0266,
+      "cost": 10
+    },
+    {
+      "customer_id": 1890,
+      "discount": 10,
+      "expected_uplift": 0.1812,
+      "cautious_uplift": 0.0201,
+      "cost": 10
+    },
+    {
+      "customer_id": 4180,
+      "discount": 10,
+      "expected_uplift": 0.1307,
+      "cautious_uplift": 0.0194,
+      "cost": 10
+    }
+  ]
+}
