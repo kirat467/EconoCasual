@@ -9,7 +9,7 @@ Until the API exists, build against the sample files in this folder. Their shape
 |---|---|---|
 | `GET /api/ite` | Real model output (Double ML) | `docs/sample_ite.json` |
 | `GET /api/uplift-curve` | Real model output (Double ML) | `docs/sample_uplift_curve.json` |
-| `POST /api/optimize` | **Proposed shape only.** The optimizer is built in Week 3, so the numbers below are illustrative | none yet |
+| `POST /api/optimize` | Real optimizer output (Week 3, `backend/optimizer.py`) | `docs/sample_optimize.json` |
 | `GET /api/drift` | **Proposed shape only.** The drift detector is built in Week 4, so the numbers below are illustrative | none yet |
 
 ---
@@ -76,26 +76,42 @@ Plot `model` and `random` as two lines on one chart. The further the model line 
 
 Heads-up: the model curve rises, peaks around 80% of customers, then falls back to the random line at 100%. That is expected, because the last customers it ranks are the ones the discount hurts.
 
-## `POST /api/optimize`  (proposed, Week 3)
+## `POST /api/optimize`
 
 Request:
 ```json
 { "budget": 5000, "discount_options": [10, 20] }
 ```
 
-Response (**illustrative values only**):
+Response (real values from `docs/sample_optimize.json`, abbreviated):
 ```json
 {
-  "budget": 5000,
-  "total_cost": 4990,
-  "expected_incremental_purchases": 187.4,
-  "savings_vs_blanket": 4200,
+  "budget": 5000.0,
+  "total_cost": 5000.0,
+  "expected_incremental_purchases": 75.36,
+  "cautious_incremental_purchases": 40.54,
+  "expected_incremental_revenue": 3014.24,
+  "average_order_value_assumed": 40.0,
+  "blanket_expected_incremental_purchases": 17.87,
+  "lift_vs_blanket": 4.22,
+  "blanket_cost_for_same_result": null,
+  "savings_vs_blanket": null,
+  "objective": "lower_confidence_bound",
+  "customers_per_discount": {"10": 12, "20": 244},
   "allocation": [
-    {"customer_id": 4837, "discount": 20, "expected_uplift": 0.093, "cost": 20}
+    {"customer_id": 4019, "discount": 20, "expected_uplift": 0.682,
+     "cautious_uplift": 0.5649, "cost": 20}
   ]
 }
 ```
-`savings_vs_blanket` feeds the natural-language summary ("This strategy saves $X compared to blanket targeting"). The exact fields may change when the optimizer is built, and we will update this file when they do.
+
+How to use the fields:
+- `allocation` is the "Prescription" table for the Allocation Matrix. It is sorted by `cautious_uplift`, highest first. Customers who get no coupon are not listed.
+- **Show `cautious_uplift`, not `expected_uplift`.** Validation on our synthetic data showed the point estimates run high at the top end (some reach 0.8, when the true maximum effect is about 0.5). `cautious_uplift` is the lower 95% bound and is safer to display.
+- **Headline numbers:** use `cautious_incremental_purchases` ("at least about 40 extra purchases") rather than `expected_incremental_purchases`. In validation the true figure was 60.4 against an estimate of 75.4, so the point estimate runs about 25% high.
+- `lift_vs_blanket` compares the optimizer with random $10 coupons at the same budget. It is 4.2x by the model's own estimates, and about 3.3x when checked against the true effects, so say "about 3x" rather than "4.2x".
+- `savings_vs_blanket` is `null` whenever matching the optimizer's result with blanket $10 coupons would cost more than giving every customer a coupon. That is the case here (it would need about $21,000), so for the natural-language summary use `lift_vs_blanket` instead ("4x more extra purchases than blanket coupons for the same budget"), and show the savings sentence only when the field is not null.
+- Constraints you can rely on: `total_cost <= budget`, and every listed customer has `cautious_uplift > 0`, so Sleeping Dogs never appear.
 
 ## `GET /api/drift`  (proposed, Week 4)
 
