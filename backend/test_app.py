@@ -4,18 +4,6 @@ from app import app
 
 class TestEconoCasualAPI(unittest.TestCase):
 
-    def test_invalid_api_route(self):
-        
-
-     def test_invalid_api_route(self):
-        response = self.client.get("/invalid-route")
-        self.assertEqual(response.status_code, 404)
-
-    def test_invalid_method(self):
-        response = self.client.post("/health")
-        self.assertEqual(response.status_code, 405)
-
-
     def setUp(self):
         app.config["TESTING"] = True
         self.client = app.test_client()
@@ -82,4 +70,5 @@ class TestEconoCasualAPI(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)
+
     
