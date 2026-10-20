@@ -967,3 +967,25 @@
   $("people").classList.add("intro");
   setTimeout(() => $("people").classList.remove("intro"), 2000);
 })();
+
+
+// EconoCasual polish: scroll progress bar + "seen once" triggers. Safe to delete.
+(function () {
+  var h = document.querySelector(".site-header");
+  if (h) {
+    var bar = document.createElement("div");
+    bar.className = "scroll-bar"; bar.setAttribute("aria-hidden", "true");
+    h.appendChild(bar);
+    var tick = function () {
+      var max = document.documentElement.scrollHeight - innerHeight;
+      bar.style.setProperty("--p", max > 0 ? Math.min(1, scrollY / max) : 0);
+    };
+    addEventListener("scroll", tick, { passive: true }); addEventListener("resize", tick); tick();
+  }
+  var els = document.querySelectorAll(".sec-head, .stats");
+  if (!("IntersectionObserver" in window)) { els.forEach(function (e) { e.classList.add("in"); }); return; }
+  var io = new IntersectionObserver(function (list) {
+    list.forEach(function (x) { if (x.isIntersecting) { x.target.classList.add("in"); io.unobserve(x.target); } });
+  }, { threshold: 0.35 });
+  els.forEach(function (e) { io.observe(e); });
+})();

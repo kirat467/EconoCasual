@@ -605,3 +605,73 @@ body.dropping::after {
 #sTotal, #sRate, #sEng, #sDisc { font-variant-numeric: tabular-nums; }
 .site-header { transition: box-shadow .25s ease; }
 .site-header.scrolled { box-shadow: 0 6px 18px -14px rgba(20, 33, 29, .45); }
+
+
+/* EconoCasual polish layer: loads AFTER style.css, so delete this file to go back to the old look. */
+
+/* 1. Header: scroll-progress line */
+.site-header { position: sticky; }
+.scroll-bar { position: absolute; left: 0; bottom: -1px; height: 3px; width: 100%; background: linear-gradient(90deg, var(--teal), var(--amber)); transform: scaleX(var(--p, 0)); transform-origin: left; pointer-events: none; }
+
+/* 2. The memorable thing: customer field as a dark "stage" with glowing buyers and one scan sweep */
+.people {
+  --ink: #f2f6f1; --ink-2: #b5c4bd; --ink-3: #8fa39b;
+  --teal: #38dcc2; --amber: #f6b445; --dot-off: #24352f;
+  background: radial-gradient(120% 140% at 10% 0%, #17302a 0%, #0e1a17 60%);
+  color: var(--ink); border: 1px solid #22372f; border-radius: 18px; padding: 28px 28px 22px;
+  overflow: hidden; box-shadow: 0 24px 48px -28px rgba(8, 28, 22, .65);
+}
+.people .d.b { box-shadow: 0 0 9px -1px currentColor; }
+.people .with .d.b { color: rgba(56, 220, 194, .75); }
+.people .without .d.b { color: rgba(246, 180, 69, .7); }
+.people .dot-tip { background: #f2f4ef; color: #14211d; }
+.people::after {
+  content: ""; position: absolute; top: 0; bottom: 0; left: -30%; width: 30%; pointer-events: none;
+  background: linear-gradient(90deg, transparent, rgba(160, 255, 235, .16), transparent);
+  transform: skewX(-18deg); animation: sweep 2.4s cubic-bezier(.5, 0, .2, 1) .5s 1 both;
+}
+@keyframes sweep { to { left: 120%; } }
+
+/* 3. Headline: soft focus-in once on load */
+.headline { animation: focus-in .9s cubic-bezier(.2, .7, .2, 1) both; }
+@keyframes focus-in { from { opacity: 0; filter: blur(8px); transform: translateY(10px); } }
+
+/* 4. Segment pills */
+.seg { border-radius: 999px; padding: 8px 16px; }
+.seg.is-on { box-shadow: 0 8px 18px -10px var(--ink); }
+
+/* 5. Stats: top rule fills with brand colours when the strip scrolls in */
+.stat { position: relative; border-top-color: transparent; }
+.stat::before { content: ""; position: absolute; inset: 0 0 auto 0; height: 2px; background: var(--rule); }
+.stat::after { content: ""; position: absolute; inset: 0 0 auto 0; height: 2px; background: var(--teal); transform: scaleX(0); transform-origin: left; transition: transform .9s cubic-bezier(.2, .7, .2, 1); }
+.stat:nth-child(even)::after { background: var(--amber); }
+.stats.in .stat::after { transform: scaleX(1); }
+.stats.in .stat:nth-child(2)::after { transition-delay: .12s; }
+.stats.in .stat:nth-child(3)::after { transition-delay: .24s; }
+.stats.in .stat:nth-child(4)::after { transition-delay: .36s; }
+
+/* 6. Section headings: underline draws once when seen */
+.sec-head h2 { position: relative; padding-bottom: 10px; }
+.sec-head h2::after { content: ""; position: absolute; left: 0; bottom: 0; width: 48px; height: 3px; border-radius: 3px; background: var(--teal); transform: scaleX(0); transform-origin: left; transition: transform .7s cubic-bezier(.2, .7, .2, 1); }
+.sec-head.in h2::after { transform: scaleX(1); }
+
+/* 7. Predictor / planner output becomes a card; the big number glows softly */
+.predict .pred-out { background: var(--surface); border: 1px solid var(--rule); border-radius: 18px; padding: 28px; box-shadow: 0 18px 40px -30px rgba(10, 60, 50, .5); }
+.pred-big { color: var(--teal); transition: color .3s; }
+.pred-out .fill { background: linear-gradient(90deg, var(--teal), #38b59f); }
+input[type="range"] { accent-color: var(--teal); }
+
+/* 8. Buttons and cards: press feedback */
+.btn, .btn-ghost { border-radius: 999px; transition: transform .15s, box-shadow .2s, background .15s, border-color .15s; }
+.btn:hover { transform: translateY(-1px); box-shadow: 0 8px 16px -10px var(--teal); }
+.quality-card { transition: transform .2s, box-shadow .2s; }
+.quality-card:hover { transform: translateY(-3px); box-shadow: 0 14px 28px -20px rgba(10, 60, 50, .55); }
+tbody tr { transition: background .15s; }
+tbody tr:hover { background: var(--teal-soft); }
+
+@media (max-width: 720px) { .people { padding: 18px 16px; border-radius: 14px; } }
+@media (prefers-reduced-motion: reduce) {
+  .people::after, .headline { animation: none !important; }
+  .stat::after, .sec-head h2::after { transform: scaleX(1) !important; transition: none !important; }
+  .scroll-bar { display: none; }
+}
