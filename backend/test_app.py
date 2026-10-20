@@ -31,6 +31,11 @@ class TestEconoCasualAPI(unittest.TestCase):
         self.assertIn("customer_id", customer)
         self.assertIn("purchase", customer)
 
+ def test_customers_response_is_json(self):
+    response = self.client.get("/customers")
+    self.assertEqual(response.status_code, 200)
+    self.assertTrue(response.is_json)
+
  def test_purchase_summary(self):
     response = self.client.get("/purchase-summary")
     self.assertEqual(response.status_code, 200)
