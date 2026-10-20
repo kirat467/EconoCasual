@@ -66,7 +66,7 @@ def purchase_summary():
         "total_customers": total,
         "total_purchases": purchases,
         "non_purchases": total - purchases,
-        "purchase_rate_percent": purchase_rate
+        "purchase_rate_percent": purchase_rate,
     })
 
 
