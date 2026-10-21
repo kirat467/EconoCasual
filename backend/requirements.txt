@@ -1,0 +1,17 @@
+# Python packages for the EconoCausal backend (Member 2 scripts)
+# Tested with Python 3.13 and: dowhy 0.14, econml 0.17.0, lightgbm 4.7.0,
+# scikit-learn 1.9.1, pandas 3.0.5, numpy 2.5.3, scipy 1.18.1, matplotlib 3.11.2
+# Unpinned on purpose, so it installs on other Python versions. If something
+# breaks after an upgrade, install the versions listed above.
+dowhy
+econml
+lightgbm
+scikit-learn
+pandas
+numpy
+scipy
+matplotlib
+
+# Week 4 (API)
+# fastapi
+# uvicorn
