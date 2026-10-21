@@ -33,6 +33,7 @@ Set `apiBase` in `config.js`. The expected response is described in `docs/API.md
 - Data quality panel: checks every loaded record (missing and out-of-range values) and reports rows skipped when a CSV was uploaded
 - "Reset view" button: puts the group, filters, sorting, predictor and discount share back to their defaults
 
+- Visual polish: a dark "stage" panel for the customer squares with glowing buyers and a one-time scan sweep, a scroll-progress line in the header, and underline/stat-strip animations that play once when scrolled into view. All motion is turned off for people who prefer reduced motion
 - Dark mode: follows the system setting, with a header toggle that remembers your choice
 - Upload CSV: drop a file anywhere or use the header button. Columns are checked, the first 5 rows are previewed, invalid rows are counted, and nothing leaves the browser
 - Who should get a discount: pick a share of customers and see the extra purchases the model expects when discounts go to the highest estimated lift versus no ranking. The target list exports to CSV

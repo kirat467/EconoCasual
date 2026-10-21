@@ -15,7 +15,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
   <script>try{var t=localStorage.getItem("ec-theme");if(t==="dark"||t==="light")document.documentElement.dataset.theme=t}catch(e){}</script>
   <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="polish.css">
 </head>
 <body>
 
@@ -39,7 +38,7 @@
     <div class="actions">
       <button class="btn-ghost" id="theme" type="button" aria-pressed="false">Dark mode</button>
       <button class="btn-ghost" id="upload" type="button">Upload CSV</button>
-      <button class="btn-ghost" id="share" type="button">Copy link to this view</button>
+      <button class="btn-ghost" id="share" type="button" title="Copy link to this view" aria-label="Copy link to this view">Copy link</button>
       <button class="btn" id="export" type="button">Export CSV</button>
     </div>
   </div>
@@ -317,7 +316,6 @@
 <div id="toast" role="status" aria-live="polite"></div>
 <script src="config.js"></script>
 <script src="script.js"></script>
-<script src="polish.js"></script>
 <script>(function(){var h=document.querySelector(".site-header");if(!h)return;function f(){h.classList.toggle("scrolled",window.scrollY>8)}addEventListener("scroll",f,{passive:true});f()})()</script>
 </body>
 </html>

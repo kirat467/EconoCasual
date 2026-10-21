@@ -675,3 +675,16 @@ tbody tr:hover { background: var(--teal-soft); }
   .stat::after, .sec-head h2::after { transform: scaleX(1) !important; transition: none !important; }
   .scroll-bar { display: none; }
 }
+
+/* Header fix: on desktop keep logo, tabs and buttons on ONE row (tabs scroll if the window is tight) */
+@media (min-width: 961px) {
+  .topbar { flex-wrap: nowrap; gap: 16px; }
+  .wordmark { flex: none; }
+  .nav { flex: 1 1 auto; min-width: 0; justify-content: center; gap: 2px; overflow-x: auto; scrollbar-width: none; }
+  .nav::-webkit-scrollbar { display: none; }
+  .nav a { white-space: nowrap; padding: 8px 10px; font-size: 13.5px; }
+  .actions { flex: none; gap: 6px; }
+  .actions .btn, .actions .btn-ghost { white-space: nowrap; padding: 7px 13px; font-size: 13.5px; }
+}
+/* Keep every header button text on one line at any width */
+.actions .btn, .actions .btn-ghost { white-space: nowrap; }
