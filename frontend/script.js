@@ -20,7 +20,7 @@
   };
   const clamp = (x, lo, hi) => Math.min(hi, Math.max(lo, x));
 
-  const customers = Array.from({ length: 1000 }, (_, i) => {
+  const makeSample = () => Array.from({ length: 1000 }, (_, i) => {
     const engagement = Math.round(clamp(normal(5.2, 2.5), 0, 10));
     const previous_purchases = Math.round(clamp(normal(3.2 + engagement * 0.15, 2.4), 0, 10));
     // Low-engagement customers were a little more likely to get an offer.
@@ -29,6 +29,10 @@
     const purchase = rand() < 1 / (1 + Math.exp(-z)) ? 1 : 0;
     return { customer_id: i + 1, previous_purchases, engagement, discount, purchase };
   });
+  const sampleData = makeSample();
+  let customers = sampleData;
+  let usingCustom = false;
+  const SAMPLE_LABEL = "Sample data: 1,000 generated customers";
 
   /* ---------- Helpers ---------- */
   const $ = (id) => document.getElementById(id);
@@ -53,17 +57,22 @@
     repeat: (c) => c.previous_purchases >= 5,
   };
 
-  const state = { seg: "all", search: "", outcome: "all", sort: "customer_id", dir: 1, page: 1, size: 10 };
+  const state = { seg: "all", search: "", outcome: "all", eng: "all", hist: "all", disc: "all", sort: "customer_id", dir: 1, page: 1, size: 10 };
+  let loadInfo = { skipped: 0 }; // rows dropped when a CSV was uploaded
   let toastTimer;
   let currentRows = customers;
 
   const segmentRows = () => customers.filter(SEGMENTS[state.seg]);
+  const ENG_FILTERS = { all: () => true, high: (c) => c.engagement >= 7, medium: (c) => c.engagement >= 4 && c.engagement <= 6, low: (c) => c.engagement <= 3 };
+  const HIST_FILTERS = { all: () => true, repeat: (c) => c.previous_purchases >= 5, few: (c) => c.previous_purchases <= 4 };
+  const DISC_FILTERS = { all: () => true, 1: (c) => c.discount === 1, 0: (c) => c.discount === 0 };
   const tableRows = () => {
     const q = state.search.replace(/\D/g, "");
     const rows = segmentRows().filter(
       (c) =>
         (!q || String(c.customer_id).padStart(4, "0").includes(q)) &&
-        (state.outcome === "all" || String(c.purchase) === state.outcome)
+        (state.outcome === "all" || String(c.purchase) === state.outcome) &&
+        ENG_FILTERS[state.eng](c) && HIST_FILTERS[state.hist](c) && DISC_FILTERS[state.disc](c)
     );
     const k = state.sort;
     return rows.sort((a, b) => (a[k] - b[k] || a.customer_id - b.customer_id) * state.dir);
@@ -106,13 +115,15 @@
   const bandGap = (rows) => { const a = adjustedGap(rows); return a && a.bands > 1 ? a : null; };
 
   /* ---------- One square per customer ---------- */
-  const dotEls = [];
+  let dotEls = [];
   const GROUPS = [
     { key: 1, cls: "with", name: "Offered a discount" },
     { key: 0, cls: "without", name: "No discount" },
   ];
 
   function buildPeople() {
+    dotEls = [];
+    $("peopleGroups").setAttribute("aria-label", `One square for each of the ${fmt(customers.length)} customers, grouped by whether they were offered a discount. Filled squares bought. The same numbers appear in the headline and the figures below.`);
     $("peopleGroups").innerHTML = GROUPS.map((g) => {
       const list = customers
         .filter((c) => c.discount === g.key)
@@ -157,6 +168,25 @@
   const hideDotTip = () => { dotTip.hidden = true; };
 
   /* ---------- Hero + stats ---------- */
+  /* ---------- Motion helpers ---------- */
+  const calm = window.matchMedia("(prefers-reduced-motion: reduce)");
+  function countTo(id, to, format) {
+    const el = $(id), from = el._v == null ? 0 : el._v;
+    el._v = to;
+    cancelAnimationFrame(el._raf);
+    if (calm.matches || from === to) { el.textContent = format(to); return; }
+    const t0 = performance.now(), ms = 650;
+    const step = (now) => {
+      const k = Math.min(1, (now - t0) / ms), e = 1 - Math.pow(1 - k, 3);
+      el.textContent = format(from + (to - from) * e);
+      if (k < 1) el._raf = requestAnimationFrame(step);
+    };
+    el._raf = requestAnimationFrame(step);
+  }
+  function swapIn(el) {
+    el.classList.remove("swap"); void el.offsetWidth; el.classList.add("swap");
+  }
+
   function renderHero(rows) {
     const n = rows.length;
     const [d, nd] = split(rows);
@@ -171,6 +201,7 @@
     }
 
     const dr = rateMin(d), nr = rateMin(nd);
+    const prevHead = $("headline").textContent;
     $("headline").innerHTML =
       `${fmt(bought)} of ${fmt(n)} customers bought. ` +
       (dr != null && nr != null
@@ -186,13 +217,14 @@
       if (adj) sub += ` Among customers with similar engagement the difference is ${pts(adj.est)} points.`;
     }
     $("subline").textContent = sub;
+    if ($("headline").textContent !== prevHead && prevHead !== "Loading customer sample…") swapIn($("headline"));
 
-    $("sTotal").textContent = fmt(n);
+    countTo("sTotal", n, (v) => fmt(Math.round(v)));
     $("sTotalNote").textContent = state.seg === "all" ? "full sample" : `of ${fmt(customers.length)} in the sample`;
-    $("sRate").textContent = pct(bought / n, 1);
+    countTo("sRate", bought / n, (v) => pct(v, 1));
     $("sRateNote").textContent = `${fmt(bought)} purchases recorded`;
-    $("sEng").textContent = (rows.reduce((a, c) => a + c.engagement, 0) / n).toFixed(1);
-    $("sDisc").textContent = pct(d.length / n, 1);
+    countTo("sEng", rows.reduce((a, c) => a + c.engagement, 0) / n, (v) => v.toFixed(1));
+    countTo("sDisc", d.length / n, (v) => pct(v, 1));
     $("sDiscNote").textContent = plural(d.length, "customer");
   }
 
@@ -252,7 +284,7 @@
         d += `${pen ? "L" : "M"}${xAt(p.e).toFixed(1)} ${yAt(p.r).toFixed(1)} `;
         pen = true;
       });
-      out += `<path class="ln ${s.cls}" d="${d}"/>`;
+      out += `<path class="ln ${s.cls}" pathLength="1" d="${d}"/>`;
       s.pts.forEach((p) => {
         if (p.r != null) out += `<circle class="dot ${s.cls}" cx="${xAt(p.e)}" cy="${yAt(p.r)}" r="3.5"/>`;
       });
@@ -408,17 +440,41 @@
     $("prev").disabled = state.page <= 1;
     $("next").disabled = state.page >= pages;
 
-    document.querySelectorAll("th").forEach((th) => {
+    document.querySelectorAll("#customers th").forEach((th) => {
       const k = th.querySelector("button").dataset.sort;
       th.setAttribute("aria-sort", k === state.sort ? (state.dir === 1 ? "ascending" : "descending") : "none");
     });
   }
 
+  /* ---------- Data quality: checks every loaded record ---------- */
+  function renderQuality() {
+    const num = (v) => typeof v === "number" && Number.isFinite(v);
+    let missing = 0, invalid = 0;
+    customers.forEach((c) => {
+      ["previous_purchases", "engagement", "discount", "purchase"].forEach((k) => { if (!num(c[k])) missing++; });
+      if (num(c.engagement) && (c.engagement < 0 || c.engagement > 10)) invalid++;
+      if (num(c.previous_purchases) && (c.previous_purchases < 0 || c.previous_purchases > 10 || !Number.isInteger(c.previous_purchases))) invalid++;
+      if (num(c.discount) && c.discount !== 0 && c.discount !== 1) invalid++;
+      if (num(c.purchase) && c.purchase !== 0 && c.purchase !== 1) invalid++;
+    });
+    const skipped = loadInfo.skipped;
+    const problems = missing + invalid + skipped;
+    $("quality-visible").textContent = fmt(customers.length);
+    $("quality-missing").textContent = fmt(missing);
+    $("quality-invalid").textContent = fmt(invalid + skipped);
+    $("quality-status").textContent = problems === 0 ? "Basic checks passed" : "Review suggested";
+    $("quality-note").textContent =
+      `Checked all ${fmt(customers.length)} records: ${plural(missing, "missing value")}, ${plural(invalid, "out-of-range value")}` +
+      (skipped ? `, and ${plural(skipped, "row")} skipped during upload because of invalid values.` : ".") +
+      (usingCustom ? "" : " This is generated sample data, so it is clean by design.");
+  }
+
   function renderAll() {
     const rows = segmentRows();
     currentRows = rows;
+    const tr = $("trend"); tr.classList.add("draw"); clearTimeout(tr._t); tr._t = setTimeout(() => tr.classList.remove("draw"), 1300);
     renderHero(rows); renderPeople(rows); renderTrend(rows);
-    renderCompare(rows); renderPrev(rows); renderNotes(rows); renderTable();
+    renderCompare(rows); renderPrev(rows); renderNotes(rows); renderTarget(rows); renderTable();
   }
 
   /* ---------- Actions ---------- */
@@ -438,13 +494,13 @@
     a.href = url; a.download = "econocasual-customers.csv";
     document.body.appendChild(a); a.click(); a.remove();
     setTimeout(() => URL.revokeObjectURL(url), 1000);
-    toast(`Exported ${plural(rows.length, "record")} from the table, with the group, search and outcome filters applied`);
+    toast(`Exported ${plural(rows.length, "record")} from the table, with the group, search and all filters applied`);
   }
 
   /* ---------- Purchase model: logistic regression, fitted here in the browser ----------
      Fitted on 80% of the records and checked on the other 20%, so the accuracy
      shown is for customers the model has not seen. */
-  const model = (() => {
+  const buildModel = () => {
     const feat = (e, p, d) => [1, e / 10, p / 10, d];
     const sig = (z) => 1 / (1 + Math.exp(-z));
     const dot = (w, x) => w.reduce((a, wi, i) => a + wi * x[i], 0);
@@ -469,9 +525,10 @@
     pos.forEach((a) => neg.forEach((b) => { wins += a > b ? 1 : a === b ? 0.5 : 0; }));
     const auc = pos.length && neg.length ? wins / (pos.length * neg.length) : null;
     return { predict, auc, accuracy: right / test.length, baseline: Math.max(bought, test.length - bought) / test.length, tested: test.length };
-  })();
+  };
+  let model = buildModel();
 
-  const avgRate = rate(customers);
+  let avgRate = rate(customers);
   const els = { eng: $("pEng"), prev: $("pPrev"), disc: $("pDisc") };
 
   function renderPredict() {
@@ -513,6 +570,235 @@
   }
   $("pLoad").addEventListener("click", () => loadCustomer(customers[Math.floor(Math.random() * customers.length)]));
 
+
+  /* ---------- Who should get a discount? ----------
+     Lift = model chance with a discount minus chance without, per customer.
+     Targeting the highest lifts is compared with giving the same number of
+     discounts to customers picked without any ranking. */
+  const tPct = $("tPct");
+  let targetRows = [];
+  const gainFmt = (g) => "+" + (g >= 10 ? fmt(Math.round(g)) : g.toFixed(1));
+  const mean = (a) => a.reduce((x, y) => x + y, 0) / (a.length || 1);
+
+  function renderTarget(rows) {
+    const n = rows.length;
+    const share = Number(tPct.value);
+    $("tPctOut").textContent = share + "%";
+    if (n < MIN_N) {
+      targetRows = [];
+      $("tBig").textContent = "–";
+      $("tSummary").textContent = "Pick a group with more customers to plan discounts.";
+      ["tCompare", "tTop"].forEach((id) => ($(id).innerHTML = ""));
+      $("tProfile").textContent = "";
+      return;
+    }
+    const scored = rows.map((c) => {
+      const base = model.predict(c.engagement, c.previous_purchases, 0);
+      return { c, base, lift: model.predict(c.engagement, c.previous_purchases, 1) - base };
+    }).sort((a, b) => b.lift - a.lift || a.c.customer_id - b.c.customer_id);
+
+    const k = Math.round((n * share) / 100);
+    const chosen = scored.slice(0, k);
+    targetRows = chosen;
+    const targeted = chosen.reduce((a, s) => a + s.lift, 0);
+    const even = k * mean(scored.map((s) => s.lift));
+    const top = Math.max(targeted, even, 1e-9);
+
+    $("tBig").textContent = gainFmt(targeted);
+    $("tSummary").textContent = k
+      ? `Offering a discount to ${plural(k, "customer")} (${share}% of ${fmt(n)}). With no discounts the model expects about ${fmt(Math.round(scored.reduce((a, s) => a + s.base, 0)))} purchases from this group.`
+      : "Move the slider to choose how many customers get a discount.";
+
+    const bar = (cls, label, g, note) =>
+      `<li class="${cls}"><div class="row"><span>${label}</span><b>${gainFmt(g)}</b></div>` +
+      `<div class="track"><span class="fill" style="width:${(g / top) * 100}%"></span></div><small>${note}</small></li>`;
+    $("tCompare").innerHTML = k
+      ? bar("with", "Targeted by the model", targeted, "Customers with the largest estimated lift") +
+        bar("cmp-even", "Spread evenly", even, even > 0 && targeted > 0 ? `Targeting gives ${(targeted / even).toFixed(1)}× as many extra purchases as picking without a ranking` : "Same number of discounts, no ranking")
+      : "";
+
+    $("tProfile").textContent = k
+      ? `Targeted customers average engagement ${mean(chosen.map((s) => s.c.engagement)).toFixed(1)} and ${mean(chosen.map((s) => s.c.previous_purchases)).toFixed(1)} past purchases, against ${mean(rows.map((c) => c.engagement)).toFixed(1)} and ${mean(rows.map((c) => c.previous_purchases)).toFixed(1)} for the whole group.`
+      : "";
+    $("tTop").innerHTML = chosen.slice(0, 5).map((s) =>
+      `<li><button type="button" class="row-load" data-id="${s.c.customer_id}">${idLabel(s.c)}</button>: engagement ${s.c.engagement}/10, ${plural(s.c.previous_purchases, "past purchase")}. Chance of buying ${pct(s.base)} without a discount, ${pct(s.base + s.lift)} with one.</li>`
+    ).join("");
+  }
+
+  const saveCsv = (name, csv) => {
+    const url = URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8" }));
+    const a = document.createElement("a");
+    a.href = url; a.download = name;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  };
+  tPct.addEventListener("input", () => renderTarget(currentRows));
+  $("tExport").addEventListener("click", () => {
+    if (!targetRows.length) { toast("Choose a share above 0% first."); return; }
+    const head = "customer_id,engagement,previous_purchases,offered_discount,chance_without,chance_with,estimated_lift\n";
+    const body = targetRows.map((s) => [s.c.customer_id, s.c.engagement, s.c.previous_purchases, s.c.discount, s.base.toFixed(4), (s.base + s.lift).toFixed(4), s.lift.toFixed(4)].join(",")).join("\n");
+    saveCsv("econocasual-discount-targets.csv", head + body + "\n");
+    toast(`Exported ${plural(targetRows.length, "customer")} ranked by estimated lift`);
+  });
+  $("tTop").addEventListener("click", (ev) => {
+    const b = ev.target.closest(".row-load");
+    if (!b) return;
+    loadCustomer(customers[Number(b.dataset.id) - 1]);
+    $("predict").scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+  });
+
+  /* ---------- Your own data: CSV upload with checks ---------- */
+  const REQUIRED = ["previous_purchases", "engagement", "discount", "purchase"];
+  const ALIASES = { customerid: "customer_id", id: "customer_id", previouspurchases: "previous_purchases", past_purchases: "previous_purchases", pastpurchases: "previous_purchases", engagement_score: "engagement", discount_offered: "discount", offered_discount: "discount", purchased: "purchase", bought: "purchase" };
+  const MAX_ROWS = 5000, MIN_ROWS = 50;
+  const esc = (s) => String(s).replace(/[&<>"']/g, (m) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[m]));
+  const normHead = (h) => { const s = h.replace(/^\ufeff/, "").trim().toLowerCase().replace(/[\s-]+/g, "_"); return ALIASES[s] || s; };
+  const toBit = (v) => { const s = String(v).trim().toLowerCase(); return ["1", "yes", "y", "true", "t"].includes(s) ? 1 : ["0", "no", "n", "false", "f"].includes(s) ? 0 : null; };
+
+  function parseCsv(text) {
+    text = text.replace(/^\ufeff/, "");
+    const first = text.split(/\r?\n/, 1)[0];
+    const delim = [",", ";", "\t"].map((d) => [d, first.split(d).length]).sort((a, b) => b[1] - a[1])[0][0];
+    const out = []; let row = [], cell = "", q = false;
+    const push = () => { row.push(cell); cell = ""; if (row.some((x) => x.trim() !== "")) out.push(row); row = []; };
+    for (let i = 0; i < text.length; i++) {
+      const ch = text[i];
+      if (q) { if (ch === '"') { if (text[i + 1] === '"') { cell += '"'; i++; } else q = false; } else cell += ch; }
+      else if (ch === '"') q = true;
+      else if (ch === delim) { row.push(cell); cell = ""; }
+      else if (ch === "\n" || ch === "\r") { if (ch === "\r" && text[i + 1] === "\n") i++; push(); }
+      else cell += ch;
+    }
+    push();
+    return out;
+  }
+
+  function validateCsv(text) {
+    const table = parseCsv(text);
+    if (table.length < 2) return { error: "The file has a header but no data rows, or is empty." };
+    const heads = table[0].map(normHead);
+    const missing = REQUIRED.filter((c) => !heads.includes(c));
+    if (missing.length)
+      return { error: `Missing ${missing.length === 1 ? "column" : "columns"}: ${missing.join(", ")}. Columns found: ${heads.join(", ")}. Needed: ${REQUIRED.join(", ")} (customer_id is optional).` };
+    const at = Object.fromEntries(REQUIRED.map((c) => [c, heads.indexOf(c)]));
+    const rows = [], issues = [], why = {};
+    const bad = (line, reason) => { why[reason] = (why[reason] || 0) + 1; if (issues.length < 3) issues.push(`Row ${line}: ${reason}`); };
+    for (let i = 1; i < table.length; i++) {
+      const r = table[i];
+      const e = Number(r[at.engagement]), p = Number(r[at.previous_purchases]);
+      const d = toBit(r[at.discount]), b = toBit(r[at.purchase]);
+      if (r[at.engagement] === undefined || r[at.engagement].trim() === "" || !Number.isFinite(e) || e < 0 || e > 10) { bad(i + 1, "engagement must be a number from 0 to 10"); continue; }
+      if (r[at.previous_purchases] === undefined || r[at.previous_purchases].trim() === "" || !Number.isFinite(p) || p < 0 || p > 10) { bad(i + 1, "previous_purchases must be a number from 0 to 10"); continue; }
+      if (d === null) { bad(i + 1, "discount must be 0/1 or yes/no"); continue; }
+      if (b === null) { bad(i + 1, "purchase must be 0/1 or yes/no"); continue; }
+      if (rows.length < MAX_ROWS) rows.push({ customer_id: rows.length + 1, previous_purchases: Math.round(p), engagement: Math.round(e), discount: d, purchase: b });
+    }
+    const skipped = Object.values(why).reduce((a, x) => a + x, 0);
+    if (rows.length < MIN_ROWS) return { error: `Only ${rows.length} usable ${rows.length === 1 ? "row" : "rows"} found. At least ${MIN_ROWS} are needed for the statistics and the model to mean anything.`, issues };
+    const warnings = [];
+    if (new Set(rows.map((c) => c.discount)).size < 2) warnings.push("Every customer has the same discount value, so discount comparisons will be empty.");
+    if (new Set(rows.map((c) => c.purchase)).size < 2) warnings.push("Every customer has the same purchase outcome, so the model has nothing to learn from.");
+    if (table.length - 1 - skipped > MAX_ROWS) warnings.push(`Only the first ${fmt(MAX_ROWS)} valid rows are used.`);
+    return { rows, skipped, issues, warnings };
+  }
+
+  const dlg = $("uploadDlg"), fileIn = $("fileIn");
+  let pending = null;
+  const openDlg = () => { if (dlg.showModal) { if (!dlg.open) dlg.showModal(); } else dlg.setAttribute("open", ""); };
+  const closeDlg = () => { if (dlg.close) dlg.close(); else dlg.removeAttribute("open"); };
+
+  function showUpload(res, name) {
+    pending = res.rows ? { rows: res.rows, name, skipped: res.skipped || 0 } : null;
+    $("uTitle").textContent = res.rows ? "Check your file" : "This file can't be used yet";
+    let html = `<p class="u-file">${esc(name)}</p>`;
+    if (res.error) html += `<p class="u-err">${esc(res.error)}</p>`;
+    if (res.rows) {
+      html += `<p><b>${plural(res.rows.length, "customer")}</b> ready to load.` + (res.skipped ? ` ${plural(res.skipped, "row")} skipped because of invalid values.` : "") + ` Customers are numbered CUST-0001 onwards in file order.</p>`;
+      html += `<div class="table-scroll u-prev"><table><thead><tr><th>Customer</th><th class="num">Past purchases</th><th>Engagement</th><th>Discount</th><th>Purchase</th></tr></thead><tbody>` +
+        res.rows.slice(0, 5).map((c) => `<tr><td>${idLabel(c)}</td><td class="num">${c.previous_purchases}</td><td>${c.engagement}/10</td><td>${c.discount ? "Offered" : "Not offered"}</td><td>${c.purchase ? "Purchased" : "Did not purchase"}</td></tr>`).join("") +
+        `</tbody></table></div><p class="u-note">First 5 rows as the dashboard will read them.</p>`;
+    }
+    const notes = [...(res.warnings || []), ...(res.issues || [])];
+    if (notes.length) html += `<ul class="u-list">${notes.map((t) => `<li>${esc(t)}</li>`).join("")}</ul>`;
+    $("uBody").innerHTML = html;
+    $("uUse").hidden = !res.rows;
+    openDlg();
+  }
+
+  function openFile(file) {
+    if (!file) return;
+    if (file.size > 5 * 1024 * 1024) { showUpload({ error: "The file is larger than 5 MB. Remove unused columns or split it." }, file.name); return; }
+    const r = new FileReader();
+    r.onload = () => showUpload(validateCsv(String(r.result)), file.name);
+    r.onerror = () => showUpload({ error: "The browser could not read this file." }, file.name);
+    r.readAsText(file);
+  }
+
+  function syncFilterControls() {
+    $("search").value = state.search;
+    $("purchaseFilter").value = state.outcome;
+    $("engagementFilter").value = state.eng;
+    $("historyFilter").value = state.hist;
+    $("discountFilter").value = state.disc;
+  }
+
+  function updateSegCounts() {
+    document.querySelectorAll(".seg").forEach((b) => { b.querySelector(".seg-n").textContent = fmt(customers.filter(SEGMENTS[b.dataset.seg]).length); });
+  }
+
+  function setData(rows, label, skipped = 0) {
+    customers = rows; usingCustom = rows !== sampleData;
+    Object.assign(state, { seg: "all", search: "", outcome: "all", eng: "all", hist: "all", disc: "all", page: 1 });
+    loadInfo = { skipped };
+    syncFilterControls();
+    document.querySelectorAll(".seg").forEach((s) => { const on = s.dataset.seg === "all"; s.classList.toggle("is-on", on); s.setAttribute("aria-pressed", String(on)); });
+    model = buildModel(); avgRate = rate(customers);
+    buildPeople(); updateSegCounts(); hideDotTip(); hideTrendTip();
+    $("sourceText").textContent = label; $("useSample").hidden = !usingCustom;
+    $("pReset").click();
+    renderAll(); renderQuality(); syncUrl();
+  }
+
+  $("upload").addEventListener("click", () => fileIn.click());
+  fileIn.addEventListener("change", () => { openFile(fileIn.files[0]); fileIn.value = ""; });
+  $("uUse").addEventListener("click", () => {
+    if (!pending) return;
+    setData(pending.rows, `${pending.name}: ${fmt(pending.rows.length)} customers`, pending.skipped);
+    closeDlg(); toast(`Loaded ${plural(pending.rows.length, "customer")} from ${pending.name}. Nothing leaves your browser.`);
+  });
+  $("uCancel").addEventListener("click", closeDlg);
+  $("uAgain").addEventListener("click", () => { closeDlg(); fileIn.click(); });
+  $("uTemplate").addEventListener("click", () => saveCsv("econocasual-template.csv", "customer_id,previous_purchases,engagement,discount,purchase\n1,3,6,1,1\n2,0,2,0,0\n3,7,8,0,1\n4,2,4,1,0\n5,5,5,0,1\n"));
+  $("useSample").addEventListener("click", () => { setData(sampleData, SAMPLE_LABEL); toast("Back to the sample data."); });
+
+  // Drag a file anywhere on the page
+  let dragDepth = 0;
+  const hasFiles = (ev) => ev.dataTransfer && [...ev.dataTransfer.types].includes("Files");
+  window.addEventListener("dragenter", (ev) => { if (hasFiles(ev)) { dragDepth++; document.body.classList.add("dropping"); } });
+  window.addEventListener("dragleave", (ev) => { if (hasFiles(ev) && --dragDepth <= 0) { dragDepth = 0; document.body.classList.remove("dropping"); } });
+  window.addEventListener("dragover", (ev) => { if (hasFiles(ev)) ev.preventDefault(); });
+  window.addEventListener("drop", (ev) => {
+    if (!hasFiles(ev)) return;
+    ev.preventDefault(); dragDepth = 0; document.body.classList.remove("dropping");
+    openFile(ev.dataTransfer.files[0]);
+  });
+
+  /* ---------- Light / dark theme ---------- */
+  const themeBtn = $("theme"), darkQuery = matchMedia("(prefers-color-scheme: dark)");
+  const isDark = () => (document.documentElement.dataset.theme ? document.documentElement.dataset.theme === "dark" : darkQuery.matches);
+  function paintTheme() {
+    const d = isDark();
+    themeBtn.setAttribute("aria-pressed", String(d));
+    document.querySelector('meta[name="theme-color"]').setAttribute("content", d ? "#0f1714" : "#0a6b5f");
+  }
+  themeBtn.addEventListener("click", () => {
+    const next = isDark() ? "light" : "dark";
+    document.documentElement.dataset.theme = next;
+    try { localStorage.setItem("ec-theme", next); } catch (e) { /* storage may be blocked */ }
+    paintTheme();
+  });
+  if (darkQuery.addEventListener) darkQuery.addEventListener("change", paintTheme);
+
   /* ---------- Shareable view: state lives in the query string ---------- */
   const DEFAULTS = { eng: 5, prev: 3 };
   function syncUrl() {
@@ -520,6 +806,9 @@
     if (state.seg !== "all") q.set("seg", state.seg);
     if (state.outcome !== "all") q.set("out", state.outcome);
     if (state.search) q.set("q", state.search);
+    if (state.eng !== "all") q.set("fe", state.eng);
+    if (state.hist !== "all") q.set("fh", state.hist);
+    if (state.disc !== "all") q.set("fd", state.disc);
     if (state.sort !== "customer_id" || state.dir !== 1) { q.set("sort", state.sort); q.set("dir", state.dir === 1 ? "asc" : "desc"); }
     if (Number(els.eng.value) !== DEFAULTS.eng) q.set("e", els.eng.value);
     if (Number(els.prev.value) !== DEFAULTS.prev) q.set("p", els.prev.value);
@@ -533,6 +822,9 @@
     if (Object.prototype.hasOwnProperty.call(SEGMENTS, q.get("seg"))) state.seg = q.get("seg");
     if (["0", "1"].includes(q.get("out"))) state.outcome = q.get("out");
     if (q.get("q")) state.search = q.get("q").replace(/\D/g, "").slice(0, 4);
+    if (Object.prototype.hasOwnProperty.call(ENG_FILTERS, q.get("fe"))) state.eng = q.get("fe");
+    if (Object.prototype.hasOwnProperty.call(HIST_FILTERS, q.get("fh"))) state.hist = q.get("fh");
+    if (["0", "1"].includes(q.get("fd"))) state.disc = q.get("fd");
     if (["customer_id", "previous_purchases", "engagement", "discount", "purchase"].includes(q.get("sort"))) {
       state.sort = q.get("sort"); state.dir = q.get("dir") === "desc" ? -1 : 1;
     }
@@ -543,14 +835,13 @@
     document.querySelectorAll(".seg").forEach((s) => {
       const on = s.dataset.seg === state.seg; s.classList.toggle("is-on", on); s.setAttribute("aria-pressed", String(on));
     });
-    $("search").value = state.search; $("purchaseFilter").value = state.outcome;
+    syncFilterControls();
   })();
   renderPredict();
 
   /* ---------- Wiring ---------- */
   buildPeople();
   document.querySelectorAll(".seg").forEach((b) => {
-    b.querySelector(".seg-n").textContent = fmt(customers.filter(SEGMENTS[b.dataset.seg]).length);
     b.addEventListener("click", () => {
       state.seg = b.dataset.seg; state.page = 1;
       document.querySelectorAll(".seg").forEach((s) => {
@@ -566,6 +857,25 @@
   $("purchaseFilter").addEventListener("change", (e) => { state.outcome = e.target.value; state.page = 1; renderTable(); });
   $("prev").addEventListener("click", () => { state.page--; renderTable(); });
   $("next").addEventListener("click", () => { state.page++; renderTable(); });
+  [["engagementFilter", "eng"], ["historyFilter", "hist"], ["discountFilter", "disc"]].forEach(([id, key]) =>
+    $(id).addEventListener("change", (e) => { state[key] = e.target.value; state.page = 1; renderTable(); })
+  );
+  $("clearAdvancedFilters").addEventListener("click", () => {
+    Object.assign(state, { eng: "all", hist: "all", disc: "all", page: 1 });
+    syncFilterControls(); renderTable();
+  });
+  $("resetDashboard").addEventListener("click", () => {
+    Object.assign(state, { seg: "all", search: "", outcome: "all", eng: "all", hist: "all", disc: "all", sort: "customer_id", dir: 1, page: 1 });
+    document.querySelectorAll(".seg").forEach((s) => { const on = s.dataset.seg === "all"; s.classList.toggle("is-on", on); s.setAttribute("aria-pressed", String(on)); });
+    syncFilterControls();
+    $("pReset").click();
+    tPct.value = 20;
+    hideDotTip(); hideTrendTip();
+    renderAll(); syncUrl();
+    const calm = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+    $("summary").scrollIntoView({ behavior: calm ? "auto" : "smooth" });
+    toast("View reset: group, filters, sorting, predictor and discount share are back to their defaults.");
+  });
   $("export").addEventListener("click", exportCsv);
   $("rows").addEventListener("click", (ev) => {
     const b = ev.target.closest(".row-load");
@@ -576,7 +886,7 @@
   });
   $("share").addEventListener("click", async () => {
     syncUrl();
-    try { await navigator.clipboard.writeText(location.href); toast("Link copied. It opens this same view."); }
+    try { await navigator.clipboard.writeText(location.href); toast(usingCustom ? "Link copied. Uploaded data stays in your browser, so the link opens with the sample data." : "Link copied. It opens this same view."); }
     catch (e) { toast("Copy this address from the browser bar to share the view."); }
   });
   document.querySelectorAll("th button").forEach((b) =>
@@ -626,12 +936,114 @@
         if (en.isIntersecting) links.forEach((a) => a.classList.toggle("active", a.getAttribute("href") === "#" + en.target.id));
       });
     }, { rootMargin: "-40% 0px -55% 0px" });
-    ["summary", "drivers", "predict", "customers"].forEach((id) => io.observe($(id)));
+    ["summary", "drivers", "predict", "target", "customers"].forEach((id) => io.observe($(id)));
   }
 
+  updateSegCounts();
+  paintTheme();
   renderAll();
+  renderQuality();
+
+  /* ---------- Optional backend: set apiBase in config.js ----------
+     Expects GET {apiBase}/api/customers -> JSON array (see docs/API.md).
+     If it is empty or unreachable, the dashboard keeps the built-in sample data. */
+  const apiBase = ((window.ECONO_CONFIG || {}).apiBase || "").replace(/\/$/, "");
+  if (apiBase) {
+    fetch(apiBase + "/api/customers", { headers: { Accept: "application/json" } })
+      .then((r) => { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
+      .then((list) => {
+        const ok = (c) => c && Number.isFinite(+c.previous_purchases) && +c.previous_purchases >= 0 &&
+          Number.isInteger(+c.engagement) && +c.engagement >= 0 && +c.engagement <= 10 &&
+          (+c.discount === 0 || +c.discount === 1) && (+c.purchase === 0 || +c.purchase === 1);
+        const good = (Array.isArray(list) ? list : []).filter(ok);
+        if (!good.length) throw new Error("no valid rows");
+        const rows = good.map((c, i) => ({ customer_id: i + 1, previous_purchases: +c.previous_purchases, engagement: +c.engagement, discount: +c.discount, purchase: +c.purchase }));
+        setData(rows, `Live data from the API: ${fmt(rows.length)} customers`, list.length - good.length);
+      })
+      .catch(() => toast("Could not reach the data server, showing sample data."));
+  }
 
   // One-time reveal: the squares fill in when the page loads
   $("people").classList.add("intro");
   setTimeout(() => $("people").classList.remove("intro"), 2000);
+})();
+
+
+// EconoCasual polish: scroll progress bar + "seen once" triggers. Safe to delete.
+(function () {
+  var h = document.querySelector(".site-header");
+  if (h) {
+    var bar = document.createElement("div");
+    bar.className = "scroll-bar"; bar.setAttribute("aria-hidden", "true");
+    h.appendChild(bar);
+    var tick = function () {
+      var max = document.documentElement.scrollHeight - innerHeight;
+      bar.style.setProperty("--p", max > 0 ? Math.min(1, scrollY / max) : 0);
+    };
+    addEventListener("scroll", tick, { passive: true }); addEventListener("resize", tick); tick();
+  }
+  var els = document.querySelectorAll(".sec-head, .stats");
+  if (!("IntersectionObserver" in window)) { els.forEach(function (e) { e.classList.add("in"); }); return; }
+  var io = new IntersectionObserver(function (list) {
+    list.forEach(function (x) { if (x.isIntersecting) { x.target.classList.add("in"); io.unobserve(x.target); } });
+  }, { threshold: 0.35 });
+  els.forEach(function (e) { io.observe(e); });
+})();
+
+/* ==========================================================
+   EconoCasual: FINAL FIXES (paste at the very bottom of script.js)
+   ========================================================== */
+(function () {
+  "use strict";
+  var $ = function (id) { return document.getElementById(id); };
+
+  /* 1. Search box: only digits, max 4. Shared links now reproduce the same view. */
+  document.addEventListener("input", function (ev) {
+    var t = ev.target;
+    if (!t || t.id !== "search") return;
+    var clean = t.value.replace(/\D/g, "").slice(0, 4);
+    if (t.value !== clean) t.value = clean;
+  }, true); // capture: runs before the dashboard's own listener
+
+  /* 2. Empty group: reset the count-up so numbers don't start from stale values. */
+  ["sTotal", "sRate", "sEng", "sDisc"].forEach(function (id) {
+    var el = $(id);
+    if (!el || !("MutationObserver" in window)) return;
+    new MutationObserver(function () {
+      if (el.textContent.trim() === "\u2013") { cancelAnimationFrame(el._raf); el._v = null; }
+    }).observe(el, { childList: true, characterData: true, subtree: true });
+  });
+
+  /* 3. Header tabs: shorter labels + a "Data quality" link that highlights on scroll. */
+  var nav = document.querySelector(".nav");
+  if (nav) {
+    var labels = { "#drivers": "Drivers", "#customers": "Records" };
+    nav.querySelectorAll("a").forEach(function (a) {
+      var l = labels[a.getAttribute("href")];
+      if (l) a.textContent = l;
+    });
+    if (!nav.querySelector('a[href="#data-quality"]')) {
+      var dq = document.createElement("a");
+      dq.href = "#data-quality";
+      dq.textContent = "Data quality";
+      nav.appendChild(dq);
+    }
+    var q = $("data-quality");
+    if (q && "IntersectionObserver" in window) {
+      new IntersectionObserver(function (entries) {
+        entries.forEach(function (en) {
+          if (!en.isIntersecting) return;
+          nav.querySelectorAll("a").forEach(function (a) {
+            a.classList.toggle("active", a.getAttribute("href") === "#data-quality");
+          });
+        });
+      }, { rootMargin: "-40% 0px -55% 0px" }).observe(q);
+    }
+  }
+
+  /* 4. Small accessibility touches */
+  var t = $("trend");
+  if (t) t.setAttribute("aria-keyshortcuts", "ArrowLeft ArrowRight Home End Escape");
+  var s = $("search");
+  if (s) { s.setAttribute("maxlength", "4"); s.setAttribute("pattern", "[0-9]*"); }
 })();

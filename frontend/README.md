@@ -5,7 +5,16 @@ A responsive dashboard that shows who buys, how engagement relates to buying, an
 ## Run
 Open `index.html` in a browser. There are no dependencies: charts are plain DOM and SVG, and only the Google Fonts load online (the page falls back to system fonts offline).
 
+## Deploy (GitHub Pages)
+Push to `main`. In the repository go to Settings, then Pages, and set the source to "GitHub Actions". `.github/workflows/pages.yml` publishes the site on every push.
+
+## Connect a backend
+Set `apiBase` in `config.js`. The expected response is described in `docs/API.md`. With no `apiBase`, or if the server cannot be reached, the dashboard uses the built-in sample data.
+
 ## Files
+- `config.js`: backend address (optional)
+- `docs/API.md`: data contract for the backend
+- `CONTRIBUTING.md`: branch and commit rules for the team
 - `index.html`: page structure
 - `style.css`: layout and visual design (colour tokens at the top)
 - `script.js`: seeded sample data, statistics, charts, table, CSV export
@@ -20,6 +29,14 @@ Open `index.html` in a browser. There are no dependencies: charts are plain DOM 
 - Shareable views: the group, outcome filter, search, sort and predictor values are stored in the page address, and "Copy link to this view" returns to the same state
 - Click any customer ID in the table to load that customer into "Try a customer"
 - Purchase rate by past purchases, a plain-language readout that changes with the data, a sortable and searchable table, and CSV export
+- Extra table filters (engagement band, past purchases, discount). They sit in the same state as the search, so they work with paging, the shareable link and CSV export
+- Data quality panel: checks every loaded record (missing and out-of-range values) and reports rows skipped when a CSV was uploaded
+- "Reset view" button: puts the group, filters, sorting, predictor and discount share back to their defaults
+
+- Visual polish: a dark "stage" panel for the customer squares with glowing buyers and a one-time scan sweep, a scroll-progress line in the header, and underline/stat-strip animations that play once when scrolled into view. All motion is turned off for people who prefer reduced motion
+- Dark mode: follows the system setting, with a header toggle that remembers your choice
+- Upload CSV: drop a file anywhere or use the header button. Columns are checked, the first 5 rows are previewed, invalid rows are counted, and nothing leaves the browser
+- Who should get a discount: pick a share of customers and see the extra purchases the model expects when discounts go to the highest estimated lift versus no ranking. The target list exports to CSV
 
 ## Data
 1,000 synthetic records with the fields `customer_id`, `previous_purchases`, `engagement`, `discount`, `purchase`. The data is generated with a fixed seed, so results are the same on every load.
@@ -28,6 +45,6 @@ Open `index.html` in a browser. There are no dependencies: charts are plain DOM 
 All comparisons are descriptive. Customers were not randomly assigned discounts, so the dashboard does not claim that a discount caused a purchase. The purchase estimate is a small in-browser model on synthetic data, so treat it as a demonstration; a backend model is future work.
 
 ## Roadmap
-- CSV upload with column checks
 - Interaction term (engagement x discount) and adjusted-effect model
-- Dark mode, self-hosted fonts, unit tests for the statistics
+- Self-hosted fonts, unit tests for the statistics
+- Calibration chart and chart export (PNG)
