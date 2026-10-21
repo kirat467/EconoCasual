@@ -9,6 +9,9 @@
   <meta property="og:type" content="website">
   <meta property="og:title" content="EconoCasual: customer intelligence">
   <meta property="og:description" content="Explore who buys, how engaged customers are, and how discounts line up with purchases.">
+  <meta property="og:image" content="og-image.png">
+  <meta property="og:image:alt" content="EconoCasual customer intelligence dashboard">
+  <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cg fill='%230a6b5f'%3E%3Crect x='2' y='12' width='5' height='10' rx='1.5'/%3E%3Crect x='9.5' y='6' width='5' height='16' rx='1.5'/%3E%3Crect x='17' y='2' width='5' height='20' rx='1.5'/%3E%3C/g%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -30,10 +33,11 @@
     </a>
     <nav class="nav" aria-label="Sections">
       <a href="#summary" class="active">Summary</a>
-      <a href="#drivers">What drives purchases</a>
+      <a href="#drivers">Drivers</a>
       <a href="#predict">Try a customer</a>
       <a href="#target">Plan discounts</a>
-      <a href="#customers">Customer records</a>
+      <a href="#customers">Records</a>
+      <a href="#data-quality">Data quality</a>
     </nav>
     <div class="actions">
       <button class="btn-ghost" id="theme" type="button" aria-pressed="false">Dark mode</button>
@@ -47,6 +51,7 @@
 <main id="top">
   <section class="wrap hero" id="summary" aria-labelledby="headline">
     <p class="source"><span id="sourceText">Sample data: 1,000 generated customers</span> <button type="button" class="link" id="useSample" hidden>Back to sample data</button></p>
+    <p class="api-status" id="apiStatus" role="status" hidden></p>
     <h1 id="headline" class="headline" aria-live="polite">Loading customer sample…</h1>
     <p class="subline" id="subline"></p>
 
@@ -90,10 +95,11 @@
           <span><i class="swatch"></i> Customers at this score</span>
         </div>
         <div class="chart" id="trendWrap">
-          <svg id="trend" role="img" tabindex="0" aria-labelledby="trendDesc"></svg>
+          <svg id="trend" role="img" tabindex="0" aria-labelledby="trendDesc" aria-keyshortcuts="ArrowLeft ArrowRight Home End Escape"></svg>
           <div class="tip" id="tip" hidden></div>
         </div>
         <p class="sr-only" id="trendDesc"></p>
+        <div class="chart-actions"><button type="button" class="btn-ghost" id="chartPng">Download chart (PNG)</button></div>
       </div>
 
       <aside class="drivers-side">
@@ -193,7 +199,7 @@
         <p>Search by ID, filter by outcome, engagement, history or discount, and click a column to sort. Click a customer ID to try that customer in the predictor. Records follow the group chosen at the top.</p>
       </div>
       <div class="filters">
-        <input type="search" id="search" inputmode="numeric" placeholder="Search by ID, e.g. 0042" aria-label="Search by customer ID" autocomplete="off">
+        <input type="search" id="search" inputmode="numeric" maxlength="4" pattern="[0-9]*" placeholder="Search by ID, e.g. 0042" aria-label="Search by customer ID" autocomplete="off">
         <select id="purchaseFilter" aria-label="Filter by outcome">
           <option value="all">All outcomes</option>
           <option value="1">Purchased</option>
@@ -246,50 +252,48 @@
       <span id="summaryText" aria-live="polite"></span>
       <div class="pager-ctl">
         <button type="button" id="prev">Previous</button>
+        <label class="page-size">Rows
+          <select id="pageSize" aria-label="Rows per page">
+            <option value="10">10</option>
+            <option value="25">25</option>
+            <option value="50">50</option>
+          </select>
+        </label>
         <span id="pageText"></span>
         <button type="button" id="next">Next</button>
       </div>
     </div>
   </section>
 
-<!-- EconoCasual: Data Quality Panel -->
-<section class="wrap quality-section" id="data-quality" aria-labelledby="quality-title">
+<!-- Data quality panel -->
+  <section class="wrap quality-section" id="data-quality" aria-labelledby="quality-title">
     <div class="quality-header">
-        <div>
-            <span class="section-eyebrow">DATA QUALITY</span>
-            <h2 id="quality-title">Customer data overview</h2>
-            <p>Checks run on every record in the loaded dataset, not just the rows on screen.</p>
-        </div>
-
-        <span class="quality-badge" id="quality-status">
-            Awaiting analysis
-        </span>
+      <div>
+        <span class="section-eyebrow">DATA QUALITY</span>
+        <h2 id="quality-title">Customer data overview</h2>
+        <p>Checks run on every record in the loaded dataset, not just the rows on screen.</p>
+      </div>
+      <span class="quality-badge" id="quality-status">Awaiting analysis</span>
     </div>
-
     <div class="quality-grid">
-        <article class="quality-card">
-            <span class="quality-label">Records checked</span>
-            <strong id="quality-visible">0</strong>
-            <p>In the loaded dataset</p>
-        </article>
-
-        <article class="quality-card">
-            <span class="quality-label">Missing values</span>
-            <strong id="quality-missing">—</strong>
-            <p>Empty or non-numeric fields</p>
-        </article>
-
-        <article class="quality-card">
-            <span class="quality-label">Invalid or skipped</span>
-            <strong id="quality-invalid">—</strong>
-            <p>Out of range, plus rows skipped on upload</p>
-        </article>
+      <article class="quality-card">
+        <span class="quality-label">Records checked</span>
+        <strong id="quality-visible">0</strong>
+        <p>In the loaded dataset</p>
+      </article>
+      <article class="quality-card">
+        <span class="quality-label">Missing values</span>
+        <strong id="quality-missing">—</strong>
+        <p>Empty or non-numeric fields</p>
+      </article>
+      <article class="quality-card">
+        <span class="quality-label">Invalid or skipped</span>
+        <strong id="quality-invalid">—</strong>
+        <p>Out of range, plus rows skipped on upload</p>
+      </article>
     </div>
-
-    <p class="quality-note" id="quality-note" aria-live="polite">
-        Quality checks run when data loads.
-    </p>
-</section>
+    <p class="quality-note" id="quality-note" aria-live="polite">Quality checks run when data loads.</p>
+  </section>
 </main>
 
 <footer class="site-footer">
@@ -303,7 +307,7 @@
   <div class="dlg">
     <h2 id="uTitle">Check your file</h2>
     <div id="uBody"></div>
-    <p class="u-note">Columns needed: <code>previous_purchases</code>, <code>engagement</code> (0–10), <code>discount</code> and <code>purchase</code> (0/1 or yes/no). <code>customer_id</code> is optional. The file is read in your browser and is not uploaded anywhere.</p>
+    <p class="u-note">Columns needed: <code>previous_purchases</code>, <code>engagement</code> (0–10), <code>discount</code> and <code>purchase</code> (0/1 or yes/no). <code>customer_id</code> is optional (kept when every value is a unique whole number from 1 to 9999). The file is read in your browser and is not uploaded anywhere.</p>
     <div class="dlg-actions">
       <button type="button" class="btn-ghost" id="uTemplate">Download a template</button>
       <button type="button" class="btn-ghost" id="uAgain">Choose another file</button>

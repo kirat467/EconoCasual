@@ -31,6 +31,7 @@
   });
   const sampleData = makeSample();
   let customers = sampleData;
+  let byId = new Map(sampleData.map((c) => [c.customer_id, c]));
   let usingCustom = false;
   const SAMPLE_LABEL = "Sample data: 1,000 generated customers";
 
@@ -79,18 +80,34 @@
   };
 
   /* ---------- Statistics ----------
-     Gaps come with a 95% range (normal approximation), so a small difference
+     Gaps come with a 95% range (Wilson / Newcombe intervals), so a small difference
      built on a few customers is not mistaken for a real pattern. */
   const Z = 1.96;
   const rateMin = (rows) => (rows.length >= MIN_N ? rate(rows) : null);
-  const varOf = (rows) => { const p = rate(rows); return (p * (1 - p)) / rows.length; };
   const split = (rows) => [rows.filter((c) => c.discount === 1), rows.filter((c) => c.discount === 0)];
-  const span = (g) => [g.est - Z * g.se, g.est + Z * g.se];
+  const span = (g) => [g.lo, g.hi];
+
+  /* Wilson score interval: stays sensible for small groups, unlike the plain normal formula */
+  function wilson(rows) {
+    const n = rows.length, p = rate(rows), z2 = Z * Z, den = 1 + z2 / n;
+    const mid = (p + z2 / (2 * n)) / den;
+    const half = (Z * Math.sqrt((p * (1 - p)) / n + z2 / (4 * n * n))) / den;
+    return { p, lo: mid - half, hi: mid + half };
+  }
+  /* Newcombe's method: interval for the difference of two proportions */
+  function diffCI(a, b) {
+    const A = wilson(a), B = wilson(b), est = A.p - B.p;
+    return {
+      est,
+      lo: est - Math.hypot(A.p - A.lo, B.hi - B.p),
+      hi: est + Math.hypot(A.hi - A.p, B.p - B.lo),
+    };
+  }
 
   function overallGap(rows) {
     const [d, n] = split(rows);
     if (d.length < MIN_N || n.length < MIN_N) return null;
-    return { est: rate(d) - rate(n), se: Math.sqrt(varOf(d) + varOf(n)) };
+    return diffCI(d, n);
   }
 
   /* Discount gap after comparing customers within the same engagement band */
@@ -101,28 +118,29 @@
       const [d, n] = split(g);
       if (d.length >= MIN_N && n.length >= MIN_N) used.push({ g, d, n });
     });
-    const total = used.reduce((a, u) => a + u.g.length, 0);
+    const total = used.reduce((x, u) => x + u.g.length, 0);
     if (!total) return null;
-    let est = 0, v = 0;
+    let est = 0, dl = 0, dh = 0;
     used.forEach(({ g, d, n }) => {
-      const w = g.length / total;
-      est += w * (rate(d) - rate(n));
-      v += w * w * (varOf(d) + varOf(n));
+      const w = g.length / total, c = diffCI(d, n);
+      est += w * c.est;
+      dl += w * w * (c.est - c.lo) ** 2;
+      dh += w * w * (c.hi - c.est) ** 2;
     });
-    return { est, se: Math.sqrt(v), bands: used.length };
+    return { est, lo: est - Math.sqrt(dl), hi: est + Math.sqrt(dh), bands: used.length };
   }
   // The band-by-band figure only adds something when more than one band was compared.
   const bandGap = (rows) => { const a = adjustedGap(rows); return a && a.bands > 1 ? a : null; };
 
   /* ---------- One square per customer ---------- */
-  let dotEls = [];
+  let dotEls = new Map();
   const GROUPS = [
     { key: 1, cls: "with", name: "Offered a discount" },
     { key: 0, cls: "without", name: "No discount" },
   ];
 
   function buildPeople() {
-    dotEls = [];
+    dotEls = new Map();
     $("peopleGroups").setAttribute("aria-label", `One square for each of the ${fmt(customers.length)} customers, grouped by whether they were offered a discount. Filled squares bought. The same numbers appear in the headline and the figures below.`);
     $("peopleGroups").innerHTML = GROUPS.map((g) => {
       const list = customers
@@ -134,12 +152,12 @@
         `<div class="grp-head"><h3>${g.name}</h3><span class="grp-meta" id="meta${g.key}"></span></div>` +
         `<div class="dots">${dots}</div></div>`;
     }).join("");
-    $("peopleGroups").querySelectorAll(".d").forEach((el) => { dotEls[Number(el.dataset.id) - 1] = el; });
+    $("peopleGroups").querySelectorAll(".d").forEach((el) => { dotEls.set(Number(el.dataset.id), el); });
   }
 
   function renderPeople(rows) {
     const inView = new Set(rows.map((c) => c.customer_id));
-    customers.forEach((c, i) => dotEls[i].classList.toggle("out", !inView.has(c.customer_id)));
+    customers.forEach((c) => dotEls.get(c.customer_id).classList.toggle("out", !inView.has(c.customer_id)));
     GROUPS.forEach((g) => {
       const list = rows.filter((c) => c.discount === g.key);
       $("meta" + g.key).textContent = list.length
@@ -150,7 +168,7 @@
 
   const dotTip = $("dotTip");
   function showDotTip(el) {
-    const c = customers[Number(el.dataset.id) - 1];
+    const c = byId.get(Number(el.dataset.id));
     const outside = el.classList.contains("out");
     dotTip.innerHTML =
       `<b>${idLabel(c)}</b> ${c.purchase ? "bought" : "did not buy"}<br>` +
@@ -195,7 +213,7 @@
     if (!n) {
       $("headline").textContent = "No customers in this group.";
       $("subline").textContent = "Pick another group above to see results.";
-      ["sTotal", "sRate", "sEng", "sDisc"].forEach((id) => ($(id).textContent = "–"));
+      ["sTotal", "sRate", "sEng", "sDisc"].forEach((id) => { const el = $(id); cancelAnimationFrame(el._raf); el._v = null; el.textContent = "–"; });
       ["sTotalNote", "sRateNote", "sDiscNote"].forEach((id) => ($(id).textContent = "\u00a0"));
       return;
     }
@@ -506,14 +524,31 @@
     const dot = (w, x) => w.reduce((a, wi, i) => a + wi * x[i], 0);
     const train = customers.filter((c) => c.customer_id % 5 !== 0);
     const test = customers.filter((c) => c.customer_id % 5 === 0);
-    const w = [0, 0, 0, 0];
-    for (let it = 0; it < 4000; it++) {
-      const g = [0, 0, 0, 0];
+    const solve = (A, b) => {
+      const n = b.length, M = A.map((r, i) => [...r, b[i]]);
+      for (let i = 0; i < n; i++) {
+        let m = i;
+        for (let r = i + 1; r < n; r++) if (Math.abs(M[r][i]) > Math.abs(M[m][i])) m = r;
+        [M[i], M[m]] = [M[m], M[i]];
+        for (let r = i + 1; r < n; r++) { const f = M[r][i] / M[i][i]; for (let c = i; c <= n; c++) M[r][c] -= f * M[i][c]; }
+      }
+      const x = Array(n).fill(0);
+      for (let i = n - 1; i >= 0; i--) { let t = M[i][n]; for (let c = i + 1; c < n; c++) t -= M[i][c] * x[c]; x[i] = t / M[i][i]; }
+      return x;
+    };
+    // Newton's method (IRLS) converges in a handful of steps, so uploads do not freeze the page
+    const w = [0, 0, 0, 0], lam = 0.001 * train.length;
+    for (let it = 0; it < 25; it++) {
+      const g = [0, 0, 0, 0], H = Array.from({ length: 4 }, () => [0, 0, 0, 0]);
       train.forEach((c) => {
-        const x = feat(c.engagement, c.previous_purchases, c.discount), err = sig(dot(w, x)) - c.purchase;
-        for (let i = 0; i < 4; i++) g[i] += err * x[i];
+        const x = feat(c.engagement, c.previous_purchases, c.discount), p = sig(dot(w, x)), sv = p * (1 - p) + 1e-6;
+        for (let i = 0; i < 4; i++) { g[i] += (p - c.purchase) * x[i]; for (let j = 0; j < 4; j++) H[i][j] += sv * x[i] * x[j]; }
       });
-      for (let i = 0; i < 4; i++) w[i] -= 3 * (g[i] / train.length + (i ? 0.001 * w[i] : 0));
+      for (let i = 1; i < 4; i++) { g[i] += lam * w[i]; H[i][i] += lam; }
+      const step = solve(H, g);
+      let big = 0;
+      for (let i = 0; i < 4; i++) { w[i] -= step[i]; big = Math.max(big, Math.abs(step[i])); }
+      if (big < 1e-6) break;
     }
     const predict = (e, p, d) => sig(dot(w, feat(e, p, d)));
     const right = test.filter((c) => (predict(c.engagement, c.previous_purchases, c.discount) >= 0.5 ? 1 : 0) === c.purchase).length;
@@ -643,7 +678,7 @@
   $("tTop").addEventListener("click", (ev) => {
     const b = ev.target.closest(".row-load");
     if (!b) return;
-    loadCustomer(customers[Number(b.dataset.id) - 1]);
+    loadCustomer(byId.get(Number(b.dataset.id)));
     $("predict").scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
   });
 
@@ -681,6 +716,7 @@
     if (missing.length)
       return { error: `Missing ${missing.length === 1 ? "column" : "columns"}: ${missing.join(", ")}. Columns found: ${heads.join(", ")}. Needed: ${REQUIRED.join(", ")} (customer_id is optional).` };
     const at = Object.fromEntries(REQUIRED.map((c) => [c, heads.indexOf(c)]));
+    const idAt = heads.indexOf("customer_id");
     const rows = [], issues = [], why = {};
     const bad = (line, reason) => { why[reason] = (why[reason] || 0) + 1; if (issues.length < 3) issues.push(`Row ${line}: ${reason}`); };
     for (let i = 1; i < table.length; i++) {
@@ -691,11 +727,15 @@
       if (r[at.previous_purchases] === undefined || r[at.previous_purchases].trim() === "" || !Number.isFinite(p) || p < 0 || p > 10) { bad(i + 1, "previous_purchases must be a number from 0 to 10"); continue; }
       if (d === null) { bad(i + 1, "discount must be 0/1 or yes/no"); continue; }
       if (b === null) { bad(i + 1, "purchase must be 0/1 or yes/no"); continue; }
-      if (rows.length < MAX_ROWS) rows.push({ customer_id: rows.length + 1, previous_purchases: Math.round(p), engagement: Math.round(e), discount: d, purchase: b });
+      if (rows.length < MAX_ROWS) rows.push({ customer_id: 0, _id: idAt >= 0 ? Number(String(r[idAt] == null ? "" : r[idAt]).trim()) : NaN, previous_purchases: Math.round(p), engagement: Math.round(e), discount: d, purchase: b });
     }
     const skipped = Object.values(why).reduce((a, x) => a + x, 0);
     if (rows.length < MIN_ROWS) return { error: `Only ${rows.length} usable ${rows.length === 1 ? "row" : "rows"} found. At least ${MIN_ROWS} are needed for the statistics and the model to mean anything.`, issues };
     const warnings = [];
+    const ids = rows.map((c) => c._id);
+    const keepIds = idAt >= 0 && ids.every((v) => Number.isInteger(v) && v >= 1 && v <= 9999) && new Set(ids).size === ids.length;
+    rows.forEach((c, i) => { c.customer_id = keepIds ? c._id : i + 1; delete c._id; });
+    if (idAt >= 0 && !keepIds) warnings.push("customer_id values were missing, repeated or outside 1–9999, so customers are numbered 1, 2, 3… instead.");
     if (new Set(rows.map((c) => c.discount)).size < 2) warnings.push("Every customer has the same discount value, so discount comparisons will be empty.");
     if (new Set(rows.map((c) => c.purchase)).size < 2) warnings.push("Every customer has the same purchase outcome, so the model has nothing to learn from.");
     if (table.length - 1 - skipped > MAX_ROWS) warnings.push(`Only the first ${fmt(MAX_ROWS)} valid rows are used.`);
@@ -713,7 +753,7 @@
     let html = `<p class="u-file">${esc(name)}</p>`;
     if (res.error) html += `<p class="u-err">${esc(res.error)}</p>`;
     if (res.rows) {
-      html += `<p><b>${plural(res.rows.length, "customer")}</b> ready to load.` + (res.skipped ? ` ${plural(res.skipped, "row")} skipped because of invalid values.` : "") + ` Customers are numbered CUST-0001 onwards in file order.</p>`;
+      html += `<p><b>${plural(res.rows.length, "customer")}</b> ready to load.` + (res.skipped ? ` ${plural(res.skipped, "row")} skipped because of invalid values.` : "") + ` Your customer_id is kept when valid; otherwise customers are numbered CUST-0001 onwards in file order.</p>`;
       html += `<div class="table-scroll u-prev"><table><thead><tr><th>Customer</th><th class="num">Past purchases</th><th>Engagement</th><th>Discount</th><th>Purchase</th></tr></thead><tbody>` +
         res.rows.slice(0, 5).map((c) => `<tr><td>${idLabel(c)}</td><td class="num">${c.previous_purchases}</td><td>${c.engagement}/10</td><td>${c.discount ? "Offered" : "Not offered"}</td><td>${c.purchase ? "Purchased" : "Did not purchase"}</td></tr>`).join("") +
         `</tbody></table></div><p class="u-note">First 5 rows as the dashboard will read them.</p>`;
@@ -740,6 +780,7 @@
     $("engagementFilter").value = state.eng;
     $("historyFilter").value = state.hist;
     $("discountFilter").value = state.disc;
+    $("pageSize").value = String(state.size);
   }
 
   function updateSegCounts() {
@@ -748,6 +789,7 @@
 
   function setData(rows, label, skipped = 0) {
     customers = rows; usingCustom = rows !== sampleData;
+    byId = new Map(rows.map((c) => [c.customer_id, c]));
     Object.assign(state, { seg: "all", search: "", outcome: "all", eng: "all", hist: "all", disc: "all", page: 1 });
     loadInfo = { skipped };
     syncFilterControls();
@@ -810,6 +852,8 @@
     if (state.hist !== "all") q.set("fh", state.hist);
     if (state.disc !== "all") q.set("fd", state.disc);
     if (state.sort !== "customer_id" || state.dir !== 1) { q.set("sort", state.sort); q.set("dir", state.dir === 1 ? "asc" : "desc"); }
+    if (state.size !== 10) q.set("ps", state.size);
+    if (state.page > 1) q.set("pg", state.page);
     if (Number(els.eng.value) !== DEFAULTS.eng) q.set("e", els.eng.value);
     if (Number(els.prev.value) !== DEFAULTS.prev) q.set("p", els.prev.value);
     if (els.disc.checked) q.set("d", "1");
@@ -829,6 +873,8 @@
       state.sort = q.get("sort"); state.dir = q.get("dir") === "desc" ? -1 : 1;
     }
     const e = int("e", 0, 10), p = int("p", 0, 10);
+    if ([10, 25, 50].includes(Number(q.get("ps")))) state.size = Number(q.get("ps"));
+    const pg = int("pg", 1, 9999); if (pg !== null) state.page = pg;
     if (e !== null) els.eng.value = e;
     if (p !== null) els.prev.value = p;
     els.disc.checked = q.get("d") === "1";
@@ -853,8 +899,13 @@
     });
   });
 
-  $("search").addEventListener("input", (e) => { state.search = e.target.value; state.page = 1; renderTable(); });
+  $("search").addEventListener("input", (e) => {
+    const clean = e.target.value.replace(/\D/g, "").slice(0, 4);
+    if (e.target.value !== clean) e.target.value = clean;
+    state.search = clean; state.page = 1; renderTable();
+  });
   $("purchaseFilter").addEventListener("change", (e) => { state.outcome = e.target.value; state.page = 1; renderTable(); });
+  $("pageSize").addEventListener("change", (e) => { state.size = Number(e.target.value); state.page = 1; renderTable(); });
   $("prev").addEventListener("click", () => { state.page--; renderTable(); });
   $("next").addEventListener("click", () => { state.page++; renderTable(); });
   [["engagementFilter", "eng"], ["historyFilter", "hist"], ["discountFilter", "disc"]].forEach(([id, key]) =>
@@ -865,7 +916,7 @@
     syncFilterControls(); renderTable();
   });
   $("resetDashboard").addEventListener("click", () => {
-    Object.assign(state, { seg: "all", search: "", outcome: "all", eng: "all", hist: "all", disc: "all", sort: "customer_id", dir: 1, page: 1 });
+    Object.assign(state, { seg: "all", search: "", outcome: "all", eng: "all", hist: "all", disc: "all", sort: "customer_id", dir: 1, page: 1, size: 10 });
     document.querySelectorAll(".seg").forEach((s) => { const on = s.dataset.seg === "all"; s.classList.toggle("is-on", on); s.setAttribute("aria-pressed", String(on)); });
     syncFilterControls();
     $("pReset").click();
@@ -877,10 +928,41 @@
     toast("View reset: group, filters, sorting, predictor and discount share are back to their defaults.");
   });
   $("export").addEventListener("click", exportCsv);
+  $("chartPng").addEventListener("click", () => {
+    const svgEl = $("trend");
+    svgEl.classList.remove("draw");
+    const clone = svgEl.cloneNode(true);
+    const from = svgEl.querySelectorAll("*"), to = clone.querySelectorAll("*");
+    const props = ["fill", "stroke", "stroke-width", "stroke-dasharray", "stroke-dashoffset", "opacity", "font-size", "font-family", "font-weight", "stroke-linecap", "stroke-linejoin", "visibility"];
+    from.forEach((el, i) => { const cs = getComputedStyle(el); props.forEach((p) => to[i].style.setProperty(p, cs.getPropertyValue(p))); });
+    const W = svgEl.viewBox.baseVal.width, H = svgEl.viewBox.baseVal.height;
+    clone.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+    clone.setAttribute("width", W); clone.setAttribute("height", H);
+    const bg = getComputedStyle(document.body).backgroundColor;
+    const url = URL.createObjectURL(new Blob([new XMLSerializer().serializeToString(clone)], { type: "image/svg+xml;charset=utf-8" }));
+    const img = new Image();
+    img.onload = () => {
+      const k = 2, cv = document.createElement("canvas");
+      cv.width = W * k; cv.height = H * k;
+      const ctx = cv.getContext("2d");
+      ctx.fillStyle = bg; ctx.fillRect(0, 0, cv.width, cv.height);
+      ctx.scale(k, k); ctx.drawImage(img, 0, 0, W, H);
+      URL.revokeObjectURL(url);
+      cv.toBlob((blob) => {
+        const u = URL.createObjectURL(blob), a = document.createElement("a");
+        a.href = u; a.download = "econocasual-trend.png";
+        document.body.appendChild(a); a.click(); a.remove();
+        setTimeout(() => URL.revokeObjectURL(u), 1000);
+        toast("Chart saved as PNG");
+      });
+    };
+    img.onerror = () => toast("Could not create the PNG in this browser.");
+    img.src = url;
+  });
   $("rows").addEventListener("click", (ev) => {
     const b = ev.target.closest(".row-load");
     if (!b) return;
-    loadCustomer(customers[Number(b.dataset.id) - 1]);
+    loadCustomer(byId.get(Number(b.dataset.id)));
     const calm = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
     $("predict").scrollIntoView({ behavior: calm ? "auto" : "smooth" });
   });
@@ -899,6 +981,26 @@
 
   // Customer squares: one delegated listener
   const grid = $("peopleGroups");
+  grid.setAttribute("tabindex", "0");
+  grid.setAttribute("aria-keyshortcuts", "ArrowLeft ArrowRight ArrowUp ArrowDown PageUp PageDown Home End Escape");
+  dotTip.setAttribute("aria-live", "polite");
+  let kbDot = -1;
+  const clearKb = () => grid.querySelectorAll(".d.kb").forEach((el) => el.classList.remove("kb"));
+  grid.addEventListener("keydown", (ev) => {
+    const jump = { ArrowRight: 1, ArrowLeft: -1, ArrowDown: 20, ArrowUp: -20, PageDown: 100, PageUp: -100 };
+    if (ev.key === "Escape") { clearKb(); hideDotTip(); return; }
+    if (!(ev.key in jump) && ev.key !== "Home" && ev.key !== "End") return;
+    ev.preventDefault();
+    const all = grid.querySelectorAll(".d");
+    if (!all.length) return;
+    kbDot = ev.key === "Home" ? 0 : ev.key === "End" ? all.length - 1 : clamp((kbDot < 0 ? 0 : kbDot) + (ev.key in jump ? jump[ev.key] : 0), 0, all.length - 1);
+    clearKb();
+    const el = all[kbDot];
+    el.classList.add("kb");
+    el.scrollIntoView({ block: "nearest" });
+    showDotTip(el);
+  });
+  grid.addEventListener("blur", () => { clearKb(); hideDotTip(); });
   grid.addEventListener("pointerover", (ev) => { const el = ev.target.closest(".d"); if (el) showDotTip(el); });
   grid.addEventListener("pointerleave", (ev) => { if (ev.pointerType === "mouse") hideDotTip(); });
   document.addEventListener("pointerdown", (ev) => { if (!ev.target.closest(".people")) hideDotTip(); });
@@ -936,7 +1038,7 @@
         if (en.isIntersecting) links.forEach((a) => a.classList.toggle("active", a.getAttribute("href") === "#" + en.target.id));
       });
     }, { rootMargin: "-40% 0px -55% 0px" });
-    ["summary", "drivers", "predict", "target", "customers"].forEach((id) => io.observe($(id)));
+    ["summary", "drivers", "predict", "target", "customers", "data-quality"].forEach((id) => io.observe($(id)));
   }
 
   updateSegCounts();
@@ -948,8 +1050,13 @@
      Expects GET {apiBase}/api/customers -> JSON array (see docs/API.md).
      If it is empty or unreachable, the dashboard keeps the built-in sample data. */
   const apiBase = ((window.ECONO_CONFIG || {}).apiBase || "").replace(/\/$/, "");
-  if (apiBase) {
-    fetch(apiBase + "/api/customers", { headers: { Accept: "application/json" } })
+  const apiStatus = $("apiStatus");
+  function loadApi() {
+    if (!apiBase) return;
+    apiStatus.hidden = false;
+    apiStatus.textContent = "Connecting to the data server… the first request can take up to a minute.";
+    const ctl = new AbortController(), timer = setTimeout(() => ctl.abort(), 60000);
+    fetch(apiBase + "/api/customers", { headers: { Accept: "application/json" }, signal: ctl.signal })
       .then((r) => { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
       .then((list) => {
         const ok = (c) => c && Number.isFinite(+c.previous_purchases) && +c.previous_purchases >= 0 &&
@@ -959,9 +1066,15 @@
         if (!good.length) throw new Error("no valid rows");
         const rows = good.map((c, i) => ({ customer_id: i + 1, previous_purchases: +c.previous_purchases, engagement: +c.engagement, discount: +c.discount, purchase: +c.purchase }));
         setData(rows, `Live data from the API: ${fmt(rows.length)} customers`, list.length - good.length);
+        apiStatus.hidden = true;
       })
-      .catch(() => toast("Could not reach the data server, showing sample data."));
+      .catch(() => {
+        apiStatus.innerHTML = 'Could not reach the data server, showing sample data. <button type="button" class="link" id="apiRetry">Try again</button>';
+        $("apiRetry").addEventListener("click", loadApi);
+      })
+      .finally(() => clearTimeout(timer));
   }
+  loadApi();
 
   // One-time reveal: the squares fill in when the page loads
   $("people").classList.add("intro");
@@ -969,7 +1082,7 @@
 })();
 
 
-// EconoCasual polish: scroll progress bar + "seen once" triggers. Safe to delete.
+/* ---------- Scroll progress bar + "seen once" reveals (visual polish only) ---------- */
 (function () {
   var h = document.querySelector(".site-header");
   if (h) {
@@ -988,62 +1101,4 @@
     list.forEach(function (x) { if (x.isIntersecting) { x.target.classList.add("in"); io.unobserve(x.target); } });
   }, { threshold: 0.35 });
   els.forEach(function (e) { io.observe(e); });
-})();
-
-/* ==========================================================
-   EconoCasual: FINAL FIXES (paste at the very bottom of script.js)
-   ========================================================== */
-(function () {
-  "use strict";
-  var $ = function (id) { return document.getElementById(id); };
-
-  /* 1. Search box: only digits, max 4. Shared links now reproduce the same view. */
-  document.addEventListener("input", function (ev) {
-    var t = ev.target;
-    if (!t || t.id !== "search") return;
-    var clean = t.value.replace(/\D/g, "").slice(0, 4);
-    if (t.value !== clean) t.value = clean;
-  }, true); // capture: runs before the dashboard's own listener
-
-  /* 2. Empty group: reset the count-up so numbers don't start from stale values. */
-  ["sTotal", "sRate", "sEng", "sDisc"].forEach(function (id) {
-    var el = $(id);
-    if (!el || !("MutationObserver" in window)) return;
-    new MutationObserver(function () {
-      if (el.textContent.trim() === "\u2013") { cancelAnimationFrame(el._raf); el._v = null; }
-    }).observe(el, { childList: true, characterData: true, subtree: true });
-  });
-
-  /* 3. Header tabs: shorter labels + a "Data quality" link that highlights on scroll. */
-  var nav = document.querySelector(".nav");
-  if (nav) {
-    var labels = { "#drivers": "Drivers", "#customers": "Records" };
-    nav.querySelectorAll("a").forEach(function (a) {
-      var l = labels[a.getAttribute("href")];
-      if (l) a.textContent = l;
-    });
-    if (!nav.querySelector('a[href="#data-quality"]')) {
-      var dq = document.createElement("a");
-      dq.href = "#data-quality";
-      dq.textContent = "Data quality";
-      nav.appendChild(dq);
-    }
-    var q = $("data-quality");
-    if (q && "IntersectionObserver" in window) {
-      new IntersectionObserver(function (entries) {
-        entries.forEach(function (en) {
-          if (!en.isIntersecting) return;
-          nav.querySelectorAll("a").forEach(function (a) {
-            a.classList.toggle("active", a.getAttribute("href") === "#data-quality");
-          });
-        });
-      }, { rootMargin: "-40% 0px -55% 0px" }).observe(q);
-    }
-  }
-
-  /* 4. Small accessibility touches */
-  var t = $("trend");
-  if (t) t.setAttribute("aria-keyshortcuts", "ArrowLeft ArrowRight Home End Escape");
-  var s = $("search");
-  if (s) { s.setAttribute("maxlength", "4"); s.setAttribute("pattern", "[0-9]*"); }
 })();
