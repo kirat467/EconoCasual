@@ -688,3 +688,55 @@ tbody tr:hover { background: var(--teal-soft); }
 }
 /* Keep every header button text on one line at any width */
 .actions .btn, .actions .btn-ghost { white-space: nowrap; }
+
+/* ==========================================================
+   EconoCasual: FINAL FIXES (paste at the very bottom of style.css)
+   ========================================================== */
+
+/* 1. Header tabs: no more cut-off "ummary" / "Customer recorc" */
+@media (min-width: 961px) {
+  .topbar { gap: 12px; }
+  .nav {
+    flex: 1 1 auto;
+    min-width: 0;
+    gap: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+    justify-content: flex-start;   /* left side never gets clipped */
+  }
+  .nav::-webkit-scrollbar { display: none; }
+  .nav a { flex: none; white-space: nowrap; padding: 8px 8px; font-size: 13px; }
+  .nav a:first-child { margin-left: auto; }   /* centred when there is room */
+  .nav a:last-child  { margin-right: auto; }  /* scrolls normally when tight */
+  .actions .btn, .actions .btn-ghost { padding: 7px 11px; font-size: 13px; }
+}
+
+/* Slightly wider header row on big screens so everything fits */
+@media (min-width: 1200px) {
+  .topbar.wrap { max-width: 1320px; }
+}
+
+/* 2. Screen-reader-only text: complete version */
+.sr-only {
+  position: absolute; width: 1px; height: 1px;
+  margin: -1px; padding: 0; border: 0;
+  overflow: hidden; clip: rect(0 0 0 0);
+  clip-path: inset(50%); white-space: nowrap;
+}
+
+/* 3. Data quality cards: shadows that work in dark mode too */
+:root[data-theme="dark"] .quality-card { box-shadow: 0 14px 28px -20px rgba(0, 0, 0, .8); }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .quality-card { box-shadow: 0 14px 28px -20px rgba(0, 0, 0, .8); }
+}
+.quality-badge { background: var(--surface); color: var(--ink-2); }
+
+/* 4. Keyboard focus: visible on customer squares and tabs */
+.d:focus-visible { outline: 2px solid var(--ink); outline-offset: 1px; opacity: 1; position: relative; z-index: 1; }
+.nav a:focus-visible { outline-offset: -2px; }
+
+/* 5. Mobile: keep the 4 header buttons from overflowing */
+@media (max-width: 720px) {
+  .actions { flex-wrap: wrap; justify-content: flex-end; }
+  .topbar { row-gap: 6px; }
+}

@@ -989,3 +989,61 @@
   }, { threshold: 0.35 });
   els.forEach(function (e) { io.observe(e); });
 })();
+
+/* ==========================================================
+   EconoCasual: FINAL FIXES (paste at the very bottom of script.js)
+   ========================================================== */
+(function () {
+  "use strict";
+  var $ = function (id) { return document.getElementById(id); };
+
+  /* 1. Search box: only digits, max 4. Shared links now reproduce the same view. */
+  document.addEventListener("input", function (ev) {
+    var t = ev.target;
+    if (!t || t.id !== "search") return;
+    var clean = t.value.replace(/\D/g, "").slice(0, 4);
+    if (t.value !== clean) t.value = clean;
+  }, true); // capture: runs before the dashboard's own listener
+
+  /* 2. Empty group: reset the count-up so numbers don't start from stale values. */
+  ["sTotal", "sRate", "sEng", "sDisc"].forEach(function (id) {
+    var el = $(id);
+    if (!el || !("MutationObserver" in window)) return;
+    new MutationObserver(function () {
+      if (el.textContent.trim() === "\u2013") { cancelAnimationFrame(el._raf); el._v = null; }
+    }).observe(el, { childList: true, characterData: true, subtree: true });
+  });
+
+  /* 3. Header tabs: shorter labels + a "Data quality" link that highlights on scroll. */
+  var nav = document.querySelector(".nav");
+  if (nav) {
+    var labels = { "#drivers": "Drivers", "#customers": "Records" };
+    nav.querySelectorAll("a").forEach(function (a) {
+      var l = labels[a.getAttribute("href")];
+      if (l) a.textContent = l;
+    });
+    if (!nav.querySelector('a[href="#data-quality"]')) {
+      var dq = document.createElement("a");
+      dq.href = "#data-quality";
+      dq.textContent = "Data quality";
+      nav.appendChild(dq);
+    }
+    var q = $("data-quality");
+    if (q && "IntersectionObserver" in window) {
+      new IntersectionObserver(function (entries) {
+        entries.forEach(function (en) {
+          if (!en.isIntersecting) return;
+          nav.querySelectorAll("a").forEach(function (a) {
+            a.classList.toggle("active", a.getAttribute("href") === "#data-quality");
+          });
+        });
+      }, { rootMargin: "-40% 0px -55% 0px" }).observe(q);
+    }
+  }
+
+  /* 4. Small accessibility touches */
+  var t = $("trend");
+  if (t) t.setAttribute("aria-keyshortcuts", "ArrowLeft ArrowRight Home End Escape");
+  var s = $("search");
+  if (s) { s.setAttribute("maxlength", "4"); s.setAttribute("pattern", "[0-9]*"); }
+})();
