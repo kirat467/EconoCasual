@@ -79,6 +79,17 @@ class TestEconoCasualAPI(unittest.TestCase):
         self.assertIn("non_purchases", data)
         self.assertIn("purchase_rate_percent", data)
 
+    def test_purchase_summary_values_are_numeric(self):
+        response = self.client.get("/purchase-summary")
+        self.assertEqual(response.status_code, 200)
+
+        data = response.get_json()
+
+        self.assertIsInstance(data["total_customers"], int)
+        self.assertIsInstance(data["total_purchases"], int)
+        self.assertIsInstance(data["non_purchases"], int)
+        self.assertIsInstance(data["purchase_rate_percent"], (int, float))
+
     def test_purchase_rate_is_valid(self):
         response = self.client.get("/purchase-summary")
         self.assertEqual(response.status_code, 200)
