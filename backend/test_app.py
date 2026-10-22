@@ -2,7 +2,7 @@ import unittest
 from app import app
 
 class TestEconoCasualAPI(unittest.TestCase):
-   
+
 
  def setUp(self):
     app.config["TESTING"] = True
@@ -31,6 +31,11 @@ class TestEconoCasualAPI(unittest.TestCase):
         self.assertIn("customer_id", customer)
         self.assertIn("purchase", customer)
 
+ def test_customers_response_is_json(self):
+    response = self.client.get("/customers")
+    self.assertEqual(response.status_code, 200)
+    self.assertTrue(response.is_json)
+
  def test_purchase_summary(self):
     response = self.client.get("/purchase-summary")
     self.assertEqual(response.status_code, 200)
@@ -57,6 +62,10 @@ class TestEconoCasualAPI(unittest.TestCase):
     data = response.get_json()
     self.assertGreaterEqual(data["purchase_rate_percent"], 0)
     self.assertLessEqual(data["purchase_rate_percent"], 100)
+
+ def test_invalid_url(self):
+    response = self.client.get("/invalid-url")
+    self.assertEqual(response.status_code, 404)
 
 
 if __name__ == "__main__":

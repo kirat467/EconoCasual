@@ -1,10 +1,10 @@
-from flask import Flask, jsonify
+
 import csv
 from pathlib import Path
+from flask import Flask, jsonify
 
 app = Flask(__name__)
 
-# Locate the original customer dataset
 DATA_FILE = Path(__file__).resolve().parent.parent / "data" / "customers.csv"
 
 
@@ -12,7 +12,7 @@ DATA_FILE = Path(__file__).resolve().parent.parent / "data" / "customers.csv"
 def home():
     return jsonify({
         "project": "EconoCasual",
-        "status": "Backend is running successfully"
+        "status": "running"
     })
 
 
@@ -33,6 +33,19 @@ def customers():
     with open(DATA_FILE, "r", newline="", encoding="utf-8") as file:
         reader = csv.DictReader(file)
         data = list(reader)
+
+    numeric_columns = [
+        "customer_id",
+        "previous_purchases",
+        "engagement",
+        "discount",
+        "purchase"
+    ]
+
+    for customer in data:
+        for column in numeric_columns:
+            if column in customer and customer[column] != "":
+                customer[column] = int(customer[column])
 
     return jsonify({
         "total_customers": len(data),
@@ -72,3 +85,4 @@ def purchase_summary():
 
 if __name__ == "__main__":
     app.run(debug=True)
+
