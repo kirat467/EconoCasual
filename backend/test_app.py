@@ -23,7 +23,6 @@ class TestEconoCasualAPI(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
 
         data = response.get_json()
-
         self.assertEqual(data["total_customers"], 1000)
         self.assertLessEqual(len(data["customers"]), 20)
         self.assertIn("customer_id", data["columns"])
@@ -118,7 +117,6 @@ class TestEconoCasualAPI(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
 
         data = response.get_json()
-
         self.assertEqual(
             data["total_purchases"] + data["non_purchases"],
             data["total_customers"]
@@ -153,6 +151,31 @@ class TestEconoCasualAPI(unittest.TestCase):
 
         self.assertGreaterEqual(data["purchase_rate_percent"], 0)
         self.assertLessEqual(data["purchase_rate_percent"], 100)
+
+    def test_discount_analysis(self):
+        response = self.client.get("/discount-analysis")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(response.is_json)
+
+        data = response.get_json()
+        self.assertIn("discount_groups", data)
+        self.assertIn("0", data["discount_groups"])
+        self.assertIn("1", data["discount_groups"])
+
+    def test_discount_analysis_counts_and_rates(self):
+        response = self.client.get("/discount-analysis")
+        self.assertEqual(response.status_code, 200)
+
+        groups = response.get_json()["discount_groups"]
+
+        for group in groups.values():
+            self.assertEqual(
+                group["total_purchases"] + group["non_purchases"],
+                group["total_customers"]
+            )
+            self.assertGreaterEqual(group["purchase_rate_percent"], 0)
+            self.assertLessEqual(group["purchase_rate_percent"], 100)
 
     def test_invalid_url(self):
         response = self.client.get("/invalid-url")
