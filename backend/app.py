@@ -297,6 +297,52 @@ def validate_data():
         )
     })
 
+@app.route("/customer-statistics")
+def customer_statistics():
+    if not DATA_FILE.exists():
+        return jsonify({
+            "error": "Customer dataset not found"
+        }), 404
+
+    data = load_customers()
+
+    if not data:
+        return jsonify({
+            "error": "Dataset is empty"
+        }), 400
+
+    columns = [
+        "previous_purchases",
+        "engagement",
+        "discount"
+    ]
+
+    statistics = {}
+
+    for column in columns:
+        try:
+            values = [float(row[column]) for row in data]
+        except (ValueError, KeyError):
+            return jsonify({
+                "error": f"Invalid or missing values in {column}"
+            }), 400
+
+        if not values:
+            return jsonify({
+                "error": "No values available for analysis"
+            }), 400
+
+        statistics[column] = {
+            "average": round(sum(values) / len(values), 2),
+            "minimum": min(values),
+            "maximum": max(values)
+        }
+
+    return jsonify({
+        "analysis": "Customer numerical statistics",
+        "total_customers": len(data),
+        "statistics": statistics
+    })
 
 if __name__ == "__main__":
     app.run(debug=True)
