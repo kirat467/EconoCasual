@@ -1,7 +1,6 @@
-
 import csv
 from pathlib import Path
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 
 app = Flask(__name__)
 
@@ -30,6 +29,24 @@ def customers():
             "error": "Customer dataset not found"
         }), 404
 
+    try:
+        limit = int(request.args.get("limit", 20))
+        offset = int(request.args.get("offset", 0))
+    except ValueError:
+        return jsonify({
+            "error": "Limit and offset must be integers"
+        }), 400
+
+    if limit < 1 or limit > 100:
+        return jsonify({
+            "error": "Limit must be between 1 and 100"
+        }), 400
+
+    if offset < 0:
+        return jsonify({
+            "error": "Offset cannot be negative"
+        }), 400
+
     with open(DATA_FILE, "r", newline="", encoding="utf-8") as file:
         reader = csv.DictReader(file)
         data = list(reader)
@@ -47,10 +64,16 @@ def customers():
             if column in customer and customer[column] != "":
                 customer[column] = int(customer[column])
 
+    total = len(data)
+    selected_customers = data[offset:offset + limit]
+
     return jsonify({
-        "total_customers": len(data),
+        "total_customers": total,
+        "limit": limit,
+        "offset": offset,
+        "returned_customers": len(selected_customers),
         "columns": list(data[0].keys()) if data else [],
-        "customers": data[:20]
+        "customers": selected_customers
     })
 
 
@@ -85,4 +108,3 @@ def purchase_summary():
 
 if __name__ == "__main__":
     app.run(debug=True)
-
