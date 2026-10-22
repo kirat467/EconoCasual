@@ -12,6 +12,5 @@ numpy
 scipy
 matplotlib
 
-# Week 4 (API)
-# fastapi
-# uvicorn
+# Model API (backend/model_api.py); the team backend (backend/app.py) uses Flask too
+flask
