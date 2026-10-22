@@ -9,7 +9,8 @@ DATA_FILE = Path(__file__).resolve().parent.parent / "data" / "customers.csv"
 
 def load_customers():
     with open(DATA_FILE, "r", newline="", encoding="utf-8") as file:
-        return list(csv.DictReader(file))
+        reader = csv.DictReader(file)
+        return list(reader)
 
 
 def convert_customer_values(data):
@@ -47,7 +48,9 @@ def health():
 @app.route("/customers")
 def customers():
     if not DATA_FILE.exists():
-        return jsonify({"error": "Customer dataset not found"}), 404
+        return jsonify({
+            "error": "Customer dataset not found"
+        }), 404
 
     try:
         limit = int(request.args.get("limit", 20))
@@ -84,21 +87,26 @@ def customers():
 @app.route("/purchase-summary")
 def purchase_summary():
     if not DATA_FILE.exists():
-        return jsonify({"error": "Customer dataset not found"}), 404
+        return jsonify({
+            "error": "Customer dataset not found"
+        }), 404
 
     data = load_customers()
     total = len(data)
 
     if total == 0:
-        return jsonify({"error": "Dataset is empty"}), 400
+        return jsonify({
+            "error": "Dataset is empty"
+        }), 400
 
     purchases = sum(int(row["purchase"]) for row in data)
+    non_purchases = total - purchases
     purchase_rate = round((purchases / total) * 100, 2)
 
     return jsonify({
         "total_customers": total,
         "total_purchases": purchases,
-        "non_purchases": total - purchases,
+        "non_purchases": non_purchases,
         "purchase_rate_percent": purchase_rate
     })
 
@@ -106,12 +114,16 @@ def purchase_summary():
 @app.route("/discount-analysis")
 def discount_analysis():
     if not DATA_FILE.exists():
-        return jsonify({"error": "Customer dataset not found"}), 404
+        return jsonify({
+            "error": "Customer dataset not found"
+        }), 404
 
     data = load_customers()
 
     if not data:
-        return jsonify({"error": "Dataset is empty"}), 400
+        return jsonify({
+            "error": "Dataset is empty"
+        }), 400
 
     groups = {}
 
@@ -151,6 +163,61 @@ def discount_analysis():
     return jsonify({
         "analysis": "Discount-wise customer purchase behavior",
         "discount_groups": results
+    })
+
+
+@app.route("/previous-purchases-analysis")
+def previous_purchases_analysis():
+    if not DATA_FILE.exists():
+        return jsonify({
+            "error": "Customer dataset not found"
+        }), 404
+
+    data = load_customers()
+
+    if not data:
+        return jsonify({
+            "error": "Dataset is empty"
+        }), 400
+
+    groups = {}
+
+    for row in data:
+        previous = int(row["previous_purchases"])
+        purchase = int(row["purchase"])
+
+        if previous not in groups:
+            groups[previous] = {
+                "total_customers": 0,
+                "total_purchases": 0,
+                "non_purchases": 0
+            }
+
+        groups[previous]["total_customers"] += 1
+
+        if purchase == 1:
+            groups[previous]["total_purchases"] += 1
+        else:
+            groups[previous]["non_purchases"] += 1
+
+    results = {}
+
+    for previous, values in sorted(groups.items()):
+        total = values["total_customers"]
+        purchases = values["total_purchases"]
+
+        results[str(previous)] = {
+            "total_customers": total,
+            "total_purchases": purchases,
+            "non_purchases": values["non_purchases"],
+            "purchase_rate_percent": round(
+                (purchases / total) * 100, 2
+            )
+        }
+
+    return jsonify({
+        "analysis": "Previous purchases and current purchase behavior",
+        "previous_purchase_groups": results
     })
 
 
