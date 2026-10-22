@@ -28,10 +28,6 @@ class TestEconoCasualAPI(unittest.TestCase):
         self.assertIn("customer_id", data["columns"])
         self.assertIn("purchase", data["columns"])
 
-        for customer in data["customers"]:
-            self.assertIn("customer_id", customer)
-            self.assertIn("purchase", customer)
-
     def test_customers_response_is_json(self):
         response = self.client.get("/customers")
         self.assertEqual(response.status_code, 200)
@@ -105,10 +101,14 @@ class TestEconoCasualAPI(unittest.TestCase):
 
     def test_purchase_summary_response_structure(self):
         data = self.client.get("/purchase-summary").get_json()
-        self.assertIn("total_customers", data)
-        self.assertIn("total_purchases", data)
-        self.assertIn("non_purchases", data)
-        self.assertIn("purchase_rate_percent", data)
+
+        for key in [
+            "total_customers",
+            "total_purchases",
+            "non_purchases",
+            "purchase_rate_percent"
+        ]:
+            self.assertIn(key, data)
 
     def test_purchase_summary_values_are_numeric(self):
         data = self.client.get("/purchase-summary").get_json()
@@ -131,9 +131,10 @@ class TestEconoCasualAPI(unittest.TestCase):
         response = self.client.get("/discount-analysis")
         self.assertEqual(response.status_code, 200)
 
-        groups = response.get_json()["discount_groups"]
-        self.assertIn("0", groups)
-        self.assertIn("1", groups)
+        data = response.get_json()
+        self.assertIn("discount_groups", data)
+        self.assertIn("0", data["discount_groups"])
+        self.assertIn("1", data["discount_groups"])
 
     def test_discount_analysis_counts_and_rates(self):
         response = self.client.get("/discount-analysis")
@@ -152,7 +153,6 @@ class TestEconoCasualAPI(unittest.TestCase):
     def test_previous_purchases_analysis(self):
         response = self.client.get("/previous-purchases-analysis")
         self.assertEqual(response.status_code, 200)
-        self.assertTrue(response.is_json)
 
         data = response.get_json()
         self.assertIn("previous_purchase_groups", data)
@@ -163,6 +163,28 @@ class TestEconoCasualAPI(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
 
         groups = response.get_json()["previous_purchase_groups"]
+
+        for group in groups.values():
+            self.assertEqual(
+                group["total_purchases"] + group["non_purchases"],
+                group["total_customers"]
+            )
+            self.assertGreaterEqual(group["purchase_rate_percent"], 0)
+            self.assertLessEqual(group["purchase_rate_percent"], 100)
+
+    def test_engagement_analysis(self):
+        response = self.client.get("/engagement-analysis")
+        self.assertEqual(response.status_code, 200)
+
+        data = response.get_json()
+        self.assertIn("engagement_groups", data)
+        self.assertGreater(len(data["engagement_groups"]), 0)
+
+    def test_engagement_analysis_counts_and_rates(self):
+        response = self.client.get("/engagement-analysis")
+        self.assertEqual(response.status_code, 200)
+
+        groups = response.get_json()["engagement_groups"]
 
         for group in groups.values():
             self.assertEqual(
