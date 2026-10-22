@@ -92,6 +92,28 @@ class TestEconoCasualAPI(unittest.TestCase):
         self.assertEqual(response.status_code, 400)
         self.assertIn("error", response.get_json())
 
+    def test_customers_invalid_offset(self):
+        response = self.client.get("/customers?offset=abc")
+
+        self.assertEqual(response.status_code, 400)
+        self.assertIn("error", response.get_json())
+
+    def test_customers_zero_limit(self):
+        response = self.client.get("/customers?limit=0")
+
+        self.assertEqual(response.status_code, 400)
+        self.assertIn("error", response.get_json())
+
+    def test_customers_offset_beyond_dataset(self):
+        response = self.client.get("/customers?limit=10&offset=2000")
+
+        self.assertEqual(response.status_code, 200)
+
+        data = response.get_json()
+
+        self.assertEqual(data["returned_customers"], 0)
+        self.assertEqual(data["customers"], [])
+
     def test_purchase_summary(self):
         response = self.client.get("/purchase-summary")
         self.assertEqual(response.status_code, 200)
