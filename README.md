@@ -53,3 +53,75 @@ Future Improvements
 ---
 
 Developed collaboratively by the EconoCasual team.
+
+# EconoCasual Backend
+
+## Overview
+
+The EconoCasual backend provides APIs for customer data, purchasing behavior, data analysis, and dataset validation.
+
+## Requirements
+
+* Python
+* Flask
+* Project customer dataset: `data/customers.csv`
+
+## Run the Backend
+
+From the project root directory, run:
+
+```powershell
+.\.venv\Scripts\python.exe backend\app.py
+```
+
+The local development server will display its address in the terminal.
+
+## API Endpoints
+
+| Method | Endpoint                       | Purpose                                   |
+| ------ | ------------------------------ | ----------------------------------------- |
+| GET    | `/`                            | Check project status                      |
+| GET    | `/health`                      | Check backend health                      |
+| GET    | `/customers`                   | Retrieve customer records                 |
+| GET    | `/purchase-summary`            | Get overall purchase statistics           |
+| GET    | `/discount-analysis`           | Analyze purchases by discount             |
+| GET    | `/previous-purchases-analysis` | Analyze previous purchase behavior        |
+| GET    | `/engagement-analysis`         | Analyze purchasing behavior by engagement |
+| GET    | `/validate-data`               | Check dataset quality                     |
+| GET    | `/customer-statistics`         | Get numerical column statistics           |
+
+## Customer Pagination
+
+The `/customers` endpoint supports `limit` and `offset`.
+
+Example:
+
+`/customers?limit=10&offset=20`
+
+* `limit`: Number of records to return; allowed range is 1–100.
+* `offset`: Number of records to skip; must be zero or greater.
+
+## Data Columns
+
+The dataset contains:
+
+* `customer_id`
+* `previous_purchases`
+* `engagement`
+* `discount`
+* `purchase`
+
+## Testing
+
+From the project root, run:
+
+```powershell
+.\.venv\Scripts\python.exe -m unittest discover -s backend -p "test_app.py" -v
+```
+
+## Notes
+
+* The customer dataset must exist at `data/customers.csv`.
+* Analysis endpoints depend on the dataset's column names and values.
+* This project is under development; endpoint behavior may change as features are added.
+
