@@ -62,10 +62,8 @@ class TestEconoCasualAPI(unittest.TestCase):
         data = response.get_json()
 
         self.assertEqual(data["total_customers"], 1000)
-        self.assertEqual(
-            data["total_purchases"] + data["non_purchases"],
-            data["total_customers"]
-        )
+        self.assertEqual(data["total_purchases"], 573)
+        self.assertEqual(data["non_purchases"], 427)
         self.assertEqual(data["purchase_rate_percent"], 57.3)
 
     def test_purchase_summary_response_structure(self):
@@ -98,6 +96,12 @@ class TestEconoCasualAPI(unittest.TestCase):
 
         self.assertGreaterEqual(data["purchase_rate_percent"], 0)
         self.assertLessEqual(data["purchase_rate_percent"], 100)
+
+    def test_purchase_summary_returns_json(self):
+        response = self.client.get("/purchase-summary")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(response.is_json)
 
     def test_invalid_url(self):
         response = self.client.get("/invalid-url")
