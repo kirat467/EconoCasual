@@ -94,6 +94,7 @@ class TestEconoCasualAPI(unittest.TestCase):
 
     def test_purchase_counts_match_total_customers(self):
         data = self.client.get("/purchase-summary").get_json()
+
         self.assertEqual(
             data["total_purchases"] + data["non_purchases"],
             data["total_customers"]
@@ -112,6 +113,7 @@ class TestEconoCasualAPI(unittest.TestCase):
 
     def test_purchase_summary_values_are_numeric(self):
         data = self.client.get("/purchase-summary").get_json()
+
         self.assertIsInstance(data["total_customers"], int)
         self.assertIsInstance(data["total_purchases"], int)
         self.assertIsInstance(data["non_purchases"], int)
@@ -124,6 +126,7 @@ class TestEconoCasualAPI(unittest.TestCase):
 
     def test_purchase_rate_is_valid(self):
         data = self.client.get("/purchase-summary").get_json()
+
         self.assertGreaterEqual(data["purchase_rate_percent"], 0)
         self.assertLessEqual(data["purchase_rate_percent"], 100)
 
@@ -193,6 +196,28 @@ class TestEconoCasualAPI(unittest.TestCase):
             )
             self.assertGreaterEqual(group["purchase_rate_percent"], 0)
             self.assertLessEqual(group["purchase_rate_percent"], 100)
+
+    def test_validate_data(self):
+        response = self.client.get("/validate-data")
+
+        self.assertEqual(response.status_code, 200)
+
+        data = response.get_json()
+        self.assertEqual(data["total_rows"], 1000)
+        self.assertIn("missing_values_by_column", data)
+        self.assertIn("duplicate_customer_ids", data)
+        self.assertIn("invalid_purchase_rows", data)
+        self.assertIn("is_valid", data)
+
+    def test_validate_data_missing_values_counts(self):
+        response = self.client.get("/validate-data")
+
+        self.assertEqual(response.status_code, 200)
+
+        data = response.get_json()
+
+        for count in data["missing_values_by_column"].values():
+            self.assertGreaterEqual(count, 0)
 
     def test_invalid_url(self):
         response = self.client.get("/invalid-url")
