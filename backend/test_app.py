@@ -1,4 +1,3 @@
-
 import unittest
 from app import app
 
@@ -41,8 +40,6 @@ class TestEconoCasualAPI(unittest.TestCase):
 
     def test_customer_values_are_integers(self):
         response = self.client.get("/customers")
-        self.assertEqual(response.status_code, 200)
-
         data = response.get_json()
         customer = data["customers"][0]
 
@@ -54,6 +51,46 @@ class TestEconoCasualAPI(unittest.TestCase):
             "purchase"
         ]:
             self.assertIsInstance(customer[column], int)
+
+    def test_customers_custom_limit(self):
+        response = self.client.get("/customers?limit=10")
+
+        self.assertEqual(response.status_code, 200)
+
+        data = response.get_json()
+
+        self.assertEqual(data["limit"], 10)
+        self.assertEqual(data["returned_customers"], 10)
+        self.assertEqual(len(data["customers"]), 10)
+
+    def test_customers_offset(self):
+        response = self.client.get("/customers?limit=10&offset=20")
+
+        self.assertEqual(response.status_code, 200)
+
+        data = response.get_json()
+
+        self.assertEqual(data["limit"], 10)
+        self.assertEqual(data["offset"], 20)
+        self.assertEqual(data["returned_customers"], 10)
+
+    def test_customers_invalid_limit(self):
+        response = self.client.get("/customers?limit=abc")
+
+        self.assertEqual(response.status_code, 400)
+        self.assertIn("error", response.get_json())
+
+    def test_customers_limit_out_of_range(self):
+        response = self.client.get("/customers?limit=101")
+
+        self.assertEqual(response.status_code, 400)
+        self.assertIn("error", response.get_json())
+
+    def test_customers_negative_offset(self):
+        response = self.client.get("/customers?offset=-1")
+
+        self.assertEqual(response.status_code, 400)
+        self.assertIn("error", response.get_json())
 
     def test_purchase_summary(self):
         response = self.client.get("/purchase-summary")
@@ -68,8 +105,6 @@ class TestEconoCasualAPI(unittest.TestCase):
 
     def test_purchase_summary_response_structure(self):
         response = self.client.get("/purchase-summary")
-        self.assertEqual(response.status_code, 200)
-
         data = response.get_json()
 
         self.assertIn("total_customers", data)
@@ -79,8 +114,6 @@ class TestEconoCasualAPI(unittest.TestCase):
 
     def test_purchase_summary_values_are_numeric(self):
         response = self.client.get("/purchase-summary")
-        self.assertEqual(response.status_code, 200)
-
         data = response.get_json()
 
         self.assertIsInstance(data["total_customers"], int)
@@ -88,20 +121,18 @@ class TestEconoCasualAPI(unittest.TestCase):
         self.assertIsInstance(data["non_purchases"], int)
         self.assertIsInstance(data["purchase_rate_percent"], (int, float))
 
-    def test_purchase_rate_is_valid(self):
-        response = self.client.get("/purchase-summary")
-        self.assertEqual(response.status_code, 200)
-
-        data = response.get_json()
-
-        self.assertGreaterEqual(data["purchase_rate_percent"], 0)
-        self.assertLessEqual(data["purchase_rate_percent"], 100)
-
     def test_purchase_summary_returns_json(self):
         response = self.client.get("/purchase-summary")
 
         self.assertEqual(response.status_code, 200)
         self.assertTrue(response.is_json)
+
+    def test_purchase_rate_is_valid(self):
+        response = self.client.get("/purchase-summary")
+        data = response.get_json()
+
+        self.assertGreaterEqual(data["purchase_rate_percent"], 0)
+        self.assertLessEqual(data["purchase_rate_percent"], 100)
 
     def test_invalid_url(self):
         response = self.client.get("/invalid-url")
@@ -110,4 +141,3 @@ class TestEconoCasualAPI(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)
-
