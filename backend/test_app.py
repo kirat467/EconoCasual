@@ -54,63 +54,52 @@ class TestEconoCasualAPI(unittest.TestCase):
 
     def test_customers_custom_limit(self):
         response = self.client.get("/customers?limit=10")
-
         self.assertEqual(response.status_code, 200)
 
         data = response.get_json()
-
         self.assertEqual(data["limit"], 10)
         self.assertEqual(data["returned_customers"], 10)
         self.assertEqual(len(data["customers"]), 10)
 
     def test_customers_offset(self):
         response = self.client.get("/customers?limit=10&offset=20")
-
         self.assertEqual(response.status_code, 200)
 
         data = response.get_json()
-
         self.assertEqual(data["limit"], 10)
         self.assertEqual(data["offset"], 20)
         self.assertEqual(data["returned_customers"], 10)
 
     def test_customers_invalid_limit(self):
         response = self.client.get("/customers?limit=abc")
-
         self.assertEqual(response.status_code, 400)
         self.assertIn("error", response.get_json())
 
     def test_customers_limit_out_of_range(self):
         response = self.client.get("/customers?limit=101")
-
         self.assertEqual(response.status_code, 400)
         self.assertIn("error", response.get_json())
 
     def test_customers_negative_offset(self):
         response = self.client.get("/customers?offset=-1")
-
         self.assertEqual(response.status_code, 400)
         self.assertIn("error", response.get_json())
 
     def test_customers_invalid_offset(self):
         response = self.client.get("/customers?offset=abc")
-
         self.assertEqual(response.status_code, 400)
         self.assertIn("error", response.get_json())
 
     def test_customers_zero_limit(self):
         response = self.client.get("/customers?limit=0")
-
         self.assertEqual(response.status_code, 400)
         self.assertIn("error", response.get_json())
 
     def test_customers_offset_beyond_dataset(self):
         response = self.client.get("/customers?limit=10&offset=2000")
-
         self.assertEqual(response.status_code, 200)
 
         data = response.get_json()
-
         self.assertEqual(data["returned_customers"], 0)
         self.assertEqual(data["customers"], [])
 
@@ -119,11 +108,21 @@ class TestEconoCasualAPI(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
 
         data = response.get_json()
-
         self.assertEqual(data["total_customers"], 1000)
         self.assertEqual(data["total_purchases"], 573)
         self.assertEqual(data["non_purchases"], 427)
         self.assertEqual(data["purchase_rate_percent"], 57.3)
+
+    def test_purchase_counts_match_total_customers(self):
+        response = self.client.get("/purchase-summary")
+        self.assertEqual(response.status_code, 200)
+
+        data = response.get_json()
+
+        self.assertEqual(
+            data["total_purchases"] + data["non_purchases"],
+            data["total_customers"]
+        )
 
     def test_purchase_summary_response_structure(self):
         response = self.client.get("/purchase-summary")
@@ -145,7 +144,6 @@ class TestEconoCasualAPI(unittest.TestCase):
 
     def test_purchase_summary_returns_json(self):
         response = self.client.get("/purchase-summary")
-
         self.assertEqual(response.status_code, 200)
         self.assertTrue(response.is_json)
 
