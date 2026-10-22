@@ -9,8 +9,7 @@ DATA_FILE = Path(__file__).resolve().parent.parent / "data" / "customers.csv"
 
 def load_customers():
     with open(DATA_FILE, "r", newline="", encoding="utf-8") as file:
-        reader = csv.DictReader(file)
-        return list(reader)
+        return list(csv.DictReader(file))
 
 
 def convert_customer_values(data):
@@ -28,6 +27,45 @@ def convert_customer_values(data):
                 customer[column] = int(customer[column])
 
     return data
+
+
+def create_purchase_groups(data, group_column):
+    groups = {}
+
+    for row in data:
+        group_value = int(row[group_column])
+        purchase = int(row["purchase"])
+
+        if group_value not in groups:
+            groups[group_value] = {
+                "total_customers": 0,
+                "total_purchases": 0,
+                "non_purchases": 0
+            }
+
+        groups[group_value]["total_customers"] += 1
+
+        if purchase == 1:
+            groups[group_value]["total_purchases"] += 1
+        else:
+            groups[group_value]["non_purchases"] += 1
+
+    results = {}
+
+    for group_value, values in sorted(groups.items()):
+        total = values["total_customers"]
+        purchases = values["total_purchases"]
+
+        results[str(group_value)] = {
+            "total_customers": total,
+            "total_purchases": purchases,
+            "non_purchases": values["non_purchases"],
+            "purchase_rate_percent": round(
+                (purchases / total) * 100, 2
+            )
+        }
+
+    return results
 
 
 @app.route("/")
@@ -100,14 +138,14 @@ def purchase_summary():
         }), 400
 
     purchases = sum(int(row["purchase"]) for row in data)
-    non_purchases = total - purchases
-    purchase_rate = round((purchases / total) * 100, 2)
 
     return jsonify({
         "total_customers": total,
         "total_purchases": purchases,
-        "non_purchases": non_purchases,
-        "purchase_rate_percent": purchase_rate
+        "non_purchases": total - purchases,
+        "purchase_rate_percent": round(
+            (purchases / total) * 100, 2
+        )
     })
 
 
@@ -125,44 +163,9 @@ def discount_analysis():
             "error": "Dataset is empty"
         }), 400
 
-    groups = {}
-
-    for row in data:
-        discount = int(row["discount"])
-        purchase = int(row["purchase"])
-
-        if discount not in groups:
-            groups[discount] = {
-                "total_customers": 0,
-                "total_purchases": 0,
-                "non_purchases": 0
-            }
-
-        groups[discount]["total_customers"] += 1
-
-        if purchase == 1:
-            groups[discount]["total_purchases"] += 1
-        else:
-            groups[discount]["non_purchases"] += 1
-
-    results = {}
-
-    for discount, values in sorted(groups.items()):
-        total = values["total_customers"]
-        purchases = values["total_purchases"]
-
-        results[str(discount)] = {
-            "total_customers": total,
-            "total_purchases": purchases,
-            "non_purchases": values["non_purchases"],
-            "purchase_rate_percent": round(
-                (purchases / total) * 100, 2
-            )
-        }
-
     return jsonify({
         "analysis": "Discount-wise customer purchase behavior",
-        "discount_groups": results
+        "discount_groups": create_purchase_groups(data, "discount")
     })
 
 
@@ -180,44 +183,33 @@ def previous_purchases_analysis():
             "error": "Dataset is empty"
         }), 400
 
-    groups = {}
-
-    for row in data:
-        previous = int(row["previous_purchases"])
-        purchase = int(row["purchase"])
-
-        if previous not in groups:
-            groups[previous] = {
-                "total_customers": 0,
-                "total_purchases": 0,
-                "non_purchases": 0
-            }
-
-        groups[previous]["total_customers"] += 1
-
-        if purchase == 1:
-            groups[previous]["total_purchases"] += 1
-        else:
-            groups[previous]["non_purchases"] += 1
-
-    results = {}
-
-    for previous, values in sorted(groups.items()):
-        total = values["total_customers"]
-        purchases = values["total_purchases"]
-
-        results[str(previous)] = {
-            "total_customers": total,
-            "total_purchases": purchases,
-            "non_purchases": values["non_purchases"],
-            "purchase_rate_percent": round(
-                (purchases / total) * 100, 2
-            )
-        }
-
     return jsonify({
         "analysis": "Previous purchases and current purchase behavior",
-        "previous_purchase_groups": results
+        "previous_purchase_groups": create_purchase_groups(
+            data, "previous_purchases"
+        )
+    })
+
+
+@app.route("/engagement-analysis")
+def engagement_analysis():
+    if not DATA_FILE.exists():
+        return jsonify({
+            "error": "Customer dataset not found"
+        }), 404
+
+    data = load_customers()
+
+    if not data:
+        return jsonify({
+            "error": "Dataset is empty"
+        }), 400
+
+    return jsonify({
+        "analysis": "Engagement-wise customer purchase behavior",
+        "engagement_groups": create_purchase_groups(
+            data, "engagement"
+        )
     })
 
 
