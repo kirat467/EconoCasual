@@ -213,5 +213,90 @@ def engagement_analysis():
     })
 
 
+@app.route("/validate-data")
+def validate_data():
+    if not DATA_FILE.exists():
+        return jsonify({
+            "error": "Customer dataset not found"
+        }), 404
+
+    data = load_customers()
+
+    if not data:
+        return jsonify({
+            "error": "Dataset is empty"
+        }), 400
+
+    required_columns = [
+        "customer_id",
+        "previous_purchases",
+        "engagement",
+        "discount",
+        "purchase"
+    ]
+
+    missing_columns = [
+        column for column in required_columns
+        if column not in data[0]
+    ]
+
+    if missing_columns:
+        return jsonify({
+            "error": "Required columns are missing",
+            "missing_columns": missing_columns
+        }), 400
+
+    missing_values = {
+        column: sum(
+            1 for row in data
+            if row.get(column) is None or not row[column].strip()
+        )
+        for column in required_columns
+    }
+
+    customer_ids = [
+        row["customer_id"].strip()
+        for row in data
+        if row.get("customer_id", "").strip()
+    ]
+
+    id_counts = {}
+
+    for customer_id in customer_ids:
+        id_counts[customer_id] = id_counts.get(customer_id, 0) + 1
+
+    duplicate_ids = sorted([
+        customer_id
+        for customer_id, count in id_counts.items()
+        if count > 1
+    ])
+
+    invalid_purchase_rows = []
+
+    for index, row in enumerate(data, start=2):
+        try:
+            purchase = int(row["purchase"])
+
+            if purchase not in (0, 1):
+                invalid_purchase_rows.append(index)
+
+        except (ValueError, KeyError):
+            invalid_purchase_rows.append(index)
+
+    has_missing_values = any(missing_values.values())
+
+    return jsonify({
+        "total_rows": len(data),
+        "missing_values_by_column": missing_values,
+        "duplicate_customer_ids": duplicate_ids,
+        "invalid_purchase_rows": invalid_purchase_rows,
+        "is_valid": (
+            not has_missing_values
+            and not duplicate_ids
+            and not invalid_purchase_rows
+        )
+    })
+
+
 if __name__ == "__main__":
     app.run(debug=True)
