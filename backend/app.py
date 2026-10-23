@@ -297,6 +297,7 @@ def validate_data():
         )
     })
 
+
 @app.route("/customer-statistics")
 def customer_statistics():
     if not DATA_FILE.exists():
@@ -311,38 +312,55 @@ def customer_statistics():
             "error": "Dataset is empty"
         }), 400
 
-    columns = [
+    required_columns = [
         "previous_purchases",
         "engagement",
         "discount"
     ]
 
+    missing_columns = [
+        column for column in required_columns
+        if column not in data[0]
+    ]
+
+    if missing_columns:
+        return jsonify({
+            "error": "Required columns are missing",
+            "missing_columns": missing_columns
+        }), 400
+
     statistics = {}
 
-    for column in columns:
-        try:
-            values = [float(row[column]) for row in data]
-        except (ValueError, KeyError):
-            return jsonify({
-                "error": f"Invalid or missing values in {column}"
-            }), 400
+    try:
+        for column in required_columns:
+            values = [
+                float(row[column])
+                for row in data
+                if row.get(column, "").strip() != ""
+            ]
 
-        if not values:
-            return jsonify({
-                "error": "No values available for analysis"
-            }), 400
+            if not values:
+                return jsonify({
+                    "error": f"No valid values found for {column}"
+                }), 400
 
-        statistics[column] = {
-            "average": round(sum(values) / len(values), 2),
-            "minimum": min(values),
-            "maximum": max(values)
-        }
+            statistics[column] = {
+                "average": round(sum(values) / len(values), 2),
+                "minimum": min(values),
+                "maximum": max(values),
+                "count": len(values)
+            }
+
+    except ValueError:
+        return jsonify({
+            "error": "Dataset contains invalid numeric values"
+        }), 400
 
     return jsonify({
-        "analysis": "Customer numerical statistics",
         "total_customers": len(data),
         "statistics": statistics
     })
+
 
 if __name__ == "__main__":
     app.run(debug=True)
