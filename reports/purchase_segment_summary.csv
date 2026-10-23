@@ -1,0 +1,4 @@
+purchase_segment,customer_count,total_purchases,average_previous_purchases,non_purchases,purchase_rate_percent
+Low,311,122,0.97,189,39.23
+Medium,297,168,4.01,129,56.57
+High,392,283,7.54,109,72.19
