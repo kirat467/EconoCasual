@@ -11,7 +11,7 @@ Run on its own (from the repository root):
 
 Endpoints follow docs/api_contract.md. For now they serve the files that the
 export scripts produce (docs/sample_ite.json, docs/sample_uplift_curve.json,
-docs/sample_optimize.json), so the frontend can be built against real model
+docs/sample_optimize.json, docs/sample_drift.json), so the frontend can be built against real model
 output. Re-run the export scripts to refresh them.
 """
 import json
@@ -100,9 +100,19 @@ def optimize():
     return jsonify(data)
 
 
+@model_api.route("/api/drift")
+def drift():
+    # Stored result of backend/drift.py (a simulated-drift example). A live
+    # check would compare incoming customer data with the training data.
+    data = _load("sample_drift.json")
+    if data is None:
+        return _missing("sample_drift.json", "run python backend/drift.py --export")
+    return jsonify(data)
+
+
 @model_api.route("/api/health")
 def health():
-    files = ["sample_ite.json", "sample_uplift_curve.json", "sample_optimize.json"]
+    files = ["sample_ite.json", "sample_uplift_curve.json", "sample_optimize.json", "sample_drift.json"]
     return jsonify({"status": "ok", "files": {f: (DOCS / f).exists() for f in files}})
 
 

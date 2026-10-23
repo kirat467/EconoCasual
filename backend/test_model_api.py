@@ -56,6 +56,13 @@ def test_optimize_rejects_unsupported_or_invalid_budget():
     assert client.post("/api/optimize", json={"budget": "lots"}).status_code == 400
 
 
+def test_drift_flags_shifted_features_only():
+    body = client.get("/api/drift").get_json()
+    assert body["drift_detected"] is True
+    flagged = {f["name"] for f in body["features"] if f["drift"]}
+    assert flagged == {"previous_purchases", "engagement"}
+
+
 def test_cors_header_present():
     assert client.get("/api/uplift-curve").headers["Access-Control-Allow-Origin"] == "*"
 
