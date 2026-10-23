@@ -2,31 +2,31 @@
 
 ## 1. Project Overview
 
-EconoCasual is a customer purchasing behaviour analysis project focused on understanding purchasing patterns and supporting future purchase prediction.
+EconoCasual is a customer purchasing behaviour analysis project focused on understanding customer patterns and supporting future purchase prediction.
 
 ## 2. Work Completed
 
 ### Backend Development
 
-* Developed and tested Flask backend API endpoints.
-* Implemented customer data retrieval and analysis endpoints.
-* Added purchase summary and customer statistics functionality.
-* Added discount, engagement, and previous-purchase analysis endpoints.
-* Added data validation functionality.
+* Developed and tested Flask API endpoints.
+* Implemented customer data retrieval and statistics.
+* Added purchase summary functionality.
+* Added discount, engagement, and previous-purchase analysis.
+* Implemented data validation functionality.
 
-### Data Analysis and Reports
+### Data Analysis and Reporting
 
 * Analyzed customer purchasing behaviour using Python and Pandas.
-* Generated reports summarizing customer purchasing patterns.
-* Created analysis outputs and visualizations.
+* Generated customer analysis reports and visualizations.
 * Documented backend functionality and API endpoints.
+* Created a Week 2 progress report.
 
-### Testing
+### API Testing
 
-* Expanded automated backend testing.
 * Added API response validation tests.
-* Verified that API endpoints return JSON responses.
-* Ran the complete backend test suite: 81 tests.
+* Added API error-handling tests.
+* Tested unknown endpoints and customer pagination inputs.
+* Ran the complete backend test suite: 86 tests.
 
 ## 3. Dataset Summary
 
@@ -37,15 +37,15 @@ EconoCasual is a customer purchasing behaviour analysis project focused on under
 
 ## 4. Current Status
 
-Backend development, analysis documentation, and automated testing have progressed during Week 2.
+Backend development, data analysis, API documentation, and automated testing have progressed during Week 2.
 
 ## 5. Next Steps
 
-* Review and improve existing analysis where necessary.
-* Continue testing backend functionality.
+* Review existing code and identify genuine improvements.
+* Continue validating backend functionality.
 * Coordinate with team members on their respective tasks.
-* Keep final integration of the team branches for Week 4.
+* Reserve final integration of team branches for Week 4.
 
 ## 6. Conclusion
 
-Week 2 has strengthened the EconoCasual backend through API development, customer analysis, reporting, and automated testing. The project will continue to develop during the remaining weeks.
+Week 2 has expanded the EconoCasual backend through API development, customer analysis, reporting, and automated testing. Development will continue during the remaining project weeks.
