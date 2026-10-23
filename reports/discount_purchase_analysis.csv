@@ -1,0 +1,3 @@
+discount,customer_count,total_purchases,non_purchases,purchase_rate_percent,discount_group
+0,413,224,189,54.24,No Discount
+1,587,349,238,59.45,Discount
