@@ -1,5 +1,11 @@
 
+
+import tempfile
 import unittest
+from pathlib import Path
+from unittest.mock import patch
+
+import pandas as pd
 
 from app import app
 
@@ -153,6 +159,70 @@ class TestEconoCasualAPI(unittest.TestCase):
     def test_unknown_endpoint_returns_json(self):
         response = self.client.get("/invalid-url")
         self.assertTrue(response.is_json)
+
+    def test_customers_missing_dataset(self):
+        with patch("app.DATA_FILE", Path("missing_customers_test.csv")):
+            response = self.client.get("/customers")
+
+        self.assertEqual(response.status_code, 500)
+        self.assertEqual(
+            response.get_json()["error"],
+            "Customer dataset not found"
+        )
+
+    def test_purchase_summary_missing_dataset(self):
+        with patch("app.DATA_FILE", Path("missing_customers_test.csv")):
+            response = self.client.get("/purchase-summary")
+
+        self.assertEqual(response.status_code, 500)
+        self.assertEqual(
+            response.get_json()["error"],
+            "Unable to generate purchase summary"
+        )
+
+    def test_validate_data_missing_dataset(self):
+        with patch("app.DATA_FILE", Path("missing_customers_test.csv")):
+            response = self.client.get("/validate-data")
+
+        self.assertEqual(response.status_code, 500)
+        self.assertEqual(
+            response.get_json()["error"],
+            "Customer dataset not found"
+        )
+
+    def test_customers_dataset_missing_required_column(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            file_path = Path(temp_dir) / "customers.csv"
+            pd.DataFrame({
+                "customer_id": [1],
+                "purchase": [1],
+            }).to_csv(file_path, index=False)
+
+            with patch("app.DATA_FILE", file_path):
+                response = self.client.get("/customers")
+
+        self.assertEqual(response.status_code, 500)
+        self.assertEqual(
+            response.get_json()["error"],
+            "Invalid customer dataset"
+        )
+
+    def test_customers_malformed_csv(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            file_path = Path(temp_dir) / "customers.csv"
+            file_path.write_text(
+                'customer_id,previous_purchases\n1,"unfinished',
+                encoding="utf-8"
+            )
+
+            with patch("app.DATA_FILE", file_path):
+                response = self.client.get("/customers")
+
+        self.assertEqual(response.status_code, 500)
+        self.assertEqual(
+            response.get_json()["error"],
+            "Invalid customer dataset"
+        )
 
 
 if __name__ == "__main__":
