@@ -1,0 +1,37 @@
+{
+  "drift_detected": true,
+  "checked_at": "2026-10-23T11:37:15Z",
+  "n_reference": 2500,
+  "n_new": 2500,
+  "rule": "drift if KS p-value < 0.01 and PSI >= 0.1",
+  "features": [
+    {
+      "name": "previous_purchases",
+      "ks_statistic": 0.3968,
+      "p_value": 0.0,
+      "psi": 2.6453,
+      "drift": true
+    },
+    {
+      "name": "engagement",
+      "ks_statistic": 0.304,
+      "p_value": 0.0,
+      "psi": 1.4723,
+      "drift": true
+    },
+    {
+      "name": "price_sensitivity",
+      "ks_statistic": 0.0168,
+      "p_value": 0.8723,
+      "psi": 0.0049,
+      "drift": false
+    },
+    {
+      "name": "age",
+      "ks_statistic": 0.0228,
+      "p_value": 0.5343,
+      "psi": 0.0051,
+      "drift": false
+    }
+  ]
+}
