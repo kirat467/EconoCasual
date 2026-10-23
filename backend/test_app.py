@@ -38,9 +38,7 @@ class TestEconoCasualAPI(unittest.TestCase):
     def test_customers_pagination(self):
         response = self.client.get("/customers?page=1&per_page=5")
         self.assertEqual(response.status_code, 200)
-        self.assertLessEqual(
-            len(response.get_json()["customers"]), 5
-        )
+        self.assertLessEqual(len(response.get_json()["customers"]), 5)
 
     def test_customers_invalid_page(self):
         response = self.client.get("/customers?page=invalid")
@@ -57,32 +55,24 @@ class TestEconoCasualAPI(unittest.TestCase):
     def test_customers_large_page(self):
         response = self.client.get("/customers?page=999999")
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(
-            response.get_json()["customers"], []
-        )
+        self.assertEqual(response.get_json()["customers"], [])
 
     def test_customers_filter_by_discount(self):
         response = self.client.get("/customers?discount=1")
         self.assertEqual(response.status_code, 200)
-
-        data = response.get_json()
-        for customer in data["customers"]:
+        for customer in response.get_json()["customers"]:
             self.assertEqual(float(customer["discount"]), 1.0)
 
     def test_customers_filter_by_engagement(self):
         response = self.client.get("/customers?engagement=1")
         self.assertEqual(response.status_code, 200)
-
-        data = response.get_json()
-        for customer in data["customers"]:
+        for customer in response.get_json()["customers"]:
             self.assertEqual(float(customer["engagement"]), 1.0)
 
     def test_customers_filter_by_purchase(self):
         response = self.client.get("/customers?purchase=1")
         self.assertEqual(response.status_code, 200)
-
-        data = response.get_json()
-        for customer in data["customers"]:
+        for customer in response.get_json()["customers"]:
             self.assertEqual(float(customer["purchase"]), 1.0)
 
     def test_customers_invalid_discount_filter(self):
@@ -97,6 +87,30 @@ class TestEconoCasualAPI(unittest.TestCase):
         response = self.client.get("/customers?purchase=invalid")
         self.assertEqual(response.status_code, 400)
 
+    def test_customers_nan_discount_filter(self):
+        response = self.client.get("/customers?discount=NaN")
+        self.assertEqual(response.status_code, 400)
+
+    def test_customers_nan_engagement_filter(self):
+        response = self.client.get("/customers?engagement=NaN")
+        self.assertEqual(response.status_code, 400)
+
+    def test_customers_nan_purchase_filter(self):
+        response = self.client.get("/customers?purchase=NaN")
+        self.assertEqual(response.status_code, 400)
+
+    def test_customers_infinite_discount_filter(self):
+        response = self.client.get("/customers?discount=inf")
+        self.assertEqual(response.status_code, 400)
+
+    def test_customers_negative_infinite_engagement_filter(self):
+        response = self.client.get("/customers?engagement=-inf")
+        self.assertEqual(response.status_code, 400)
+
+    def test_customers_infinite_purchase_filter(self):
+        response = self.client.get("/customers?purchase=inf")
+        self.assertEqual(response.status_code, 400)
+
     def test_purchase_summary(self):
         response = self.client.get("/purchase-summary")
         self.assertEqual(response.status_code, 200)
@@ -104,7 +118,6 @@ class TestEconoCasualAPI(unittest.TestCase):
     def test_purchase_summary_fields(self):
         response = self.client.get("/purchase-summary")
         data = response.get_json()
-
         self.assertIn("total_customers", data)
         self.assertIn("total_purchases", data)
         self.assertIn("non_purchases", data)
@@ -125,7 +138,6 @@ class TestEconoCasualAPI(unittest.TestCase):
     def test_validate_data(self):
         response = self.client.get("/validate-data")
         self.assertEqual(response.status_code, 200)
-
         data = response.get_json()
         self.assertIn("total_rows", data)
         self.assertIn("missing_values_by_column", data)

@@ -1,8 +1,9 @@
+
 from pathlib import Path
+import math
 
 import pandas as pd
 from flask import Flask, jsonify, request
-
 
 app = Flask(__name__)
 
@@ -21,9 +22,7 @@ REQUIRED_COLUMNS = [
 def load_data():
     """Load customer data and verify that required columns exist."""
     if not DATA_FILE.exists():
-        raise FileNotFoundError(
-            f"Customer dataset not found: {DATA_FILE}"
-        )
+        raise FileNotFoundError(f"Customer dataset not found: {DATA_FILE}")
 
     df = pd.read_csv(DATA_FILE)
 
@@ -33,9 +32,7 @@ def load_data():
     ]
 
     if missing_columns:
-        raise ValueError(
-            f"Missing required columns: {missing_columns}"
-        )
+        raise ValueError(f"Missing required columns: {missing_columns}")
 
     return df
 
@@ -81,9 +78,7 @@ def home():
 
 @app.route("/health", methods=["GET"])
 def health():
-    return jsonify({
-        "status": "healthy",
-    }), 200
+    return jsonify({"status": "healthy"}), 200
 
 
 @app.route("/customers", methods=["GET"])
@@ -91,7 +86,6 @@ def customers():
     try:
         df = load_data()
 
-        # Invalid, zero, or negative page values default to page 1.
         try:
             page = int(request.args.get("page", 1))
         except (TypeError, ValueError):
@@ -108,21 +102,25 @@ def customers():
         if per_page < 1:
             per_page = 20
 
-        # Prevent excessively large responses.
         per_page = min(per_page, 100)
 
-        # Optional filtering.
         for column in ["discount", "engagement", "purchase"]:
             value = request.args.get(column)
 
             if value is not None:
                 try:
                     numeric_value = float(value)
-                    df = df[df[column] == numeric_value]
                 except ValueError:
                     return jsonify({
                         "error": f"Invalid filter value for {column}"
                     }), 400
+
+                if not math.isfinite(numeric_value):
+                    return jsonify({
+                        "error": f"Invalid filter value for {column}"
+                    }), 400
+
+                df = df[df[column] == numeric_value]
 
         total_customers = int(len(df))
         start = (page - 1) * per_page
@@ -158,9 +156,7 @@ def customers():
 def purchase_summary():
     try:
         df = load_data()
-        summary = calculate_purchase_statistics(df)
-        return jsonify(summary), 200
-
+        return jsonify(calculate_purchase_statistics(df)), 200
     except Exception:
         app.logger.exception("Error generating purchase summary")
         return jsonify({
@@ -175,7 +171,6 @@ def discount_analysis():
         return jsonify({
             "analysis": analyse_column(df, "discount")
         }), 200
-
     except Exception:
         app.logger.exception("Error generating discount analysis")
         return jsonify({
@@ -190,7 +185,6 @@ def engagement_analysis():
         return jsonify({
             "analysis": analyse_column(df, "engagement")
         }), 200
-
     except Exception:
         app.logger.exception("Error generating engagement analysis")
         return jsonify({
@@ -205,11 +199,8 @@ def previous_purchases_analysis():
         return jsonify({
             "analysis": analyse_column(df, "previous_purchases")
         }), 200
-
     except Exception:
-        app.logger.exception(
-            "Error generating previous purchases analysis"
-        )
+        app.logger.exception("Error generating previous purchases analysis")
         return jsonify({
             "error": "Unable to generate previous purchases analysis"
         }), 500
@@ -269,10 +260,9 @@ def customer_statistics():
 
 @app.errorhandler(404)
 def not_found(error):
-    return jsonify({
-        "error": "Endpoint not found"
-    }), 404
+    return jsonify({"error": "Endpoint not found"}), 404
 
 
 if __name__ == "__main__":
     app.run(debug=True)
+
