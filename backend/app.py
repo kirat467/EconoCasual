@@ -61,7 +61,7 @@ def create_purchase_groups(data, group_column):
             "total_purchases": purchases,
             "non_purchases": values["non_purchases"],
             "purchase_rate_percent": round(
-                (purchases / total) * 100, 2
+                purchases / total * 100, 2
             )
         }
 
@@ -78,17 +78,13 @@ def home():
 
 @app.route("/health")
 def health():
-    return jsonify({
-        "status": "healthy"
-    })
+    return jsonify({"status": "healthy"})
 
 
 @app.route("/customers")
 def customers():
     if not DATA_FILE.exists():
-        return jsonify({
-            "error": "Customer dataset not found"
-        }), 404
+        return jsonify({"error": "Customer dataset not found"}), 404
 
     try:
         limit = int(request.args.get("limit", 20))
@@ -98,17 +94,41 @@ def customers():
             "error": "Limit and offset must be integers"
         }), 400
 
-    if limit < 1 or limit > 100:
+    if not 1 <= limit <= 100:
         return jsonify({
             "error": "Limit must be between 1 and 100"
         }), 400
 
     if offset < 0:
+        return jsonify({"error": "Offset cannot be negative"}), 400
+
+    purchase_filter = request.args.get("purchase")
+    discount_filter = request.args.get("discount")
+
+    if purchase_filter is not None and purchase_filter not in ("0", "1"):
         return jsonify({
-            "error": "Offset cannot be negative"
+            "error": "Purchase filter must be 0 or 1"
+        }), 400
+
+    if discount_filter is not None and discount_filter not in ("0", "1"):
+        return jsonify({
+            "error": "Discount filter must be 0 or 1"
         }), 400
 
     data = convert_customer_values(load_customers())
+
+    if purchase_filter is not None:
+        data = [
+            row for row in data
+            if row["purchase"] == int(purchase_filter)
+        ]
+
+    if discount_filter is not None:
+        data = [
+            row for row in data
+            if row["discount"] == int(discount_filter)
+        ]
+
     total = len(data)
     selected_customers = data[offset:offset + limit]
 
@@ -117,6 +137,16 @@ def customers():
         "limit": limit,
         "offset": offset,
         "returned_customers": len(selected_customers),
+        "filters": {
+            "purchase": (
+                int(purchase_filter)
+                if purchase_filter is not None else None
+            ),
+            "discount": (
+                int(discount_filter)
+                if discount_filter is not None else None
+            )
+        },
         "columns": list(data[0].keys()) if data else [],
         "customers": selected_customers
     })
@@ -125,43 +155,33 @@ def customers():
 @app.route("/purchase-summary")
 def purchase_summary():
     if not DATA_FILE.exists():
-        return jsonify({
-            "error": "Customer dataset not found"
-        }), 404
+        return jsonify({"error": "Customer dataset not found"}), 404
 
     data = load_customers()
+
+    if not data:
+        return jsonify({"error": "Dataset is empty"}), 400
+
     total = len(data)
-
-    if total == 0:
-        return jsonify({
-            "error": "Dataset is empty"
-        }), 400
-
     purchases = sum(int(row["purchase"]) for row in data)
 
     return jsonify({
         "total_customers": total,
         "total_purchases": purchases,
         "non_purchases": total - purchases,
-        "purchase_rate_percent": round(
-            (purchases / total) * 100, 2
-        )
+        "purchase_rate_percent": round(purchases / total * 100, 2)
     })
 
 
 @app.route("/discount-analysis")
 def discount_analysis():
     if not DATA_FILE.exists():
-        return jsonify({
-            "error": "Customer dataset not found"
-        }), 404
+        return jsonify({"error": "Customer dataset not found"}), 404
 
     data = load_customers()
 
     if not data:
-        return jsonify({
-            "error": "Dataset is empty"
-        }), 400
+        return jsonify({"error": "Dataset is empty"}), 400
 
     return jsonify({
         "analysis": "Discount-wise customer purchase behavior",
@@ -172,16 +192,12 @@ def discount_analysis():
 @app.route("/previous-purchases-analysis")
 def previous_purchases_analysis():
     if not DATA_FILE.exists():
-        return jsonify({
-            "error": "Customer dataset not found"
-        }), 404
+        return jsonify({"error": "Customer dataset not found"}), 404
 
     data = load_customers()
 
     if not data:
-        return jsonify({
-            "error": "Dataset is empty"
-        }), 400
+        return jsonify({"error": "Dataset is empty"}), 400
 
     return jsonify({
         "analysis": "Previous purchases and current purchase behavior",
@@ -194,38 +210,28 @@ def previous_purchases_analysis():
 @app.route("/engagement-analysis")
 def engagement_analysis():
     if not DATA_FILE.exists():
-        return jsonify({
-            "error": "Customer dataset not found"
-        }), 404
+        return jsonify({"error": "Customer dataset not found"}), 404
 
     data = load_customers()
 
     if not data:
-        return jsonify({
-            "error": "Dataset is empty"
-        }), 400
+        return jsonify({"error": "Dataset is empty"}), 400
 
     return jsonify({
         "analysis": "Engagement-wise customer purchase behavior",
-        "engagement_groups": create_purchase_groups(
-            data, "engagement"
-        )
+        "engagement_groups": create_purchase_groups(data, "engagement")
     })
 
 
 @app.route("/validate-data")
 def validate_data():
     if not DATA_FILE.exists():
-        return jsonify({
-            "error": "Customer dataset not found"
-        }), 404
+        return jsonify({"error": "Customer dataset not found"}), 404
 
     data = load_customers()
 
     if not data:
-        return jsonify({
-            "error": "Dataset is empty"
-        }), 400
+        return jsonify({"error": "Dataset is empty"}), 400
 
     required_columns = [
         "customer_id",
@@ -265,25 +271,20 @@ def validate_data():
     for customer_id in customer_ids:
         id_counts[customer_id] = id_counts.get(customer_id, 0) + 1
 
-    duplicate_ids = sorted([
+    duplicate_ids = sorted(
         customer_id
         for customer_id, count in id_counts.items()
         if count > 1
-    ])
+    )
 
     invalid_purchase_rows = []
 
     for index, row in enumerate(data, start=2):
         try:
-            purchase = int(row["purchase"])
-
-            if purchase not in (0, 1):
+            if int(row["purchase"]) not in (0, 1):
                 invalid_purchase_rows.append(index)
-
         except (ValueError, KeyError):
             invalid_purchase_rows.append(index)
-
-    has_missing_values = any(missing_values.values())
 
     return jsonify({
         "total_rows": len(data),
@@ -291,7 +292,7 @@ def validate_data():
         "duplicate_customer_ids": duplicate_ids,
         "invalid_purchase_rows": invalid_purchase_rows,
         "is_valid": (
-            not has_missing_values
+            not any(missing_values.values())
             and not duplicate_ids
             and not invalid_purchase_rows
         )
@@ -301,16 +302,12 @@ def validate_data():
 @app.route("/customer-statistics")
 def customer_statistics():
     if not DATA_FILE.exists():
-        return jsonify({
-            "error": "Customer dataset not found"
-        }), 404
+        return jsonify({"error": "Customer dataset not found"}), 404
 
     data = load_customers()
 
     if not data:
-        return jsonify({
-            "error": "Dataset is empty"
-        }), 400
+        return jsonify({"error": "Dataset is empty"}), 400
 
     required_columns = [
         "previous_purchases",
@@ -336,7 +333,7 @@ def customer_statistics():
             values = [
                 float(row[column])
                 for row in data
-                if row.get(column, "").strip() != ""
+                if row.get(column, "").strip()
             ]
 
             if not values:
