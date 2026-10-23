@@ -712,3 +712,11 @@ tbody tr:hover { background: var(--teal-soft); }
 .page-size select { padding: 5px 8px; border: 1px solid var(--rule); border-radius: 8px; background: var(--surface); color: var(--ink); }
 #peopleGroups:focus-visible { outline: 2px solid var(--teal); outline-offset: 8px; }
 .d.kb { outline: 2px solid var(--ink); outline-offset: 1px; opacity: 1; transform: none; position: relative; z-index: 1; }
+
+/* Skip link (keyboard users) */
+.skip {
+  position: absolute; left: 12px; top: -48px; z-index: 100;
+  padding: 10px 16px; border-radius: 6px;
+  background: var(--ink); color: var(--paper); font-weight: 600;
+}
+.skip:focus { top: 12px; }

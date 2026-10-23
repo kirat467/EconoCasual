@@ -522,8 +522,9 @@
     const feat = (e, p, d) => [1, e / 10, p / 10, d];
     const sig = (z) => 1 / (1 + Math.exp(-z));
     const dot = (w, x) => w.reduce((a, wi, i) => a + wi * x[i], 0);
-    const train = customers.filter((c) => c.customer_id % 5 !== 0);
-    const test = customers.filter((c) => c.customer_id % 5 === 0);
+    // Split by position, not by customer_id, so uploaded IDs can never leave a set empty
+    const train = customers.filter((c, i) => i % 5 !== 0);
+    const test = customers.filter((c, i) => i % 5 === 0);
     const solve = (A, b) => {
       const n = b.length, M = A.map((r, i) => [...r, b[i]]);
       for (let i = 0; i < n; i++) {
@@ -559,7 +560,12 @@
     let wins = 0;
     pos.forEach((a) => neg.forEach((b) => { wins += a > b ? 1 : a === b ? 0.5 : 0; }));
     const auc = pos.length && neg.length ? wins / (pos.length * neg.length) : null;
-    return { predict, auc, accuracy: right / test.length, baseline: Math.max(bought, test.length - bought) / test.length, tested: test.length };
+    return {
+      predict, auc,
+      accuracy: test.length ? right / test.length : null,
+      baseline: test.length ? Math.max(bought, test.length - bought) / test.length : null,
+      tested: test.length,
+    };
   };
   let model = buildModel();
 
@@ -586,8 +592,10 @@
       }
     }
     $("pSimilar").textContent = text;
-    $("pModel").textContent = `Checked on ${fmt(model.tested)} customers the model never saw, it called the outcome right ${pct(model.accuracy)} of the time. Always guessing the more common outcome would be right ${pct(model.baseline)}.` +
-      (model.auc == null ? "" : ` Its AUC is ${model.auc.toFixed(2)} (0.50 is a coin flip, 1.00 is perfect).`);
+    $("pModel").textContent = model.tested < 10
+      ? "Too few records to check the model on unseen customers."
+      : `Checked on ${fmt(model.tested)} customers the model never saw, it called the outcome right ${pct(model.accuracy)} of the time. Always guessing the more common outcome would be right ${pct(model.baseline)}.` +
+        (model.auc == null ? "" : ` Its AUC is ${model.auc.toFixed(2)} (0.50 is a coin flip, 1.00 is perfect).`);
     syncUrl();
   }
   const clearActual = () => { $("pActual").hidden = true; };
@@ -787,17 +795,21 @@
     document.querySelectorAll(".seg").forEach((b) => { b.querySelector(".seg-n").textContent = fmt(customers.filter(SEGMENTS[b.dataset.seg]).length); });
   }
 
-  function setData(rows, label, skipped = 0) {
+  function setData(rows, label, skipped = 0, keepView = false) {
     customers = rows; usingCustom = rows !== sampleData;
     byId = new Map(rows.map((c) => [c.customer_id, c]));
-    Object.assign(state, { seg: "all", search: "", outcome: "all", eng: "all", hist: "all", disc: "all", page: 1 });
+    // keepView = true keeps the group, filters and predictor restored from a shared link
+    if (!keepView) Object.assign(state, { seg: "all", search: "", outcome: "all", eng: "all", hist: "all", disc: "all", page: 1 });
     loadInfo = { skipped };
     syncFilterControls();
-    document.querySelectorAll(".seg").forEach((s) => { const on = s.dataset.seg === "all"; s.classList.toggle("is-on", on); s.setAttribute("aria-pressed", String(on)); });
+    document.querySelectorAll(".seg").forEach((s) => {
+      const on = s.dataset.seg === state.seg;
+      s.classList.toggle("is-on", on); s.setAttribute("aria-pressed", String(on));
+    });
     model = buildModel(); avgRate = rate(customers);
     buildPeople(); updateSegCounts(); hideDotTip(); hideTrendTip();
     $("sourceText").textContent = label; $("useSample").hidden = !usingCustom;
-    $("pReset").click();
+    if (keepView) renderPredict(); else $("pReset").click();
     renderAll(); renderQuality(); syncUrl();
   }
 
@@ -1035,7 +1047,11 @@
   if ("IntersectionObserver" in window) {
     const io = new IntersectionObserver((entries) => {
       entries.forEach((en) => {
-        if (en.isIntersecting) links.forEach((a) => a.classList.toggle("active", a.getAttribute("href") === "#" + en.target.id));
+        if (en.isIntersecting) links.forEach((a) => {
+          const on = a.getAttribute("href") === "#" + en.target.id;
+          a.classList.toggle("active", on);
+          if (on) a.setAttribute("aria-current", "true"); else a.removeAttribute("aria-current");
+        });
       });
     }, { rootMargin: "-40% 0px -55% 0px" });
     ["summary", "drivers", "predict", "target", "customers", "data-quality"].forEach((id) => io.observe($(id)));
@@ -1059,13 +1075,28 @@
     fetch(apiBase + "/api/customers", { headers: { Accept: "application/json" }, signal: ctl.signal })
       .then((r) => { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
       .then((list) => {
-        const ok = (c) => c && Number.isFinite(+c.previous_purchases) && +c.previous_purchases >= 0 &&
-          Number.isInteger(+c.engagement) && +c.engagement >= 0 && +c.engagement <= 10 &&
-          (+c.discount === 0 || +c.discount === 1) && (+c.purchase === 0 || +c.purchase === 1);
-        const good = (Array.isArray(list) ? list : []).filter(ok);
+        const API_MAX_ROWS = 5000;
+        // null, undefined and "" must not turn into 0
+        const num = (v) => (v === null || v === undefined || (typeof v === "string" && v.trim() === "") ? NaN : Number(v));
+        const ok = (c) => {
+          if (!c) return false;
+          const e = num(c.engagement), p = num(c.previous_purchases), d = num(c.discount), b = num(c.purchase);
+          return Number.isInteger(e) && e >= 0 && e <= 10 &&
+            Number.isFinite(p) && p >= 0 && p <= 10 &&
+            (d === 0 || d === 1) && (b === 0 || b === 1);
+        };
+        const all = Array.isArray(list) ? list : [];
+        const good = all.filter(ok);
         if (!good.length) throw new Error("no valid rows");
-        const rows = good.map((c, i) => ({ customer_id: i + 1, previous_purchases: +c.previous_purchases, engagement: +c.engagement, discount: +c.discount, purchase: +c.purchase }));
-        setData(rows, `Live data from the API: ${fmt(rows.length)} customers`, list.length - good.length);
+        const rows = good.slice(0, API_MAX_ROWS).map((c, i) => ({
+          customer_id: i + 1,
+          previous_purchases: Math.round(num(c.previous_purchases)),
+          engagement: num(c.engagement),
+          discount: num(c.discount),
+          purchase: num(c.purchase),
+        }));
+        const capped = good.length > API_MAX_ROWS ? ` (first ${fmt(API_MAX_ROWS)} of ${fmt(good.length)})` : "";
+        setData(rows, `Live data from the API: ${fmt(rows.length)} customers${capped}`, all.length - good.length, true);
         apiStatus.hidden = true;
       })
       .catch(() => {
