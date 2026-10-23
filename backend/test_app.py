@@ -1,5 +1,4 @@
 
-
 import tempfile
 import unittest
 from pathlib import Path
@@ -66,18 +65,21 @@ class TestEconoCasualAPI(unittest.TestCase):
     def test_customers_filter_by_discount(self):
         response = self.client.get("/customers?discount=1")
         self.assertEqual(response.status_code, 200)
+
         for customer in response.get_json()["customers"]:
             self.assertEqual(float(customer["discount"]), 1.0)
 
     def test_customers_filter_by_engagement(self):
         response = self.client.get("/customers?engagement=1")
         self.assertEqual(response.status_code, 200)
+
         for customer in response.get_json()["customers"]:
             self.assertEqual(float(customer["engagement"]), 1.0)
 
     def test_customers_filter_by_purchase(self):
         response = self.client.get("/customers?purchase=1")
         self.assertEqual(response.status_code, 200)
+
         for customer in response.get_json()["customers"]:
             self.assertEqual(float(customer["purchase"]), 1.0)
 
@@ -124,6 +126,7 @@ class TestEconoCasualAPI(unittest.TestCase):
     def test_purchase_summary_fields(self):
         response = self.client.get("/purchase-summary")
         data = response.get_json()
+
         self.assertIn("total_customers", data)
         self.assertIn("total_purchases", data)
         self.assertIn("non_purchases", data)
@@ -144,13 +147,68 @@ class TestEconoCasualAPI(unittest.TestCase):
     def test_validate_data(self):
         response = self.client.get("/validate-data")
         self.assertEqual(response.status_code, 200)
+
         data = response.get_json()
+
         self.assertIn("total_rows", data)
         self.assertIn("missing_values_by_column", data)
 
     def test_customer_statistics(self):
         response = self.client.get("/customer-statistics")
         self.assertEqual(response.status_code, 200)
+
+        data = response.get_json()
+
+        self.assertEqual(data["total_customers"], 1000)
+
+        self.assertEqual(
+            data["columns"],
+            [
+                "customer_id",
+                "previous_purchases",
+                "engagement",
+                "discount",
+                "purchase",
+            ],
+        )
+
+        self.assertIn("numeric_statistics", data)
+
+        statistics = data["numeric_statistics"]
+
+        for column in [
+            "customer_id",
+            "previous_purchases",
+            "engagement",
+            "discount",
+            "purchase",
+        ]:
+            self.assertIn(column, statistics)
+
+            for statistic in ["count", "mean", "std", "min", "max"]:
+                self.assertIn(statistic, statistics[column])
+
+            self.assertEqual(statistics[column]["count"], 1000.0)
+
+    def test_customer_statistics_returns_json(self):
+        response = self.client.get("/customer-statistics")
+        self.assertTrue(response.is_json)
+
+    def test_customer_statistics_numeric_values(self):
+        response = self.client.get("/customer-statistics")
+        statistics = response.get_json()["numeric_statistics"]
+
+        self.assertEqual(statistics["customer_id"]["min"], 1.0)
+        self.assertEqual(statistics["customer_id"]["max"], 1000.0)
+
+        self.assertGreaterEqual(
+            statistics["purchase"]["mean"],
+            0.0,
+        )
+        self.assertLessEqual(
+            statistics["purchase"]["mean"],
+            1.0,
+        )
 
     def test_unknown_endpoint(self):
         response = self.client.get("/invalid-url")
@@ -167,7 +225,7 @@ class TestEconoCasualAPI(unittest.TestCase):
         self.assertEqual(response.status_code, 500)
         self.assertEqual(
             response.get_json()["error"],
-            "Customer dataset not found"
+            "Customer dataset not found",
         )
 
     def test_purchase_summary_missing_dataset(self):
@@ -177,7 +235,7 @@ class TestEconoCasualAPI(unittest.TestCase):
         self.assertEqual(response.status_code, 500)
         self.assertEqual(
             response.get_json()["error"],
-            "Unable to generate purchase summary"
+            "Unable to generate purchase summary",
         )
 
     def test_validate_data_missing_dataset(self):
@@ -187,12 +245,13 @@ class TestEconoCasualAPI(unittest.TestCase):
         self.assertEqual(response.status_code, 500)
         self.assertEqual(
             response.get_json()["error"],
-            "Customer dataset not found"
+            "Customer dataset not found",
         )
 
     def test_customers_dataset_missing_required_column(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             file_path = Path(temp_dir) / "customers.csv"
+
             pd.DataFrame({
                 "customer_id": [1],
                 "purchase": [1],
@@ -204,15 +263,16 @@ class TestEconoCasualAPI(unittest.TestCase):
         self.assertEqual(response.status_code, 500)
         self.assertEqual(
             response.get_json()["error"],
-            "Invalid customer dataset"
+            "Invalid customer dataset",
         )
 
     def test_customers_malformed_csv(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             file_path = Path(temp_dir) / "customers.csv"
+
             file_path.write_text(
                 'customer_id,previous_purchases\n1,"unfinished',
-                encoding="utf-8"
+                encoding="utf-8",
             )
 
             with patch("app.DATA_FILE", file_path):
@@ -221,7 +281,7 @@ class TestEconoCasualAPI(unittest.TestCase):
         self.assertEqual(response.status_code, 500)
         self.assertEqual(
             response.get_json()["error"],
-            "Invalid customer dataset"
+            "Invalid customer dataset",
         )
 
 
