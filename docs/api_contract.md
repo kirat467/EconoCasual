@@ -10,7 +10,7 @@ Until the API exists, build against the sample files in this folder. Their shape
 | `GET /api/ite` | Real model output (Double ML) | `docs/sample_ite.json` |
 | `GET /api/uplift-curve` | Real model output (Double ML) | `docs/sample_uplift_curve.json` |
 | `POST /api/optimize` | Real optimizer output (Week 3, `backend/optimizer.py`) | `docs/sample_optimize.json` |
-| `GET /api/drift` | **Proposed shape only.** The drift detector is built in Week 4, so the numbers below are illustrative | none yet |
+| `GET /api/drift` | Real detector output (`backend/drift.py`). The stored example is a **simulated** shift, not live data | `docs/sample_drift.json` |
 
 ---
 
@@ -113,19 +113,26 @@ How to use the fields:
 - `savings_vs_blanket` is `null` whenever matching the optimizer's result with blanket $10 coupons would cost more than giving every customer a coupon. That is the case here (it would need about $21,000), so for the natural-language summary use `lift_vs_blanket` instead ("4x more extra purchases than blanket coupons for the same budget"), and show the savings sentence only when the field is not null.
 - Constraints you can rely on: `total_cost <= budget`, and every listed customer has `cautious_uplift > 0`, so Sleeping Dogs never appear.
 
-## `GET /api/drift`  (proposed, Week 4)
+## `GET /api/drift`
 
-Response (**illustrative values only**):
+Compares the customer data the model was trained on with newer data, one feature at a time. Real values from `docs/sample_drift.json` (a simulated shift in `engagement` and `previous_purchases`; the other two features are unchanged), abbreviated:
 ```json
 {
-  "drift_detected": false,
-  "checked_at": "2026-11-01T10:00:00Z",
+  "drift_detected": true,
+  "checked_at": "2026-10-23T11:37:15Z",
+  "n_reference": 2500,
+  "n_new": 2500,
+  "rule": "drift if KS p-value < 0.01 and PSI >= 0.1",
   "features": [
-    {"name": "engagement", "ks_statistic": 0.04, "p_value": 0.62, "drift": false}
+    {"name": "previous_purchases", "ks_statistic": 0.3968, "p_value": 0.0, "psi": 2.6453, "drift": true},
+    {"name": "age", "ks_statistic": 0.0228, "p_value": 0.5343, "psi": 0.0051, "drift": false}
   ]
 }
 ```
-Show a warning banner when `drift_detected` is `true`.
+- Show a warning banner when `drift_detected` is `true`, and list the features where `drift` is `true`.
+- `psi` (Population Stability Index): under 0.1 is stable, 0.1 to 0.25 a moderate shift, over 0.25 a large shift.
+- A feature is flagged only when **both** tests agree (KS p-value below 0.01 and PSI at least 0.1), which avoids false alarms on tiny differences. With data from the same population, no feature was flagged in our check.
+- For now the endpoint returns the stored simulated example. A live check on incoming data comes when there is a real data feed.
 
 ---
 
