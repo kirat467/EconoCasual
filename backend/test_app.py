@@ -1,3 +1,4 @@
+
 import unittest
 
 from app import app
@@ -59,6 +60,42 @@ class TestEconoCasualAPI(unittest.TestCase):
         self.assertEqual(
             response.get_json()["customers"], []
         )
+
+    def test_customers_filter_by_discount(self):
+        response = self.client.get("/customers?discount=1")
+        self.assertEqual(response.status_code, 200)
+
+        data = response.get_json()
+        for customer in data["customers"]:
+            self.assertEqual(float(customer["discount"]), 1.0)
+
+    def test_customers_filter_by_engagement(self):
+        response = self.client.get("/customers?engagement=1")
+        self.assertEqual(response.status_code, 200)
+
+        data = response.get_json()
+        for customer in data["customers"]:
+            self.assertEqual(float(customer["engagement"]), 1.0)
+
+    def test_customers_filter_by_purchase(self):
+        response = self.client.get("/customers?purchase=1")
+        self.assertEqual(response.status_code, 200)
+
+        data = response.get_json()
+        for customer in data["customers"]:
+            self.assertEqual(float(customer["purchase"]), 1.0)
+
+    def test_customers_invalid_discount_filter(self):
+        response = self.client.get("/customers?discount=invalid")
+        self.assertEqual(response.status_code, 400)
+
+    def test_customers_invalid_engagement_filter(self):
+        response = self.client.get("/customers?engagement=invalid")
+        self.assertEqual(response.status_code, 400)
+
+    def test_customers_invalid_purchase_filter(self):
+        response = self.client.get("/customers?purchase=invalid")
+        self.assertEqual(response.status_code, 400)
 
     def test_purchase_summary(self):
         response = self.client.get("/purchase-summary")
