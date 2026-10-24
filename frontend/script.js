@@ -1,4 +1,4 @@
-/* EconoCasual: customer intelligence dashboard
+/* EconoCausal: customer intelligence dashboard
    Synthetic sample data, descriptive statistics only (no causal claims).
    Everything is drawn with plain DOM and SVG, so the page works without any CDN. */
 (() => {
@@ -509,7 +509,7 @@
     const csv = [cols.join(","), ...rows.map((c) => cols.map((k) => c[k]).join(","))].join("\n") + "\n";
     const url = URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8" }));
     const a = document.createElement("a");
-    a.href = url; a.download = "econocasual-customers.csv";
+    a.href = url; a.download = "econocausal-customers.csv";
     document.body.appendChild(a); a.click(); a.remove();
     setTimeout(() => URL.revokeObjectURL(url), 1000);
     toast(`Exported ${plural(rows.length, "record")} from the table, with the group, search and all filters applied`);
@@ -680,7 +680,7 @@
     if (!targetRows.length) { toast("Choose a share above 0% first."); return; }
     const head = "customer_id,engagement,previous_purchases,offered_discount,chance_without,chance_with,estimated_lift\n";
     const body = targetRows.map((s) => [s.c.customer_id, s.c.engagement, s.c.previous_purchases, s.c.discount, s.base.toFixed(4), (s.base + s.lift).toFixed(4), s.lift.toFixed(4)].join(",")).join("\n");
-    saveCsv("econocasual-discount-targets.csv", head + body + "\n");
+    saveCsv("econocausal-discount-targets.csv", head + body + "\n");
     toast(`Exported ${plural(targetRows.length, "customer")} ranked by estimated lift`);
   });
   $("tTop").addEventListener("click", (ev) => {
@@ -811,6 +811,7 @@
     $("sourceText").textContent = label; $("useSample").hidden = !usingCustom;
     if (keepView) renderPredict(); else $("pReset").click();
     renderAll(); renderQuality(); syncUrl();
+    document.dispatchEvent(new CustomEvent("econo:data"));
   }
 
   $("upload").addEventListener("click", () => fileIn.click());
@@ -822,7 +823,7 @@
   });
   $("uCancel").addEventListener("click", closeDlg);
   $("uAgain").addEventListener("click", () => { closeDlg(); fileIn.click(); });
-  $("uTemplate").addEventListener("click", () => saveCsv("econocasual-template.csv", "customer_id,previous_purchases,engagement,discount,purchase\n1,3,6,1,1\n2,0,2,0,0\n3,7,8,0,1\n4,2,4,1,0\n5,5,5,0,1\n"));
+  $("uTemplate").addEventListener("click", () => saveCsv("econocausal-template.csv", "customer_id,previous_purchases,engagement,discount,purchase\n1,3,6,1,1\n2,0,2,0,0\n3,7,8,0,1\n4,2,4,1,0\n5,5,5,0,1\n"));
   $("useSample").addEventListener("click", () => { setData(sampleData, SAMPLE_LABEL); toast("Back to the sample data."); });
 
   // Drag a file anywhere on the page
@@ -962,7 +963,7 @@
       URL.revokeObjectURL(url);
       cv.toBlob((blob) => {
         const u = URL.createObjectURL(blob), a = document.createElement("a");
-        a.href = u; a.download = "econocasual-trend.png";
+        a.href = u; a.download = "econocausal-trend.png";
         document.body.appendChild(a); a.click(); a.remove();
         setTimeout(() => URL.revokeObjectURL(u), 1000);
         toast("Chart saved as PNG");
@@ -1054,7 +1055,7 @@
         });
       });
     }, { rootMargin: "-40% 0px -55% 0px" });
-    ["summary", "drivers", "predict", "target", "customers", "data-quality"].forEach((id) => io.observe($(id)));
+    ["summary", "drivers", "predict", "target", "budget", "customers", "data-quality"].forEach((id) => io.observe($(id)));
   }
 
   updateSegCounts();
@@ -1094,6 +1095,9 @@
           engagement: num(c.engagement),
           discount: num(c.discount),
           purchase: num(c.purchase),
+          // optional fields from the backend model (see docs/API.md)
+          ite: Number.isFinite(num(c.ite)) ? num(c.ite) : undefined,
+          recommended_discount: Number.isFinite(num(c.recommended_discount)) && num(c.recommended_discount) >= 0 ? num(c.recommended_discount) : undefined,
         }));
         const capped = good.length > API_MAX_ROWS ? ` (first ${fmt(API_MAX_ROWS)} of ${fmt(good.length)})` : "";
         setData(rows, `Live data from the API: ${fmt(rows.length)} customers${capped}`, all.length - good.length, true);
@@ -1105,6 +1109,8 @@
       })
       .finally(() => clearTimeout(timer));
   }
+  // Read-only access for budget.js (budget allocation section)
+  window.ECONO_APP = { customers: () => customers, model: () => model, sample: () => sampleData, usingCustom: () => usingCustom };
   loadApi();
 
   // One-time reveal: the squares fill in when the page loads

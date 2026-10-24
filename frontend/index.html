@@ -3,15 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>EconoCasual: customer intelligence</title>
+  <title>EconoCausal: customer intelligence</title>
   <meta name="description" content="Explore who buys, how engaged customers are, and how discounts line up with purchases.">
   <meta name="theme-color" content="#0a6b5f">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="EconoCasual: customer intelligence">
+  <meta property="og:title" content="EconoCausal: customer intelligence">
   <meta property="og:description" content="Explore who buys, how engaged customers are, and how discounts line up with purchases.">
   <meta property="og:url" content="https://YOUR-USERNAME.github.io/YOUR-REPO/">
   <meta property="og:image" content="https://YOUR-USERNAME.github.io/YOUR-REPO/og-image.png">
-  <meta property="og:image:alt" content="EconoCasual customer intelligence dashboard">
+  <meta property="og:image:alt" content="EconoCausal customer intelligence dashboard">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cg fill='%230a6b5f'%3E%3Crect x='2' y='12' width='5' height='10' rx='1.5'/%3E%3Crect x='9.5' y='6' width='5' height='16' rx='1.5'/%3E%3Crect x='17' y='2' width='5' height='20' rx='1.5'/%3E%3C/g%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -25,19 +25,20 @@
 
 <header class="site-header">
   <div class="wrap topbar">
-    <a class="wordmark" href="#top" aria-label="EconoCasual home">
+    <a class="wordmark" href="#top" aria-label="EconoCausal home">
       <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true">
         <rect x="2" y="12" width="5" height="10" rx="1.5"/>
         <rect x="9.5" y="6" width="5" height="16" rx="1.5"/>
         <rect x="17" y="2" width="5" height="20" rx="1.5"/>
       </svg>
-      EconoCasual
+      EconoCausal
     </a>
     <nav class="nav" aria-label="Sections">
       <a href="#summary" class="active">Summary</a>
       <a href="#drivers">Drivers</a>
       <a href="#predict">Try a customer</a>
       <a href="#target">Plan discounts</a>
+      <a href="#budget">Budget</a>
       <a href="#customers">Records</a>
       <a href="#data-quality">Data quality</a>
     </nav>
@@ -194,6 +195,52 @@
     </div>
   </section>
 
+  <section class="wrap predict" id="budget" aria-labelledby="bud-title">
+    <div class="sec-head">
+      <h2 id="bud-title">Budget allocation</h2>
+      <p>Enter a marketing budget and the discount per customer. Discounts go to customers with the highest estimated effect, only while the budget lasts and only where the effect is above zero.</p>
+    </div>
+    <form class="b-form" id="bForm" novalidate>
+      <div class="b-field">
+        <label for="bBudget">Marketing budget (₹)</label>
+        <input id="bBudget" type="text" inputmode="numeric" autocomplete="off" value="50000" aria-describedby="bBudgetErr">
+        <small class="b-err" id="bBudgetErr" role="alert"></small>
+      </div>
+      <div class="b-field">
+        <label for="bDisc">Discount per customer (₹)</label>
+        <input id="bDisc" type="text" inputmode="numeric" autocomplete="off" value="100" aria-describedby="bDiscErr">
+        <small class="b-err" id="bDiscErr" role="alert"></small>
+      </div>
+      <button class="btn" id="bRun" type="submit">Run analysis</button>
+    </form>
+    <p class="b-note" id="bSource"></p>
+    <p class="b-drift" id="bDrift" role="status"></p>
+    <div id="bResults">
+      <div class="b-cards" id="bCards"></div>
+      <p class="b-summary" id="bSummary" aria-live="polite"></p>
+      <div class="b-charts">
+        <figure><figcaption>Uplift curve: expected extra purchases as more customers are targeted</figcaption><svg id="bUplift" viewBox="0 0 600 300" role="img" aria-label="Uplift curve"></svg></figure>
+        <figure><figcaption>Distribution of estimated effect (percentage points)</figcaption><svg id="bHist" viewBox="0 0 600 300" role="img" aria-label="Histogram of estimated effects"></svg></figure>
+      </div>
+      <ul class="compare" id="bUsage"></ul>
+      <h3 class="b-h3">Recommended discounts</h3>
+      <div class="table-scroll" tabindex="0" role="region" aria-label="Allocation table">
+        <table>
+          <thead><tr><th scope="col">Customer</th><th scope="col" class="num">Engagement</th><th scope="col" class="num">Past purchases</th><th scope="col" class="num">Estimated effect</th><th scope="col" class="num">Discount</th><th scope="col" class="num">Running spend</th></tr></thead>
+          <tbody id="bRows"></tbody>
+        </table>
+      </div>
+      <div class="pager">
+        <span id="bPageInfo" aria-live="polite"></span>
+        <div class="pager-ctl">
+          <button type="button" id="bPrev">Previous</button>
+          <button type="button" id="bNext">Next</button>
+          <button type="button" class="btn-ghost" id="bExport">Export allocation (CSV)</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <section class="wrap records" id="customers" aria-labelledby="rec-title">
     <div class="rec-head">
       <div class="sec-head">
@@ -300,7 +347,7 @@
 
 <footer class="site-footer">
   <div class="wrap">
-    <p>EconoCasual frontend prototype. The default 1,000 records are generated sample data; you can upload your own CSV, which stays in your browser. Records use the fields <code>customer_id</code>, <code>previous_purchases</code>, <code>engagement</code>, <code>discount</code> and <code>purchase</code>. The purchase estimate comes from a small model fitted in the browser; no backend is connected yet.</p>
+    <p>EconoCausal frontend prototype. The default 1,000 records are generated sample data; you can upload your own CSV, which stays in your browser. Records use the fields <code>customer_id</code>, <code>previous_purchases</code>, <code>engagement</code>, <code>discount</code> and <code>purchase</code>. The purchase estimate comes from a small model fitted in the browser; no backend is connected yet.</p>
   </div>
 </footer>
 
@@ -322,6 +369,7 @@
 <div id="toast" role="status" aria-live="polite"></div>
 <script src="config.js"></script>
 <script src="script.js"></script>
+<script src="budget.js"></script>
 <script>(function(){var h=document.querySelector(".site-header");if(!h)return;function f(){h.classList.toggle("scrolled",window.scrollY>8)}addEventListener("scroll",f,{passive:true});f()})()</script>
 </body>
 </html>
