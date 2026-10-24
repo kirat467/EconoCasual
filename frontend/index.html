@@ -297,4 +297,80 @@
         <tbody id="rows"></tbody>
       </table>
     </div>
-   
+    <div class="pager">
+      <span id="summaryText" aria-live="polite"></span>
+      <div class="pager-ctl">
+        <button type="button" id="prev">Previous</button>
+        <label class="page-size">Rows
+          <select id="pageSize" aria-label="Rows per page">
+            <option value="10">10</option>
+            <option value="25">25</option>
+            <option value="50">50</option>
+          </select>
+        </label>
+        <span id="pageText"></span>
+        <button type="button" id="next">Next</button>
+      </div>
+    </div>
+  </section>
+
+<!-- Data quality panel -->
+  <section class="wrap quality-section" id="data-quality" aria-labelledby="quality-title">
+    <div class="quality-header">
+      <div>
+        <span class="section-eyebrow">DATA QUALITY</span>
+        <h2 id="quality-title">Customer data overview</h2>
+        <p>Checks run on every record in the loaded dataset, not just the rows on screen.</p>
+      </div>
+      <span class="quality-badge" id="quality-status">Awaiting analysis</span>
+    </div>
+    <div class="quality-grid">
+      <article class="quality-card">
+        <span class="quality-label">Records checked</span>
+        <strong id="quality-visible">0</strong>
+        <p>In the loaded dataset</p>
+      </article>
+      <article class="quality-card">
+        <span class="quality-label">Missing values</span>
+        <strong id="quality-missing">—</strong>
+        <p>Empty or non-numeric fields</p>
+      </article>
+      <article class="quality-card">
+        <span class="quality-label">Invalid or skipped</span>
+        <strong id="quality-invalid">—</strong>
+        <p>Out of range, plus rows skipped on upload</p>
+      </article>
+    </div>
+    <p class="quality-note" id="quality-note" aria-live="polite">Quality checks run when data loads.</p>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <p>EconoCausal frontend prototype. The default 1,000 records are generated sample data; you can upload your own CSV, which stays in your browser. Records use the fields <code>customer_id</code>, <code>previous_purchases</code>, <code>engagement</code>, <code>discount</code> and <code>purchase</code>. The purchase estimate comes from a small model fitted in the browser; no backend is connected yet.</p>
+  </div>
+</footer>
+
+<input type="file" id="fileIn" accept=".csv,text/csv,text/plain" hidden>
+<dialog id="uploadDlg" aria-labelledby="uTitle">
+  <div class="dlg">
+    <h2 id="uTitle">Check your file</h2>
+    <div id="uBody"></div>
+    <p class="u-note">Columns needed: <code>previous_purchases</code>, <code>engagement</code> (0–10), <code>discount</code> and <code>purchase</code> (0/1 or yes/no). <code>customer_id</code> is optional (kept when every value is a unique whole number from 1 to 9999). The file is read in your browser and is not uploaded anywhere.</p>
+    <div class="dlg-actions">
+      <button type="button" class="btn-ghost" id="uTemplate">Download a template</button>
+      <button type="button" class="btn-ghost" id="uAgain">Choose another file</button>
+      <button type="button" class="btn-ghost" id="uCancel">Cancel</button>
+      <button type="button" class="btn" id="uUse">Use this data</button>
+    </div>
+  </div>
+</dialog>
+<noscript><p class="noscript">This dashboard needs JavaScript to draw its charts and table.</p></noscript>
+<div id="toast" role="status" aria-live="polite"></div>
+<script src="config.js"></script>
+<script src="script.js"></script>
+<script src="budget.js"></script>
+<script>(function(){var h=document.querySelector(".site-header");if(!h)return;function f(){h.classList.toggle("scrolled",window.scrollY>8)}addEventListener("scroll",f,{passive:true});f()})()</script>
+</body>
+</html>
+
