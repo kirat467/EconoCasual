@@ -746,3 +746,59 @@ tbody tr:hover { background: var(--teal-soft); }
 .b-h3 { margin: 32px 0 0; font-size: 17px; }
 #bResults .num { text-align: right; font-variant-numeric: tabular-nums; }
 #bResults .b-empty { text-align: center; color: var(--ink-3); padding: 24px 0; }
+/* ===== Utility Additions ===== */
+
+:root {
+  --accent-color: #4f46e5;
+  --accent-hover: #4338ca;
+  --muted-text: #6b7280;
+  --card-radius: 8px;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-muted {
+  color: var(--muted-text);
+}
+
+.mt-1 { margin-top: 0.5rem; }
+.mt-2 { margin-top: 1rem; }
+.mb-1 { margin-bottom: 0.5rem; }
+.mb-2 { margin-bottom: 1rem; }
+
+.btn-accent {
+  background-color: var(--accent-color);
+  color: #fff;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: var(--card-radius);
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.btn-accent:hover {
+  background-color: var(--accent-hover);
+}
+
+.card {
+  padding: 1rem;
+  border: 1px solid #e5e7eb;
+  border-radius: var(--card-radius);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.card:hover {
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.container {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.hidden {
+  display: none;
+}
