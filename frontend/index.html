@@ -351,3 +351,25 @@
   </div>
 </footer>
 
+<input type="file" id="fileIn" accept=".csv,text/csv,text/plain" hidden>
+<dialog id="uploadDlg" aria-labelledby="uTitle">
+  <div class="dlg">
+    <h2 id="uTitle">Check your file</h2>
+    <div id="uBody"></div>
+    <p class="u-note">Columns needed: <code>previous_purchases</code>, <code>engagement</code> (0–10), <code>discount</code> and <code>purchase</code> (0/1 or yes/no). <code>customer_id</code> is optional (kept when every value is a unique whole number from 1 to 9999). The file is read in your browser and is not uploaded anywhere.</p>
+    <div class="dlg-actions">
+      <button type="button" class="btn-ghost" id="uTemplate">Download a template</button>
+      <button type="button" class="btn-ghost" id="uAgain">Choose another file</button>
+      <button type="button" class="btn-ghost" id="uCancel">Cancel</button>
+      <button type="button" class="btn" id="uUse">Use this data</button>
+    </div>
+  </div>
+</dialog>
+<noscript><p class="noscript">This dashboard needs JavaScript to draw its charts and table.</p></noscript>
+<div id="toast" role="status" aria-live="polite"></div>
+<script src="config.js"></script>
+<script src="script.js"></script>
+<script src="budget.js"></script>
+<script>(function(){var h=document.querySelector(".site-header");if(!h)return;function f(){h.classList.toggle("scrolled",window.scrollY>8)}addEventListener("scroll",f,{passive:true});f()})()</script>
+</body>
+</html>
