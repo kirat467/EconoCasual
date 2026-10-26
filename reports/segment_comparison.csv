@@ -1,0 +1,10 @@
+engagement_segment,purchase_history_segment,customer_count,total_purchases,purchase_rate_percent
+High Engagement,High Purchase History,116,93,80.17
+High Engagement,Low Purchase History,102,53,51.96
+High Engagement,Medium Purchase History,115,86,74.78
+Low Engagement,High Purchase History,116,79,68.1
+Low Engagement,Low Purchase History,117,40,34.19
+Low Engagement,Medium Purchase History,101,45,44.55
+Medium Engagement,High Purchase History,101,71,70.3
+Medium Engagement,Low Purchase History,115,41,35.65
+Medium Engagement,Medium Purchase History,117,65,55.56

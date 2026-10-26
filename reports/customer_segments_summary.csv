@@ -1,0 +1,10 @@
+engagement_segment,purchase_history_segment,total_customers,total_purchases,average_engagement,average_previous_purchases,purchase_rate_percent
+Low Engagement,Low Purchase History,117,40,2.1196581196581197,1.1452991452991452,34.19
+Low Engagement,Medium Purchase History,101,45,2.01980198019802,4.346534653465347,44.55
+Low Engagement,High Purchase History,116,79,2.1120689655172415,7.810344827586207,68.1
+Medium Engagement,Low Purchase History,115,41,5.521739130434782,1.1043478260869566,35.65
+Medium Engagement,Medium Purchase History,117,65,5.52991452991453,4.495726495726496,55.56
+Medium Engagement,High Purchase History,101,71,5.455445544554456,7.96039603960396,70.3
+High Engagement,Low Purchase History,102,53,8.872549019607844,1.088235294117647,51.96
+High Engagement,Medium Purchase History,115,86,8.921739130434782,4.434782608695652,74.78
+High Engagement,High Purchase History,116,93,8.698275862068966,7.681034482758621,80.17

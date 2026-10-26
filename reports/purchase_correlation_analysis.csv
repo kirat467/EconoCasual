@@ -1,0 +1,5 @@
+,previous_purchases,engagement,discount,purchase
+previous_purchases,1.0,0.004,-0.21,0.302
+engagement,0.004,1.0,0.068,0.181
+discount,-0.21,0.068,1.0,0.052
+purchase,0.302,0.181,0.052,1.0
