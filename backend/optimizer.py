@@ -38,70 +38,25 @@ import numpy as np
 import pandas as pd
 from econml.dml import LinearDML
 from lightgbm import LGBMClassifier, LGBMRegressor
-from scipy.optimize import Bounds, LinearConstraint, milp
-from scipy.sparse import csr_matrix, vstack
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import PolynomialFeatures
+
+from optimizer_core import (AOV, DISCOUNTS, build_response, random_blanket, realised,  # noqa: F401
+                            solve_allocation)
 
 warnings.filterwarnings("ignore")
 
 ROOT = Path(__file__).resolve().parent.parent
 FEATURES = ["previous_purchases", "engagement", "price_sensitivity", "age"]
-DISCOUNTS = [10, 20]
-AOV = 40.0     # assumed average order value in dollars, used only to express revenue
 
 
 # --------------------------------------------------------------------------------
 # The optimiser (reusable: the API will call this)
 # --------------------------------------------------------------------------------
-def solve_allocation(values, discounts, budget, time_limit=60):
-    """Exact multiple-choice knapsack.
-
-    values    : (n_customers, n_options) value of giving option j to customer i
-    discounts : list of coupon face values (the cost of each option)
-    returns   : array of length n_customers with the chosen discount (0 = none)
-    """
-    n, k = values.shape
-    costs = np.tile(np.asarray(discounts, float), n)          # cost of variable (i, j)
-
-    # at most one coupon per customer: row i has ones in columns i*k .. i*k+k-1
-    rows = np.repeat(np.arange(n), k)
-    assign = csr_matrix((np.ones(n * k), (rows, np.arange(n * k))), shape=(n, n * k))
-    budget_row = csr_matrix(costs.reshape(1, -1))
-
-    constraints = LinearConstraint(
-        vstack([assign, budget_row]),
-        lb=-np.inf,
-        ub=np.concatenate([np.ones(n), [budget]]),
-    )
-    res = milp(c=-values.ravel(), constraints=constraints,
-               integrality=np.ones(n * k), bounds=Bounds(0, 1),
-               options={"time_limit": time_limit, "mip_rel_gap": 1e-6})
-    if res.x is None:
-        raise RuntimeError(f"optimiser failed: {res.message}")
-    chosen = np.round(res.x).reshape(n, k)
-    choice = np.zeros(n)
-    for j, d in enumerate(discounts):
-        choice[chosen[:, j] == 1] = d
-    return choice
 
 
-def realised(choice, tau_by_discount):
-    """Sum of effects actually obtained by an allocation. tau_by_discount: {d: array}."""
-    total = 0.0
-    for d, tau in tau_by_discount.items():
-        total += tau[choice == d].sum()
-    return total
 
 
-def random_blanket(order_rng, n, discount, budget, tau_by_discount, reps=300):
-    """Give everyone the SAME coupon, in random order, until the budget runs out."""
-    k = int(budget // discount)
-    out = []
-    for _ in range(reps):
-        pick = order_rng.permutation(n)[:k]
-        out.append(tau_by_discount[discount][pick].sum())
-    return float(np.mean(out)), min(k, n)
 
 
 # --------------------------------------------------------------------------------
@@ -210,40 +165,17 @@ def main():
           f"purchases (about ${true_opt * AOV:,.0f} of extra revenue at ${AOV:.0f} per order).")
 
     if args.export:
-        est_total = realised(choice, tau)
-        cautious_total = realised(choice, {d: np.maximum(lo[d], 0) for d in DISCOUNTS})
-        blanket_est, _ = random_blanket(np.random.default_rng(0), n, 10, args.budget, tau)
-        per_dollar_blanket = tau[10].mean() / 10          # expected extra purchases per $ if random
-        blanket_cost = est_total / per_dollar_blanket if per_dollar_blanket > 0 else float("inf")
-        reachable = blanket_cost <= n * 10
-        cautious = np.array([max(lo[int(choice[i])][i], 0.0) if choice[i] > 0 else 0.0
-                             for i in range(n)])
-        allocation = [
-            {"customer_id": int(test.customer_id[i]), "discount": int(choice[i]),
-             "expected_uplift": round(float(tau[int(choice[i])][i]), 4),
-             "cautious_uplift": round(float(cautious[i]), 4),   # lower 95% bound: safer to display
-             "cost": int(choice[i])}
-            for i in np.argsort(-cautious) if choice[i] > 0
-        ]
-        out = {
-            "budget": args.budget, "total_cost": float(spend),
-            "expected_incremental_purchases": round(float(est_total), 2),
-            "cautious_incremental_purchases": round(float(cautious_total), 2),
-            "expected_incremental_revenue": round(float(est_total * AOV), 2),
-            "average_order_value_assumed": AOV,
-            "blanket_expected_incremental_purchases": round(float(blanket_est), 2),
-            "lift_vs_blanket": round(float(est_total / blanket_est), 2) if blanket_est > 0 else None,
-            "blanket_cost_for_same_result": round(float(blanket_cost), 2) if reachable else None,
-            "savings_vs_blanket": round(float(blanket_cost - spend), 2) if reachable else None,
-            "objective": "lower_confidence_bound" if conservative else "point_estimate",
-            "customers_per_discount": {"10": n10, "20": n20},
-            "allocation": allocation,
-        }
+        out = build_response(args.budget, test.customer_id.values, tau, lo, conservative)
         (ROOT / "docs").mkdir(exist_ok=True)
         (ROOT / "docs" / "sample_optimize.json").write_text(json.dumps(out, indent=2))
-        print(f"\nWrote docs/sample_optimize.json ({len(allocation)} customers). "
-              f"Blanket coupons would need about ${blanket_cost:,.0f} for the same estimated result"
-              f"{'' if reachable else ' (more than $10 to every customer, so not reachable)'}.")
+        # effects for the API, so it can solve ANY budget without refitting the model
+        cache = {"discounts": DISCOUNTS, "customer_id": [int(c) for c in test.customer_id],
+                 **{f"tau_{d}": [round(float(v), 6) for v in tau[d]] for d in DISCOUNTS},
+                 **{f"lo_{d}": [round(float(v), 6) for v in lo[d]] for d in DISCOUNTS}}
+        (ROOT / "docs" / "optimizer_effects.json").write_text(json.dumps(cache))
+        print(f"\nWrote docs/sample_optimize.json ({len(out['allocation'])} customers) and "
+              f"docs/optimizer_effects.json (effects for the API).")
+        print(out["summary"])
 
 
 if __name__ == "__main__":
