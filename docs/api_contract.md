@@ -78,9 +78,9 @@ Heads-up: the model curve rises, peaks around 80% of customers, then falls back 
 
 ## `POST /api/optimize`
 
-Request:
+Request (any budget above 0 and up to $30,000; `GET /api/optimize?budget=5000` also works). The answer is computed on the spot, in well under a second:
 ```json
-{ "budget": 5000, "discount_options": [10, 20] }
+{ "budget": 5000 }
 ```
 
 Response (real values from `docs/sample_optimize.json`, abbreviated):
@@ -98,6 +98,7 @@ Response (real values from `docs/sample_optimize.json`, abbreviated):
   "savings_vs_blanket": null,
   "objective": "lower_confidence_bound",
   "customers_per_discount": {"10": 12, "20": 244},
+  "summary": "With a $5,000 budget the optimizer gives 256 customers a coupon (12 at $10, 244 at $20) and expects at least about 41 extra purchases (cautious estimate). By the model's own estimates, which run high, that is about 4.2x the extra purchases of random $10 coupons at the same budget.",
   "allocation": [
     {"customer_id": 4019, "discount": 20, "expected_uplift": 0.682,
      "cautious_uplift": 0.5649, "cost": 20}
@@ -106,6 +107,9 @@ Response (real values from `docs/sample_optimize.json`, abbreviated):
 ```
 
 How to use the fields:
+- `summary` is a ready-made plain-English sentence for the natural-language summary box. It already uses the cautious figure and only mentions savings when `savings_vs_blanket` is not null.
+- **The optimizer may spend less than the budget.** It only gives coupons to customers whose *cautious* effect is above zero, so beyond about $6,670 it stops spending (a $10,000 budget returns `total_cost` 6,670). Show `total_cost`, not the budget, as the amount used.
+- A budget that is 0, negative, not a number or above $30,000 returns HTTP 400 with an `error` message.
 - `allocation` is the "Prescription" table for the Allocation Matrix. It is sorted by `cautious_uplift`, highest first. Customers who get no coupon are not listed.
 - **Show `cautious_uplift`, not `expected_uplift`.** Validation on our synthetic data showed the point estimates run high at the top end (some reach 0.8, when the true maximum effect is about 0.5). `cautious_uplift` is the lower 95% bound and is safer to display.
 - **Headline numbers:** use `cautious_incremental_purchases` ("at least about 40 extra purchases") rather than `expected_incremental_purchases`. In validation the true figure was 60.4 against an estimate of 75.4, so the point estimate runs about 25% high.

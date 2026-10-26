@@ -33,7 +33,7 @@ Writes `data/customers_causal.csv` (5,000 customers, a $0/$10/$20 discount level
 ```bash
 python backend/optimizer.py --export
 ```
-Allocates a $5,000 budget (change it with `--budget`) and writes `docs/sample_optimize.json`. Add `--point-estimate` to optimise point estimates instead of the cautious lower bound.
+Allocates a $5,000 budget (change it with `--budget`) and writes `docs/sample_optimize.json` and `docs/optimizer_effects.json`. The API reads the second file, so run this once before `model_api.py` if it is missing; the API then answers any budget without refitting the model. Add `--point-estimate` to optimise point estimates instead of the cautious lower bound.
 
 ## Where things are
 | Folder | Contents |
