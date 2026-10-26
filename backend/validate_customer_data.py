@@ -58,7 +58,7 @@ def validate_customer_data(df):
             "details": missing_values,
         })
 
-    # Check numeric columns
+    # Check numeric values
     for column in NUMERIC_COLUMNS:
         converted = pd.to_numeric(df[column], errors="coerce")
 
@@ -83,7 +83,7 @@ def validate_customer_data(df):
                 "count": int(non_finite_mask.sum()),
             })
 
-    # Check purchase values (must be 0 or 1)
+    # Check purchase values
     purchase_values = pd.to_numeric(
         df["purchase"],
         errors="coerce",
@@ -120,13 +120,23 @@ def validate_dataset_file():
 if __name__ == "__main__":
     try:
         result = validate_dataset_file()
-        print("Customer Data Validation Result:")
-        print(result)
+
+        print("\nCUSTOMER DATA VALIDATION")
+        print("------------------------")
+        print(f"Total rows: {result['total_rows']}")
+        print(f"Valid dataset: {result['is_valid']}")
 
         if result["is_valid"]:
-            print("SUCCESS: Customer dataset is valid.")
+            print("Status: SUCCESS")
+            print("All customer data checks passed.")
         else:
-            print("WARNING: Customer dataset contains validation errors.")
+            print("Status: FAILED")
+            print("Validation issues:")
 
+            for error in result["errors"]:
+                print(error)
+
+    except FileNotFoundError as error:
+        print(f"DATASET ERROR: {error}")
     except Exception as error:
-        print(f"ERROR: {error}")
+        print(f"UNEXPECTED ERROR: {error}")
