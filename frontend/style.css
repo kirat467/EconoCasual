@@ -1,4 +1,4 @@
-/* EconoCasual: customer intelligence dashboard
+/* EconoCausal: customer intelligence dashboard
    Paper and ink, with two colours that always mean the same thing:
    teal = offered a discount, amber = no discount. */
 
@@ -40,10 +40,6 @@ h1, h2, h3, strong { font-family: var(--font-display); }
 :focus-visible { outline: 2px solid var(--teal); outline-offset: 2px; border-radius: 4px; }
 
 .wrap { width: 100%; max-width: 1180px; margin: 0 auto; padding: 0 32px; }
-.sr-only {
-  position: absolute; width: 1px; height: 1px; overflow: hidden;
-  clip: rect(0 0 0 0); white-space: nowrap;
-}
 .noscript { margin: 0; padding: 16px 32px; background: var(--amber-soft); color: var(--amber-ink); }
 
 /* Header */
@@ -413,10 +409,6 @@ body.dropping::after {
 @media print { dialog, #theme, #upload { display: none !important; } }
 
 
-/* ==========================================
-   ECONOCASUAL - FRONTEND ENHANCEMENTS
-   ========================================== */
-
 /* Data quality panel */
 
 .quality-section {
@@ -471,12 +463,6 @@ body.dropping::after {
     border: 1px solid var(--rule);
     border-radius: 18px;
     background: var(--surface);
-    box-shadow: 0 12px 28px rgba(20, 33, 29, 0.07);
-    transition: transform 180ms ease, border-color 180ms ease;
-}
-
-.quality-card:hover {
-    transform: translateY(-3px);
 }
 
 .quality-label {
@@ -572,15 +558,6 @@ body.dropping::after {
 
 }
 
-@media (prefers-reduced-motion: reduce) {
-    .quality-card {
-        transition: none !important;
-    }
-
-    .quality-card:hover {
-        transform: none;
-    }
-}
 /* Records section (restored) */
 .records .advanced-filters { margin-top: 18px; }
 .segments .link#resetDashboard { margin-left: auto; align-self: center; }
@@ -607,10 +584,9 @@ body.dropping::after {
 .site-header.scrolled { box-shadow: 0 6px 18px -14px rgba(20, 33, 29, .45); }
 
 
-/* EconoCasual polish layer: loads AFTER style.css, so delete this file to go back to the old look. */
+/* ---------- Visual polish layer ---------- */
 
 /* 1. Header: scroll-progress line */
-.site-header { position: sticky; }
 .scroll-bar { position: absolute; left: 0; bottom: -1px; height: 3px; width: 100%; background: linear-gradient(90deg, var(--teal), var(--amber)); transform: scaleX(var(--p, 0)); transform-origin: left; pointer-events: none; }
 
 /* 2. The memorable thing: customer field as a dark "stage" with glowing buyers and one scan sweep */
@@ -676,22 +652,10 @@ tbody tr:hover { background: var(--teal-soft); }
   .scroll-bar { display: none; }
 }
 
-/* Header fix: on desktop keep logo, tabs and buttons on ONE row (tabs scroll if the window is tight) */
-@media (min-width: 961px) {
-  .topbar { flex-wrap: nowrap; gap: 16px; }
-  .wordmark { flex: none; }
-  .nav { flex: 1 1 auto; min-width: 0; justify-content: center; gap: 2px; overflow-x: auto; scrollbar-width: none; }
-  .nav::-webkit-scrollbar { display: none; }
-  .nav a { white-space: nowrap; padding: 8px 10px; font-size: 13.5px; }
-  .actions { flex: none; gap: 6px; }
-  .actions .btn, .actions .btn-ghost { white-space: nowrap; padding: 7px 13px; font-size: 13.5px; }
-}
 /* Keep every header button text on one line at any width */
 .actions .btn, .actions .btn-ghost { white-space: nowrap; }
 
-/* ==========================================================
-   EconoCasual: FINAL FIXES (paste at the very bottom of style.css)
-   ========================================================== */
+/* ---------- Header, accessibility and dark-mode fixes ---------- */
 
 /* 1. Header tabs: no more cut-off "ummary" / "Customer recorc" */
 @media (min-width: 961px) {
@@ -740,3 +704,45 @@ tbody tr:hover { background: var(--teal-soft); }
   .actions { flex-wrap: wrap; justify-content: flex-end; }
   .topbar { row-gap: 6px; }
 }
+
+/* ---------- Data status, chart actions, page size, keyboard squares ---------- */
+.api-status { margin: 8px 0 0; font-size: 14px; color: var(--ink-2); }
+.chart-actions { margin-top: 12px; }
+.page-size { display: inline-flex; align-items: center; gap: 6px; font-size: 14px; color: var(--ink-2); }
+.page-size select { padding: 5px 8px; border: 1px solid var(--rule); border-radius: 8px; background: var(--surface); color: var(--ink); }
+#peopleGroups:focus-visible { outline: 2px solid var(--teal); outline-offset: 8px; }
+.d.kb { outline: 2px solid var(--ink); outline-offset: 1px; opacity: 1; transform: none; position: relative; z-index: 1; }
+
+/* Skip link (keyboard users) */
+.skip {
+  position: absolute; left: 12px; top: -48px; z-index: 100;
+  padding: 10px 16px; border-radius: 6px;
+  background: var(--ink); color: var(--paper); font-weight: 600;
+}
+.skip:focus { top: 12px; }
+
+/* ---------- Budget allocation section ---------- */
+.b-form { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); gap: 16px; align-items: start; margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--ink); }
+.b-field label { display: block; font-size: 14.5px; color: var(--ink-2); margin-bottom: 6px; }
+.b-field input { width: 100%; padding: 10px 12px; border: 1px solid var(--rule); border-radius: 6px; background: var(--surface); font-variant-numeric: tabular-nums; }
+.b-field input.bad { border-color: var(--amber); box-shadow: 0 0 0 1px var(--amber); }
+.b-err { display: block; min-height: 20px; margin-top: 4px; font-size: 13.5px; color: var(--amber-ink); }
+#bRun { align-self: center; justify-self: start; margin-top: 4px; }
+#bRun:disabled { opacity: .7; cursor: progress; }
+.b-note { margin: 12px 0 0; font-size: 13.5px; color: var(--ink-3); }
+.b-drift { margin: 8px 0 0; font-size: 14px; color: var(--ink-2); }
+.b-drift.warn { padding: 10px 14px; border-left: 4px solid var(--amber); background: var(--amber-soft); color: var(--amber-ink); border-radius: 4px; }
+.b-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 170px), 1fr)); gap: 12px; margin-top: 24px; }
+.b-card { padding: 14px 16px; background: var(--surface); border: 1px solid var(--rule); border-top: 3px solid var(--teal); border-radius: 6px; }
+.b-card:nth-child(even) { border-top-color: var(--amber); }
+.b-card span { display: block; font-size: 13.5px; color: var(--ink-2); }
+.b-card strong { display: block; font-size: 24px; letter-spacing: -.01em; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.b-card small { color: var(--ink-3); font-size: 13px; }
+.b-summary { margin: 20px 0 0; max-width: 75ch; font-size: 16px; color: var(--ink); }
+.b-charts { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); gap: 24px; margin: 24px 0 0; }
+.b-charts figure { margin: 0; min-width: 0; }
+.b-charts figcaption { font-size: 14px; color: var(--ink-2); margin-bottom: 6px; }
+.b-charts svg { width: 100%; height: auto; display: block; }
+.b-h3 { margin: 32px 0 0; font-size: 17px; }
+#bResults .num { text-align: right; font-variant-numeric: tabular-nums; }
+#bResults .b-empty { text-align: center; color: var(--ink-3); padding: 24px 0; }
