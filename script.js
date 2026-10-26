@@ -1139,3 +1139,28 @@
   }, { threshold: 0.35 });
   els.forEach(function (e) { io.observe(e); });
 })();
+/* ===== DAY 1: Back-to-top button ===== */
+(function () {
+  var btn = document.getElementById("toTop");
+  if (!btn) return;
+
+  var reduce = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  function toggle() {
+    var on = window.scrollY > 400;
+    if (on) btn.hidden = false;
+    btn.classList.toggle("show", on);
+    if (!on) {
+      setTimeout(function () {
+        if (window.scrollY <= 400) btn.hidden = true;
+      }, 200);
+    }
+  }
+
+  btn.addEventListener("click", function () {
+    window.scrollTo({ top: 0, behavior: reduce ? "auto" : "smooth" });
+  });
+
+  addEventListener("scroll", toggle, { passive: true });
+  toggle();
+})();
