@@ -1,5 +1,5 @@
 {
-  "budget": 5000,
+  "budget": 5000.0,
   "total_cost": 5000.0,
   "expected_incremental_purchases": 75.36,
   "cautious_incremental_purchases": 40.54,
@@ -14,6 +14,7 @@
     "10": 12,
     "20": 244
   },
+  "summary": "With a $5,000 budget the optimizer gives 256 customers a coupon (12 at $10, 244 at $20) and expects at least about 41 extra purchases (cautious estimate). By the model's own estimates, which run high, that is about 4.2x the extra purchases of random $10 coupons at the same budget.",
   "allocation": [
     {
       "customer_id": 4019,
