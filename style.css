@@ -746,3 +746,27 @@ tbody tr:hover { background: var(--teal-soft); }
 .b-h3 { margin: 32px 0 0; font-size: 17px; }
 #bResults .num { text-align: right; font-variant-numeric: tabular-nums; }
 #bResults .b-empty { text-align: center; color: var(--ink-3); padding: 24px 0; }
+/* ===== DAY 1: Back-to-top button ===== */
+.to-top {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 20;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid var(--rule);
+  background: var(--surface);
+  color: var(--teal);
+  font: 700 20px/1 var(--font-display);
+  cursor: pointer;
+  box-shadow: 0 8px 20px -10px rgba(0, 0, 0, .35);
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity .2s ease, transform .2s ease, background .2s ease;
+}
+.to-top.show { opacity: 1; transform: none; }
+.to-top:hover { background: var(--teal-soft); }
+@media (prefers-reduced-motion: reduce) {
+  .to-top { transition: none; }
+}
