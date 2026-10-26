@@ -11,17 +11,22 @@ Run on its own (from the repository root):
 
 Endpoints follow docs/api_contract.md. For now they serve the files that the
 export scripts produce (docs/sample_ite.json, docs/sample_uplift_curve.json,
-docs/sample_optimize.json, docs/sample_drift.json), so the frontend can be built against real model
+docs/optimizer_effects.json, docs/sample_drift.json), so the frontend can be built against real model
 output. Re-run the export scripts to refresh them.
 """
 import json
+import sys
+from functools import lru_cache
 from pathlib import Path
 
+import numpy as np
 from flask import Blueprint, Flask, jsonify, request
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from optimizer_core import DISCOUNTS, build_response  # noqa: E402
 
 DOCS = Path(__file__).resolve().parent.parent / "docs"
 SEGMENTS = {"persuadable", "sleeping_dog", "sure_thing", "lost_cause"}
-SUPPORTED_BUDGET = 5000  # the budget the stored optimizer result was computed for
 
 model_api = Blueprint("model_api", __name__)
 
@@ -32,6 +37,11 @@ def _load(name):
         return None
     with path.open() as f:
         return json.load(f)
+
+
+@lru_cache(maxsize=1)
+def _effects():
+    return _load("optimizer_effects.json")
 
 
 def _missing(name, hint):
@@ -82,22 +92,27 @@ def uplift_curve():
 
 @model_api.route("/api/optimize", methods=["GET", "POST"])
 def optimize():
-    data = _load("sample_optimize.json")
-    if data is None:
-        return _missing("sample_optimize.json", "run python backend/optimizer.py --export")
+    """Solve the coupon allocation for ANY budget (uses the saved effects, no refit)."""
+    cache = _effects()
+    if cache is None:
+        return _missing("optimizer_effects.json", "run python backend/optimizer.py --export")
 
     body = request.get_json(silent=True) or {}
-    budget = body.get("budget", request.args.get("budget", SUPPORTED_BUDGET, type=float))
+    budget = body.get("budget", request.args.get("budget", 5000))
     try:
         budget = float(budget)
     except (TypeError, ValueError):
         return jsonify({"error": "budget must be a number"}), 400
-    if budget != SUPPORTED_BUDGET:
-        return jsonify({
-            "error": f"only budget={SUPPORTED_BUDGET} is available for now",
-            "hint": "other budgets can be computed with: python backend/optimizer.py --budget <amount> --export",
-        }), 400
-    return jsonify(data)
+    n = len(cache["customer_id"])
+    if not (budget > 0) or budget > n * max(DISCOUNTS):   # also rejects NaN
+        return jsonify({"error": f"budget must be more than 0 and at most {n * max(DISCOUNTS):,}"}), 400
+
+    result = build_response(
+        budget, np.array(cache["customer_id"]),
+        {d: np.array(cache[f"tau_{d}"]) for d in DISCOUNTS},
+        {d: np.array(cache[f"lo_{d}"]) for d in DISCOUNTS},
+    )
+    return jsonify(result)
 
 
 @model_api.route("/api/drift")
@@ -112,7 +127,7 @@ def drift():
 
 @model_api.route("/api/health")
 def health():
-    files = ["sample_ite.json", "sample_uplift_curve.json", "sample_optimize.json", "sample_drift.json"]
+    files = ["sample_ite.json", "sample_uplift_curve.json", "optimizer_effects.json", "sample_drift.json"]
     return jsonify({"status": "ok", "files": {f: (DOCS / f).exists() for f in files}})
 
 
