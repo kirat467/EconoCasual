@@ -51,9 +51,17 @@ def test_optimize_respects_budget_and_never_picks_negative_effects():
     assert all(row["cautious_uplift"] > 0 for row in body["allocation"])
 
 
-def test_optimize_rejects_unsupported_or_invalid_budget():
-    assert client.post("/api/optimize", json={"budget": 9999}).status_code == 400
-    assert client.post("/api/optimize", json={"budget": "lots"}).status_code == 400
+def test_optimize_works_for_other_budgets():
+    small = client.post("/api/optimize", json={"budget": 2000}).get_json()
+    large = client.post("/api/optimize", json={"budget": 8000}).get_json()
+    assert small["total_cost"] <= 2000 and large["total_cost"] <= 8000
+    assert large["cautious_incremental_purchases"] > small["cautious_incremental_purchases"]
+    assert isinstance(large["summary"], str) and "$8,000" in large["summary"]
+
+
+def test_optimize_rejects_invalid_budget():
+    for bad in (0, -50, "lots", 10**9):
+        assert client.post("/api/optimize", json={"budget": bad}).status_code == 400
 
 
 def test_drift_flags_shifted_features_only():
