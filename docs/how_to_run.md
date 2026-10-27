@@ -35,6 +35,20 @@ python backend/optimizer.py --export
 ```
 Allocates a $5,000 budget (change it with `--budget`) and writes `docs/sample_optimize.json` and `docs/optimizer_effects.json`. The API reads the second file, so run this once before `model_api.py` if it is missing; the API then answers any budget without refitting the model. Add `--point-estimate` to optimise point estimates instead of the cautious lower bound.
 
+## 5. Run the API for the frontend
+```bash
+python backend/model_api.py                      # development, http://localhost:8000
+gunicorn --chdir backend --bind 0.0.0.0:8000 "model_api:create_app()"   # production-style
+```
+Needs `docs/optimizer_effects.json` and `docs/drift_reference.json`, which come from `python backend/optimizer.py --export` and `python backend/drift.py --export`. Check `http://localhost:8000/api/health`: every file should say `true`.
+
+**Docker (packaging).** From the repository root:
+```bash
+docker build -f backend/Dockerfile -t econocausal-api .
+docker run -p 8000:8000 econocausal-api
+```
+It installs only `backend/requirements-api.txt` (no model-training libraries), so the image stays small.
+
 ## Where things are
 | Folder | Contents |
 |---|---|
