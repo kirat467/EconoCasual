@@ -95,7 +95,11 @@ def main():
     if args.export:
         out = ROOT / "docs" / "sample_drift.json"
         out.write_text(json.dumps(bad, indent=2))
-        print(f"\nWrote {out.relative_to(ROOT)} (the simulated-drift case)")
+        # the reference data the live check (POST /api/drift) compares new data against
+        ref = {name: [round(float(v), 4) for v in reference[name]] for name in FEATURES}
+        (ROOT / "docs" / "drift_reference.json").write_text(json.dumps(ref))
+        print(f"\nWrote {out.relative_to(ROOT)} (the simulated-drift case) and "
+              f"docs/drift_reference.json (reference data for live checks)")
 
 
 if __name__ == "__main__":

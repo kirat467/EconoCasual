@@ -20,13 +20,17 @@ from functools import lru_cache
 from pathlib import Path
 
 import numpy as np
+import pandas as pd
 from flask import Blueprint, Flask, jsonify, request
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+from drift import FEATURES, detect_drift  # noqa: E402
 from optimizer_core import DISCOUNTS, build_response  # noqa: E402
 
 DOCS = Path(__file__).resolve().parent.parent / "docs"
 SEGMENTS = {"persuadable", "sleeping_dog", "sure_thing", "lost_cause"}
+
+MIN_DRIFT_ROWS = 50   # fewer rows than this makes the statistical tests unreliable
 
 model_api = Blueprint("model_api", __name__)
 
@@ -115,19 +119,46 @@ def optimize():
     return jsonify(result)
 
 
-@model_api.route("/api/drift")
+@lru_cache(maxsize=1)
+def _drift_reference():
+    ref = _load("drift_reference.json")
+    return None if ref is None else pd.DataFrame(ref)
+
+
+@model_api.route("/api/drift", methods=["GET", "POST"])
 def drift():
-    # Stored result of backend/drift.py (a simulated-drift example). A live
-    # check would compare incoming customer data with the training data.
-    data = _load("sample_drift.json")
-    if data is None:
-        return _missing("sample_drift.json", "run python backend/drift.py --export")
-    return jsonify(data)
+    """GET: stored example (a simulated shift). POST: live check of YOUR customers.
+
+    POST body: {"customers": [{"previous_purchases": 3, "engagement": 7,
+                               "price_sensitivity": 0.4, "age": 35}, ...]}
+    The rows are compared with the data the model was trained on.
+    """
+    if request.method == "GET":
+        data = _load("sample_drift.json")
+        if data is None:
+            return _missing("sample_drift.json", "run python backend/drift.py --export")
+        return jsonify(data)
+
+    reference = _drift_reference()
+    if reference is None:
+        return _missing("drift_reference.json", "run python backend/drift.py --export")
+
+    body = request.get_json(silent=True) or {}
+    rows = body.get("customers")
+    if not isinstance(rows, list) or len(rows) < MIN_DRIFT_ROWS:
+        return jsonify({"error": f"send a 'customers' list with at least {MIN_DRIFT_ROWS} rows"}), 400
+    try:
+        new = pd.DataFrame(rows)[FEATURES].astype(float)
+    except (KeyError, ValueError, TypeError):
+        return jsonify({"error": f"every customer needs numeric values for {FEATURES}"}), 400
+    if new.isna().any().any() or not np.isfinite(new.to_numpy()).all():
+        return jsonify({"error": "values must be finite numbers (no missing values)"}), 400
+    return jsonify(detect_drift(reference, new))
 
 
 @model_api.route("/api/health")
 def health():
-    files = ["sample_ite.json", "sample_uplift_curve.json", "optimizer_effects.json", "sample_drift.json"]
+    files = ["sample_ite.json", "sample_uplift_curve.json", "optimizer_effects.json", "sample_drift.json", "drift_reference.json"]
     return jsonify({"status": "ok", "files": {f: (DOCS / f).exists() for f in files}})
 
 
