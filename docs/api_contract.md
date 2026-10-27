@@ -10,7 +10,7 @@ Until the API exists, build against the sample files in this folder. Their shape
 | `GET /api/ite` | Real model output (Double ML) | `docs/sample_ite.json` |
 | `GET /api/uplift-curve` | Real model output (Double ML) | `docs/sample_uplift_curve.json` |
 | `POST /api/optimize` | Real optimizer output (Week 3, `backend/optimizer.py`) | `docs/sample_optimize.json` |
-| `GET /api/drift` | Real detector output (`backend/drift.py`). The stored example is a **simulated** shift, not live data | `docs/sample_drift.json` |
+| `GET /api/drift` and `POST /api/drift` | Real detector output (`backend/drift.py`). GET returns a stored **simulated** shift; POST checks the customers you send | `docs/sample_drift.json` |
 
 ---
 
@@ -117,7 +117,7 @@ How to use the fields:
 - `savings_vs_blanket` is `null` whenever matching the optimizer's result with blanket $10 coupons would cost more than giving every customer a coupon. That is the case here (it would need about $21,000), so for the natural-language summary use `lift_vs_blanket` instead ("4x more extra purchases than blanket coupons for the same budget"), and show the savings sentence only when the field is not null.
 - Constraints you can rely on: `total_cost <= budget`, and every listed customer has `cautious_uplift > 0`, so Sleeping Dogs never appear.
 
-## `GET /api/drift`
+## `GET /api/drift` and `POST /api/drift`
 
 Compares the customer data the model was trained on with newer data, one feature at a time. Real values from `docs/sample_drift.json` (a simulated shift in `engagement` and `previous_purchases`; the other two features are unchanged), abbreviated:
 ```json
@@ -136,7 +136,12 @@ Compares the customer data the model was trained on with newer data, one feature
 - Show a warning banner when `drift_detected` is `true`, and list the features where `drift` is `true`.
 - `psi` (Population Stability Index): under 0.1 is stable, 0.1 to 0.25 a moderate shift, over 0.25 a large shift.
 - A feature is flagged only when **both** tests agree (KS p-value below 0.01 and PSI at least 0.1), which avoids false alarms on tiny differences. With data from the same population, no feature was flagged in our check.
-- For now the endpoint returns the stored simulated example. A live check on incoming data comes when there is a real data feed.
+- **`GET`** returns the stored simulated example above, so you can build the warning banner.
+- **`POST`** runs a live check of customers you send against the data the model was trained on. Body:
+```json
+{ "customers": [ {"previous_purchases": 3, "engagement": 7, "price_sensitivity": 0.4, "age": 35} ] }
+```
+  Send at least 50 customers, each with all four numbers. The response has the same shape as the GET example. Missing or non-numeric values, or fewer than 50 rows, return HTTP 400 with an `error` message.
 
 ---
 
