@@ -1,3 +1,4 @@
+
 import sys
 import unittest
 from pathlib import Path
@@ -48,8 +49,50 @@ class TestEngagementPurchaseAnalysis(unittest.TestCase):
         ]
 
         for column in expected_columns:
-            self.assertIn(column, result.columns)
+            with self.subTest(column=column):
+                self.assertIn(column, result.columns)
+
+    def test_result_is_not_empty(self):
+        result = analyze_engagement_purchase()
+        self.assertFalse(result.empty)
+
+    def test_customer_counts_are_non_negative(self):
+        result = analyze_engagement_purchase()
+
+        for column in ["customer_count", "total_purchases", "non_purchases"]:
+            with self.subTest(column=column):
+                self.assertTrue((result[column] >= 0).all())
+
+    def test_purchases_do_not_exceed_customer_count(self):
+        result = analyze_engagement_purchase()
+
+        self.assertTrue(
+            (result["total_purchases"] <= result["customer_count"]).all()
+        )
+
+    def test_purchase_rate_matches_counts(self):
+        result = analyze_engagement_purchase()
+        valid_rows = result["customer_count"] > 0
+
+        expected_rates = (
+            result.loc[valid_rows, "total_purchases"]
+            / result.loc[valid_rows, "customer_count"]
+            * 100
+        )
+
+        actual_rates = result.loc[valid_rows, "purchase_rate_percent"]
+
+        self.assertTrue(
+            (expected_rates.round(2) == actual_rates.round(2)).all()
+        )
+
+    def test_analysis_is_repeatable(self):
+        first_result = analyze_engagement_purchase()
+        second_result = analyze_engagement_purchase()
+
+        pd.testing.assert_frame_equal(first_result, second_result)
 
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)
+
