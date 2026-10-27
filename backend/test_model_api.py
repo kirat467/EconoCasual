@@ -71,6 +71,31 @@ def test_drift_flags_shifted_features_only():
     assert flagged == {"previous_purchases", "engagement"}
 
 
+def _live_rows(shift=0.0, n=300, seed=7):
+    import numpy as np
+    rng = np.random.default_rng(seed)
+    return [{"previous_purchases": float(max(0, rng.normal(3, 2))),
+             "engagement": float(rng.normal(5 + shift, 2)),
+             "price_sensitivity": float(rng.uniform(0, 1)),
+             "age": float(rng.normal(40, 10))} for _ in range(n)]
+
+
+def test_live_drift_flags_a_shifted_feature():
+    bad = client.post("/api/drift", json={"customers": _live_rows(6.0)}).get_json()
+    assert bad["drift_detected"] is True
+    assert "engagement" in {f["name"] for f in bad["features"] if f["drift"]}
+    assert bad["n_new"] == 300
+
+
+def test_live_drift_rejects_bad_input():
+    assert client.post("/api/drift", json={"customers": []}).status_code == 400
+    assert client.post("/api/drift", json={}).status_code == 400
+    too_few = _live_rows(n=10)
+    assert client.post("/api/drift", json={"customers": too_few}).status_code == 400
+    missing = [{"engagement": 5}] * 100
+    assert client.post("/api/drift", json={"customers": missing}).status_code == 400
+
+
 def test_cors_header_present():
     assert client.get("/api/uplift-curve").headers["Access-Control-Allow-Origin"] == "*"
 
