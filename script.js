@@ -1164,70 +1164,25 @@
   addEventListener("scroll", toggle, { passive: true });
   toggle();
 })();
-/* ===== DAY 1: Back-to-top button ===== */
+/* ===== DAY 3: Compact table rows ===== */
 (function () {
-  var btn = document.getElementById("toTop");
-  if (!btn) return;
+  var box = document.getElementById("compactRows");
+  var wrap = document.querySelector(".table-scroll[aria-label='Customer records table']");
+  if (!box || !wrap) return;
 
-  var reduce = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var KEY = "ec-compact";
 
-  function toggle() {
-    var on = window.scrollY > 400;
-    if (on) btn.hidden = false;
-    btn.classList.toggle("show", on);
-    if (!on) {
-      setTimeout(function () {
-        if (window.scrollY <= 400) btn.hidden = true;
-      }, 200);
-    }
+  function apply(on) {
+    wrap.classList.toggle("is-compact", on);
+    box.checked = on;
   }
 
-  btn.addEventListener("click", function () {
-    window.scrollTo({ top: 0, behavior: reduce ? "auto" : "smooth" });
-  });
+  var saved = false;
+  try { saved = localStorage.getItem(KEY) === "1"; } catch (e) { /* storage may be blocked */ }
+  apply(saved);
 
-  addEventListener("scroll", toggle, { passive: true });
-  toggle();
-})();
-/* ===== DAY 2: Keyboard shortcuts dialog ===== */
-(function () {
-  var dlg = document.getElementById("keysDlg");
-  if (!dlg) return;
-
-  function open() {
-    if (dlg.open) return;
-    if (dlg.showModal) dlg.showModal();
-    else dlg.setAttribute("open", "");
-  }
-  function close() {
-    if (dlg.close) dlg.close();
-    else dlg.removeAttribute("open");
-  }
-  function typing(t) {
-    return !!t && (t.isContentEditable || /^(INPUT|SELECT|TEXTAREA)$/.test(t.tagName));
-  }
-
-  var btn = document.getElementById("keysBtn");
-  if (btn) btn.addEventListener("click", open);
-  var x = document.getElementById("kClose");
-  if (x) x.addEventListener("click", close);
-
-  // click on the dark backdrop closes it too
-  dlg.addEventListener("click", function (e) { if (e.target === dlg) close(); });
-
-  document.addEventListener("keydown", function (e) {
-    if (e.ctrlKey || e.metaKey || e.altKey || typing(e.target)) return;
-    if (e.key === "?") {
-      e.preventDefault();
-      open();
-    } else if (e.key === "/") {
-      var s = document.getElementById("search");
-      if (!s) return;
-      e.preventDefault();
-      s.scrollIntoView({ block: "center" });
-      s.focus();
-      s.classList.add("flash");
-      setTimeout(function () { s.classList.remove("flash"); }, 900);
-    }
+  box.addEventListener("change", function () {
+    apply(box.checked);
+    try { localStorage.setItem(KEY, box.checked ? "1" : "0"); } catch (e) { /* ignore */ }
   });
 })();
