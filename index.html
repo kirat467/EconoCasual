@@ -380,3 +380,18 @@
     <path d="M5 12l7-7 7 7"/>
   </svg>
 </button>
+/* ===== DAY 2: Keyboard shortcuts dialog ===== */
+<dialog id="keysDlg" aria-labelledby="kTitle">
+  <div class="dlg">
+    <h2 id="kTitle">Keyboard shortcuts</h2>
+    <ul class="k-list">
+      <li><kbd>?</kbd><span>Open this list</span></li>
+      <li><kbd>/</kbd><span>Jump to the customer search box</span></li>
+      <li><kbd>Esc</kbd><span>Close this window</span></li>
+      <li><kbd>←</kbd><kbd>→</kbd><span>Move along the engagement chart (when it is focused)</span></li>
+    </ul>
+    <div class="dlg-actions">
+      <button type="button" class="btn" id="kClose">Close</button>
+    </div>
+  </div>
+</dialog>
