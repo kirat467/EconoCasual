@@ -96,7 +96,8 @@ def build_response(budget, customer_ids, tau, lo, conservative=True):
                f"({n10} at $10, {n20} at $20) and expects at least about "
                f"{cautious_total:.0f} extra purchases (cautious estimate).")
     if savings is not None:
-        summary += f" Matching that with blanket $10 coupons would cost about ${blanket_cost:,.0f}."
+        summary += (f" By the model's own estimates, which run high, matching that result with "
+                    f"blanket $10 coupons would cost about ${blanket_cost:,.0f}.")
     elif lift is not None:
         summary += (f" By the model's own estimates, which run high, that is about {lift:.1f}x the "
                     f"extra purchases of random $10 coupons at the same budget.")
