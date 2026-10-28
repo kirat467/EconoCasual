@@ -42,6 +42,8 @@ gunicorn --chdir backend --bind 0.0.0.0:8000 "model_api:create_app()"   # produc
 ```
 Needs `docs/optimizer_effects.json` and `docs/drift_reference.json`, which come from `python backend/optimizer.py --export` and `python backend/drift.py --export`. Check `http://localhost:8000/api/health`: every file should say `true`.
 
+**See it in a browser.** With the API running, open `docs/api_demo.html` (double-click it). It shows the uplift curve, the ITE table with a segment filter and sorting, the optimizer with a budget box, and the drift banner. It is a reference for the dashboard, not the dashboard itself.
+
 **Docker (packaging).** From the repository root:
 ```bash
 docker build -f backend/Dockerfile -t econocausal-api .
