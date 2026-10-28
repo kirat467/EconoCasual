@@ -1189,3 +1189,45 @@
   addEventListener("scroll", toggle, { passive: true });
   toggle();
 })();
+/* ===== DAY 2: Keyboard shortcuts dialog ===== */
+(function () {
+  var dlg = document.getElementById("keysDlg");
+  if (!dlg) return;
+
+  function open() {
+    if (dlg.open) return;
+    if (dlg.showModal) dlg.showModal();
+    else dlg.setAttribute("open", "");
+  }
+  function close() {
+    if (dlg.close) dlg.close();
+    else dlg.removeAttribute("open");
+  }
+  function typing(t) {
+    return !!t && (t.isContentEditable || /^(INPUT|SELECT|TEXTAREA)$/.test(t.tagName));
+  }
+
+  var btn = document.getElementById("keysBtn");
+  if (btn) btn.addEventListener("click", open);
+  var x = document.getElementById("kClose");
+  if (x) x.addEventListener("click", close);
+
+  // click on the dark backdrop closes it too
+  dlg.addEventListener("click", function (e) { if (e.target === dlg) close(); });
+
+  document.addEventListener("keydown", function (e) {
+    if (e.ctrlKey || e.metaKey || e.altKey || typing(e.target)) return;
+    if (e.key === "?") {
+      e.preventDefault();
+      open();
+    } else if (e.key === "/") {
+      var s = document.getElementById("search");
+      if (!s) return;
+      e.preventDefault();
+      s.scrollIntoView({ block: "center" });
+      s.focus();
+      s.classList.add("flash");
+      setTimeout(function () { s.classList.remove("flash"); }, 900);
+    }
+  });
+})();
