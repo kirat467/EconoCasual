@@ -59,6 +59,13 @@ def test_optimize_works_for_other_budgets():
     assert isinstance(large["summary"], str) and "$8,000" in large["summary"]
 
 
+def test_summary_does_not_present_point_estimate_savings_as_cautious():
+    summary = client.post("/api/optimize", json={"budget": 2000}).get_json()["summary"]
+    assert "cautious estimate" in summary
+    if "blanket" in summary:
+        assert "which run high" in summary
+
+
 def test_optimize_rejects_invalid_budget():
     for bad in (0, -50, "lots", 10**9):
         assert client.post("/api/optimize", json={"budget": bad}).status_code == 400
