@@ -14,7 +14,6 @@ class TestAPIErrorHandling(unittest.TestCase):
 
  def test_unknown_endpoint_returns_404(self):
     response = self.client.get("/this-endpoint-does-not-exist")
-
     self.assertEqual(response.status_code, 404)
 
  def test_unknown_endpoint_returns_json(self):
@@ -25,6 +24,14 @@ class TestAPIErrorHandling(unittest.TestCase):
         response.get_json()["error"],
         "Endpoint not found",
     )
+
+ def test_unknown_endpoint_error_response_has_expected_structure(self):
+    response = self.client.get("/unknown-test-endpoint")
+    data = response.get_json()
+
+    self.assertEqual(response.status_code, 404)
+    self.assertIsInstance(data, dict)
+    self.assertEqual(data["error"], "Endpoint not found")
 
  def test_customers_endpoint_handles_invalid_page(self):
     response = self.client.get("/customers?page=invalid")
@@ -61,7 +68,7 @@ class TestAPIErrorHandling(unittest.TestCase):
             self.assertTrue(response.is_json)
             self.assertIn("error", response.get_json())
 
- def test_customers_endpoint_rejects_non_finite_filters(self):
+def test_customers_endpoint_rejects_non_finite_filters(self):
     for value in ["NaN", "inf", "-inf"]:
         for column in ["discount", "engagement", "purchase"]:
             with self.subTest(column=column, value=value):
@@ -71,12 +78,12 @@ class TestAPIErrorHandling(unittest.TestCase):
 
                 self.assertEqual(response.status_code, 400)
                 self.assertTrue(response.is_json)
+                self.assertIn("error", response.get_json())
 
- def test_customers_endpoint_handles_missing_dataset(self):
-    with patch(
-        "app.DATA_FILE",
-        Path("missing_customers_test.csv"),
-    ):
+def test_customers_endpoint_handles_missing_dataset(self):
+    missing_file = Path("missing_customers_test.csv")
+
+    with patch("app.DATA_FILE", missing_file):
         response = self.client.get("/customers")
 
     self.assertEqual(response.status_code, 500)
@@ -85,6 +92,34 @@ class TestAPIErrorHandling(unittest.TestCase):
         response.get_json()["error"],
         "Customer dataset not found",
     )
+    
+def test_customers_endpoint_returns_json_on_missing_dataset(self):
+    with patch(
+        "app.DATA_FILE",
+        Path("missing_customers_test.csv"),
+    ):
+        response = self.client.get("/customers")
+
+    self.assertTrue(response.is_json)
+    self.assertIn("error", response.get_json())
+
+def test_customers_endpoint_handles_invalid_page_size(self):
+    response = self.client.get("/customers?per_page=invalid")
+
+    self.assertIn(response.status_code, [200, 400])
+    self.assertTrue(response.is_json)
+
+def test_customers_endpoint_handles_zero_page_size(self):
+    response = self.client.get("/customers?per_page=0")
+
+    self.assertIn(response.status_code, [200, 400])
+    self.assertTrue(response.is_json)
+
+def test_customers_endpoint_handles_negative_page_size(self):
+    response = self.client.get("/customers?per_page=-1")
+
+    self.assertIn(response.status_code, [200, 400])
+    self.assertTrue(response.is_json)
 
 
 if __name__ == "__main__":
