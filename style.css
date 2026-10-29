@@ -765,3 +765,21 @@ tbody tr:hover { background: var(--teal-soft); }
 @media print {
   .compact-toggle { display: none !important; }
 }
+/* ===== DAY 4: Calm motion mode ===== */
+html.calm *,
+html.calm *::before,
+html.calm *::after {
+  animation: none !important;
+  transition: none !important;
+  scroll-behavior: auto !important;
+}
+#calmBtn[aria-pressed="true"] {
+  background: var(--teal);
+  color: #fff;
+  border-color: var(--teal);
+}
+#calmBtn:focus-visible { outline: 2px solid var(--teal); outline-offset: 3px; }
+
+@media print {
+  #calmBtn { display: none !important; }
+}
