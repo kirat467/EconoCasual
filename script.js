@@ -1186,3 +1186,27 @@
     try { localStorage.setItem(KEY, box.checked ? "1" : "0"); } catch (e) { /* ignore */ }
   });
 })();
+/* ===== DAY 4: Calm motion mode ===== */
+(function () {
+  var btn = document.getElementById("calmBtn");
+  if (!btn) return;
+
+  var KEY = "ec-calm";
+  var root = document.documentElement;
+
+  function apply(on) {
+    root.classList.toggle("calm", on);
+    btn.setAttribute("aria-pressed", String(on));
+    btn.textContent = on ? "Calm motion: on" : "Calm motion: off";
+  }
+
+  var saved = false;
+  try { saved = localStorage.getItem(KEY) === "1"; } catch (e) { /* storage may be blocked */ }
+  apply(saved);
+
+  btn.addEventListener("click", function () {
+    var on = !root.classList.contains("calm");
+    apply(on);
+    try { localStorage.setItem(KEY, on ? "1" : "0"); } catch (e) { /* ignore */ }
+  });
+})();
