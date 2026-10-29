@@ -7,6 +7,7 @@ Until the API exists, build against the sample files in this folder. Their shape
 
 | Endpoint | Status | Sample file |
 |---|---|---|
+| `GET /api/customers` | The dashboard's data feed: all 1,000 customers as a plain array (served by `backend/server.py`) | none |
 | `GET /api/ite` | Real model output (Double ML) | `docs/sample_ite.json` |
 | `GET /api/uplift-curve` | Real model output (Double ML) | `docs/sample_uplift_curve.json` |
 | `POST /api/optimize` | Real optimizer output (Week 3, `backend/optimizer.py`) | `docs/sample_optimize.json` |
