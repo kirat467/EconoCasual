@@ -1210,3 +1210,22 @@
     try { localStorage.setItem(KEY, on ? "1" : "0"); } catch (e) { /* ignore */ }
   });
 })();
+/* ===== DAY 5: Print button ===== */
+(function () {
+  var btn = document.getElementById("printBtn");
+  if (!btn) return;
+
+  btn.addEventListener("click", function () {
+    window.print();
+  });
+
+  // Ctrl+P / Cmd+P also uses the same print layout, nothing extra needed.
+  // Small hint on first print: restore the original page title afterwards.
+  var original = document.title;
+  window.addEventListener("beforeprint", function () {
+    document.title = "EconoCausal dashboard";
+  });
+  window.addEventListener("afterprint", function () {
+    document.title = original;
+  });
+})();
