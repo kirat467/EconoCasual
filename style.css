@@ -783,3 +783,22 @@ html.calm *::after {
 @media print {
   #calmBtn { display: none !important; }
 }
+/* ===== DAY 5: Print button and clean print layout ===== */
+#printBtn:focus-visible { outline: 2px solid var(--teal); outline-offset: 3px; }
+
+@media print {
+  #printBtn,
+  #calmBtn,
+  #keysBtn,
+  #toTop,
+  #toast,
+  .to-top,
+  .pager-ctl,
+  .compact-toggle {
+    display: none !important;
+  }
+  body { background: #fff !important; color: #000 !important; }
+  .table-scroll { overflow: visible !important; border-top: 1px solid #000; }
+  tr, svg, .b-card { break-inside: avoid; }
+  a[href]::after { content: ""; }
+}
