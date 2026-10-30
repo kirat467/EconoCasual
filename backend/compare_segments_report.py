@@ -4,11 +4,13 @@ import pandas as pd
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+
 INPUT_FILE = BASE_DIR / "reports" / "segment_comparison.csv"
 OUTPUT_FILE = BASE_DIR / "reports" / "segment_comparison_report.md"
 
 
 def generate_comparison_report():
+
     if not INPUT_FILE.exists():
         raise FileNotFoundError(
             "segment_comparison.csv not found. "
@@ -25,13 +27,55 @@ def generate_comparison_report():
         "purchase_rate_percent",
     ]
 
-    missing = [column for column in required_columns if column not in df.columns]
+    missing = [
+        column for column in required_columns
+        if column not in df.columns
+    ]
 
     if missing:
         raise ValueError(f"Missing required columns: {missing}")
 
-    total_customers = int(df["customer_count"].sum())
-    total_purchases = int(df["total_purchases"].sum())
+    if df.empty:
+        raise ValueError("Segment comparison dataset is empty.")
+
+    customer_counts = pd.to_numeric(
+        df["customer_count"], errors="coerce"
+    )
+
+    purchases = pd.to_numeric(
+        df["total_purchases"], errors="coerce"
+    )
+
+    rates = pd.to_numeric(
+        df["purchase_rate_percent"], errors="coerce"
+    )
+
+    if (
+        customer_counts.isna().any()
+        or purchases.isna().any()
+        or rates.isna().any()
+    ):
+        raise ValueError(
+            "Segment comparison data contains invalid numeric values."
+        )
+
+    if (customer_counts < 0).any() or (purchases < 0).any():
+        raise ValueError(
+            "Customer counts and purchases cannot be negative."
+        )
+
+    if (purchases > customer_counts).any():
+        raise ValueError(
+            "Purchases cannot exceed customer counts."
+        )
+
+    if not rates.between(0, 100).all():
+        raise ValueError(
+            "Purchase rates must be between 0 and 100."
+        )
+
+    total_customers = int(customer_counts.sum())
+    total_purchases = int(purchases.sum())
 
     overall_purchase_rate = (
         total_purchases / total_customers * 100
@@ -39,22 +83,26 @@ def generate_comparison_report():
         else 0
     )
 
-    highest_rate = df.loc[df["purchase_rate_percent"].idxmax()]
-    lowest_rate = df.loc[df["purchase_rate_percent"].idxmin()]
+    highest_rate = df.loc[rates.idxmax()]
+    lowest_rate = df.loc[rates.idxmin()]
 
-    # Build Markdown table without requiring extra packages
     table_lines = [
         "| " + " | ".join(df.columns) + " |",
         "| " + " | ".join(["---"] * len(df.columns)) + " |",
     ]
 
     for _, row in df.iterrows():
+
         values = []
+
         for value in row:
+
             if pd.isna(value):
                 values.append("")
+
             elif isinstance(value, float):
                 values.append(f"{value:.2f}")
+
             else:
                 values.append(str(value))
 
@@ -78,11 +126,11 @@ def generate_comparison_report():
         f"- Highest purchase-rate combination: "
         f"{highest_rate['engagement_segment']} + "
         f"{highest_rate['purchase_history_segment']} "
-        f"({highest_rate['purchase_rate_percent']:.2f}%).",
+        f"({rates.loc[highest_rate.name]:.2f}%).",
         f"- Lowest purchase-rate combination: "
         f"{lowest_rate['engagement_segment']} + "
         f"{lowest_rate['purchase_history_segment']} "
-        f"({lowest_rate['purchase_rate_percent']:.2f}%).",
+        f"({rates.loc[lowest_rate.name]:.2f}%).",
         "",
         "## 4. Interpretation",
         "",
@@ -105,7 +153,11 @@ def generate_comparison_report():
     ]
 
     OUTPUT_FILE.parent.mkdir(parents=True, exist_ok=True)
-    OUTPUT_FILE.write_text("\n".join(report), encoding="utf-8")
+
+    OUTPUT_FILE.write_text(
+        "\n".join(report),
+        encoding="utf-8"
+    )
 
     print("Segment comparison report generated successfully!")
     print(f"Report saved to: {OUTPUT_FILE}")
