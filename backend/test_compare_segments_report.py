@@ -1,148 +1,171 @@
-import sys
+"""Tests for the customer segment comparison report."""
+
+import tempfile
+import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 import pandas as pd
 
-BACKEND_DIR = Path(__file__).resolve().parent
-PROJECT_DIR = BACKEND_DIR.parent
-
-sys.path.insert(0, str(BACKEND_DIR))
-
-from compare_segments_report import generate_comparison_report
+from backend import compare_segments_report as report_module
 
 
-def run_tests():
+class TestCompareSegmentsReport(unittest.TestCase):
 
-    sample_data = pd.DataFrame({
-        "engagement_segment": ["High", "Low"],
-        "purchase_history_segment": ["Frequent", "Rare"],
-        "customer_count": [100, 50],
-        "total_purchases": [80, 10],
-        "purchase_rate_percent": [80.0, 20.0],
-    })
+    def setUp(self):
+        """Create isolated temporary input and output files."""
+        self.temp_dir = tempfile.TemporaryDirectory()
+        self.addCleanup(self.temp_dir.cleanup)
 
-    input_file = PROJECT_DIR / "reports" / "segment_comparison.csv"
-    output_file = (
-        PROJECT_DIR / "reports" / "segment_comparison_report.md"
-    )
+        self.temp_path = Path(self.temp_dir.name)
 
-    # Test 1: Function exists
-    assert callable(generate_comparison_report)
-    print("Test 1 passed: Report function exists")
-
-    # Test 2: Input CSV exists
-    assert input_file.exists()
-    print("Test 2 passed: Input CSV exists")
-
-    # Test 3: Required columns exist
-    required_columns = [
-        "engagement_segment",
-        "purchase_history_segment",
-        "customer_count",
-        "total_purchases",
-        "purchase_rate_percent",
-    ]
-
-    for column in required_columns:
-        assert column in sample_data.columns
-
-    print("Test 3 passed: Required columns exist")
-
-    # Test 4: Dataset is not empty
-    assert not sample_data.empty
-    print("Test 4 passed: Dataset is not empty")
-
-    # Test 5: Numeric values are valid
-    numeric_columns = [
-        "customer_count",
-        "total_purchases",
-        "purchase_rate_percent",
-    ]
-
-    for column in numeric_columns:
-        converted = pd.to_numeric(
-            sample_data[column],
-            errors="coerce"
+        self.input_file = self.temp_path / "segment_comparison.csv"
+        self.output_file = (
+            self.temp_path / "segment_comparison_report.md"
         )
-        assert not converted.isna().any()
 
-    print("Test 5 passed: Numeric values are valid")
+        self.valid_data = pd.DataFrame({
+            "engagement_segment": ["High", "Low"],
+            "purchase_history_segment": ["Frequent", "Rare"],
+            "customer_count": [100, 50],
+            "total_purchases": [80, 10],
+            "purchase_rate_percent": [80.0, 20.0],
+        })
 
-    # Test 6: Customer counts are non-negative
-    assert (sample_data["customer_count"] >= 0).all()
-    print("Test 6 passed: Customer counts are non-negative")
+        self.valid_data.to_csv(self.input_file, index=False)
 
-    # Test 7: Purchases do not exceed customers
-    assert (
-        sample_data["total_purchases"]
-        <= sample_data["customer_count"]
-    ).all()
+        self.input_patch = patch.object(
+            report_module,
+            "INPUT_FILE",
+            self.input_file,
+        )
+        self.output_patch = patch.object(
+            report_module,
+            "OUTPUT_FILE",
+            self.output_file,
+        )
 
-    print("Test 7 passed: Purchases do not exceed customers")
+        self.input_patch.start()
+        self.output_patch.start()
 
-    # Test 8: Purchase rates are valid
-    rates = sample_data["purchase_rate_percent"]
+        self.addCleanup(self.input_patch.stop)
+        self.addCleanup(self.output_patch.stop)
 
-    assert (rates >= 0).all()
-    assert (rates <= 100).all()
+    def test_valid_report_is_generated(self):
+        """A valid dataset should generate a Markdown report."""
+        report_module.generate_comparison_report()
 
-    print("Test 8 passed: Purchase rates are valid")
+        self.assertTrue(self.output_file.exists())
 
-    # Test 9: Report generation
-    generate_comparison_report()
-    print("Test 9 passed: Report generated")
+        content = self.output_file.read_text(encoding="utf-8")
 
-    # Test 10: Output file exists
-    assert output_file.exists()
-    print("Test 10 passed: Output file exists")
+        self.assertIn("# Customer Segment Comparison Report", content)
+        self.assertIn("## 1. Overview", content)
+        self.assertIn("## 2. Segment Comparison", content)
+        self.assertIn("## 3. Key Findings", content)
+        self.assertIn("## 4. Interpretation", content)
+        self.assertIn("## 5. Limitations", content)
+        self.assertIn("## 6. Recommended Next Steps", content)
 
-    # Read generated report
-    content = output_file.read_text(encoding="utf-8")
+    def test_report_contains_segment_names(self):
+        """The report should include actual segment names."""
+        report_module.generate_comparison_report()
 
-    # Test 11: Report headings
-    headings = [
-        "# Customer Segment Comparison Report",
-        "## 1. Overview",
-        "## 2. Segment Comparison",
-        "## 3. Key Findings",
-        "## 4. Interpretation",
-        "## 5. Limitations",
-        "## 6. Recommended Next Steps",
-    ]
+        content = self.output_file.read_text(encoding="utf-8")
 
-    for heading in headings:
-        assert heading in content
+        self.assertIn("High", content)
+        self.assertIn("Low", content)
+        self.assertIn("Frequent", content)
+        self.assertIn("Rare", content)
 
-    print("Test 11 passed: Report headings exist")
+    def test_missing_input_file_is_rejected(self):
+        """A missing input CSV should raise FileNotFoundError."""
+        self.input_file.unlink()
 
-    # Test 12: Actual segment names from CSV
-    actual_data = pd.read_csv(input_file)
+        with self.assertRaises(FileNotFoundError):
+            report_module.generate_comparison_report()
 
-    for column in [
-        "engagement_segment",
-        "purchase_history_segment",
-    ]:
-        for value in actual_data[column].dropna().unique():
-            assert str(value) in content, (
-                f"Segment value {value} missing from report"
-            )
+    def test_missing_required_column_is_rejected(self):
+        """A dataset missing a required column should raise ValueError."""
+        invalid_data = self.valid_data.drop(
+            columns=["engagement_segment"]
+        )
+        invalid_data.to_csv(self.input_file, index=False)
 
-    print("Test 12 passed: Actual segment names exist")
+        with self.assertRaises(ValueError):
+            report_module.generate_comparison_report()
 
-    # Test 13: Customer total
-    assert sample_data["customer_count"].sum() == 150
-    print("Test 13 passed: Sample customer total is correct")
+    def test_empty_dataset_is_rejected(self):
+        """An empty dataset should raise ValueError."""
+        empty_data = self.valid_data.iloc[0:0]
+        empty_data.to_csv(self.input_file, index=False)
 
-    # Test 14: Purchase total
-    assert sample_data["total_purchases"].sum() == 90
-    print("Test 14 passed: Sample purchase total is correct")
+        with self.assertRaises(ValueError):
+            report_module.generate_comparison_report()
 
-    # Test 15: Dataset contains two segments
-    assert len(sample_data) == 2
-    print("Test 15 passed: Sample segment count is correct")
+    def test_invalid_numeric_values_are_rejected(self):
+        """Non-numeric values should raise ValueError."""
+        numeric_columns = [
+            "customer_count",
+            "total_purchases",
+            "purchase_rate_percent",
+        ]
 
-    print("\nAll 15 tests passed successfully!")
+        for column in numeric_columns:
+            with self.subTest(column=column):
+                invalid_data = self.valid_data.copy()
+                invalid_data[column] = invalid_data[column].astype(object)
+                invalid_data.loc[0, column] = "invalid"
+                invalid_data.to_csv(self.input_file, index=False)
+
+                with self.assertRaises(ValueError):
+                    report_module.generate_comparison_report()
+
+    def test_negative_customer_count_is_rejected(self):
+        """Customer counts cannot be negative."""
+        invalid_data = self.valid_data.copy()
+        invalid_data.loc[0, "customer_count"] = -10
+        invalid_data.to_csv(self.input_file, index=False)
+
+        with self.assertRaises(ValueError):
+            report_module.generate_comparison_report()
+
+    def test_negative_purchase_count_is_rejected(self):
+        """Purchase counts cannot be negative."""
+        invalid_data = self.valid_data.copy()
+        invalid_data.loc[0, "total_purchases"] = -5
+        invalid_data.to_csv(self.input_file, index=False)
+
+        with self.assertRaises(ValueError):
+            report_module.generate_comparison_report()
+
+    def test_purchases_cannot_exceed_customers(self):
+        """Purchases cannot exceed the customer count."""
+        invalid_data = self.valid_data.copy()
+        invalid_data.loc[0, "total_purchases"] = 120
+        invalid_data.to_csv(self.input_file, index=False)
+
+        with self.assertRaises(ValueError):
+            report_module.generate_comparison_report()
+
+    def test_purchase_rate_below_zero_is_rejected(self):
+        """Purchase rates cannot be below zero."""
+        invalid_data = self.valid_data.copy()
+        invalid_data.loc[0, "purchase_rate_percent"] = -1
+        invalid_data.to_csv(self.input_file, index=False)
+
+        with self.assertRaises(ValueError):
+            report_module.generate_comparison_report()
+
+    def test_purchase_rate_above_100_is_rejected(self):
+        """Purchase rates cannot exceed 100 percent."""
+        invalid_data = self.valid_data.copy()
+        invalid_data.loc[0, "purchase_rate_percent"] = 101
+        invalid_data.to_csv(self.input_file, index=False)
+
+        with self.assertRaises(ValueError):
+            report_module.generate_comparison_report()
 
 
 if __name__ == "__main__":
-    run_tests()
+    unittest.main()
