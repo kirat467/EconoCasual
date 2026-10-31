@@ -802,3 +802,15 @@ html.calm *::after {
   tr, svg, .b-card { break-inside: avoid; }
   a[href]::after { content: ""; }
 }
+/* ===== DAY 6: Copy headline button ===== */
+#copyHeadline {
+  margin-top: 8px;
+  font-size: 13px;
+  cursor: pointer;
+}
+#copyHeadline.copied { color: var(--teal); font-weight: 600; }
+#copyHeadline:focus-visible { outline: 2px solid var(--teal); outline-offset: 3px; border-radius: 4px; }
+
+@media print {
+  #copyHeadline { display: none !important; }
+}
