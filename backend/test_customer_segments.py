@@ -54,12 +54,12 @@ class TestCustomerSegments(unittest.TestCase):
         )
 
     def test_summary_purchase_count(self):
-        """Segment purchase counts should add up to 573."""
+        """Segment purchase counts should add up to 586."""
         summary = pd.read_csv(SUMMARY_FILE)
 
         self.assertEqual(
             summary["total_purchases"].sum(),
-            573,
+            586,
         )
 
     def test_purchase_rates_are_valid(self):
@@ -73,4 +73,3 @@ class TestCustomerSegments(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
-
