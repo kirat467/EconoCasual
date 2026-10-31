@@ -29,7 +29,8 @@ def analyze_purchase_trends():
     ]
 
     missing_columns = [
-        column for column in required_columns
+        column
+        for column in required_columns
         if column not in df.columns
     ]
 
@@ -48,6 +49,19 @@ def analyze_purchase_trends():
     df["purchase"] = pd.to_numeric(
         df["purchase"], errors="raise"
     )
+
+    if df[required_columns].isna().any().any():
+        raise ValueError("Required columns contain missing values.")
+
+    if not df["previous_purchases"].ge(0).all():
+        raise ValueError(
+            "Previous purchases must be non-negative."
+        )
+
+    if not df["previous_purchases"].mod(1).eq(0).all():
+        raise ValueError(
+            "Previous purchases must be whole numbers."
+        )
 
     if not df["purchase"].isin([0, 1]).all():
         raise ValueError("Purchase values must be 0 or 1.")
