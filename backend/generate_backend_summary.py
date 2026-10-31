@@ -1,3 +1,4 @@
+
 from pathlib import Path
 
 import pandas as pd
@@ -66,6 +67,15 @@ def generate_backend_summary():
     if not df["purchase"].isin([0, 1]).all():
         raise ValueError("Purchase values must be 0 or 1.")
 
+    if not df["discount"].isin([0, 1]).all():
+        raise ValueError("Discount values must be 0 or 1.")
+
+    if not df["previous_purchases"].ge(0).all():
+        raise ValueError("Previous purchases must be non-negative.")
+
+    if not df["previous_purchases"].mod(1).eq(0).all():
+        raise ValueError("Previous purchases must be whole numbers.")
+
     total_customers = len(df)
     total_purchases = int(df["purchase"].sum())
     non_purchases = total_customers - total_purchases
@@ -80,6 +90,7 @@ def generate_backend_summary():
         )
         .reset_index()
     )
+
     discount_summary["purchase_rate"] = (
         discount_summary["purchase_rate"] * 100
     ).round(2)
@@ -93,6 +104,7 @@ def generate_backend_summary():
         )
         .reset_index()
     )
+
     engagement_summary["purchase_rate"] = (
         engagement_summary["purchase_rate"] * 100
     ).round(2)
@@ -106,6 +118,7 @@ def generate_backend_summary():
         )
         .reset_index()
     )
+
     history_summary["purchase_rate"] = (
         history_summary["purchase_rate"] * 100
     ).round(2)
@@ -152,12 +165,14 @@ EconoCasual customer dataset.
 
 These results describe the available dataset and do not prove that
 discounts, engagement, or previous purchases cause customers to buy.
+
 Further analysis and model validation are needed before making predictions.
 
 ## 8. Conclusion
 
 This report brings together the main descriptive statistics for
 EconoCasual customer purchasing behaviour.
+
 """
 
     REPORT_DIR.mkdir(parents=True, exist_ok=True)
@@ -175,3 +190,4 @@ EconoCasual customer purchasing behaviour.
 
 if __name__ == "__main__":
     generate_backend_summary()
+
