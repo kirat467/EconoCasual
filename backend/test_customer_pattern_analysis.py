@@ -1,44 +1,68 @@
 import sys
+import tempfile
 import unittest
 from pathlib import Path
 from unittest.mock import patch
 
 import pandas as pd
 
-BASE_DIR = Path(__file__).resolve().parent.parent
 BACKEND_DIR = Path(__file__).resolve().parent
-
 sys.path.insert(0, str(BACKEND_DIR))
 
-from customer_pattern_analysis import analyze_customer_patterns
-
-
-OUTPUT_FILE = BASE_DIR / "reports" / "customer_pattern_analysis.csv"
-CHART_FILE = BASE_DIR / "reports" / "charts" / "customer_purchase_patterns.png"
+import customer_pattern_analysis as analysis
 
 
 class TestCustomerPatternAnalysis(unittest.TestCase):
 
+    def setUp(self):
+        # Har test ke liye separate temporary directory banao
+        self.temp_dir = tempfile.TemporaryDirectory()
+        self.addCleanup(self.temp_dir.cleanup)
+
+        self.temp_path = Path(self.temp_dir.name)
+
+        # Temporary test dataset banao
+        self.data_file = self.temp_path / "customers.csv"
+
+        self.test_data = pd.DataFrame({
+            "customer_id": [1, 2, 3, 4, 5],
+            "previous_purchases": [0, 1, 1, 2, 2],
+            "engagement": [20, 40, 60, 70, 90],
+            "purchase": [0, 1, 0, 1, 1],
+        })
+
+        self.test_data.to_csv(self.data_file, index=False)
+
+        # Temporary report aur chart paths
+        self.report_dir = self.temp_path / "reports"
+        self.chart_dir = self.report_dir / "charts"
+
+        self.output_file = self.report_dir / "analysis.csv"
+        self.chart_file = self.chart_dir / "analysis.png"
+
+        # Original paths ko temporary test paths se replace karo
+        self.patches = [
+            patch.object(analysis, "DATA_FILE", self.data_file),
+            patch.object(analysis, "REPORT_DIR", self.report_dir),
+            patch.object(analysis, "CHART_DIR", self.chart_dir),
+            patch.object(analysis, "OUTPUT_FILE", self.output_file),
+            patch.object(analysis, "CHART_FILE", self.chart_file),
+        ]
+
+        for patcher in self.patches:
+            patcher.start()
+            self.addCleanup(patcher.stop)
+
     def test_analysis_returns_dataframe(self):
-        result = analyze_customer_patterns()
+        result = analysis.analyze_customer_patterns()
         self.assertIsInstance(result, pd.DataFrame)
 
-    def test_purchase_rates_are_valid(self):
-        result = analyze_customer_patterns()
-        self.assertTrue(
-            result["purchase_rate_percent"].between(0, 100).all()
-        )
-
-    def test_output_csv_exists(self):
-        analyze_customer_patterns()
-        self.assertTrue(OUTPUT_FILE.exists())
-
-    def test_chart_exists(self):
-        analyze_customer_patterns()
-        self.assertTrue(CHART_FILE.exists())
+    def test_result_is_not_empty(self):
+        result = analysis.analyze_customer_patterns()
+        self.assertFalse(result.empty)
 
     def test_required_columns_exist(self):
-        result = analyze_customer_patterns()
+        result = analysis.analyze_customer_patterns()
 
         expected_columns = [
             "previous_purchases",
@@ -53,43 +77,87 @@ class TestCustomerPatternAnalysis(unittest.TestCase):
             with self.subTest(column=column):
                 self.assertIn(column, result.columns)
 
-    def test_result_is_not_empty(self):
-        result = analyze_customer_patterns()
-        self.assertFalse(result.empty)
+    def test_customer_counts_are_correct(self):
+        result = analysis.analyze_customer_patterns()
+        self.assertEqual(result["customer_count"].sum(), 5)
 
-    def test_customer_counts_are_non_negative(self):
-        result = analyze_customer_patterns()
+    def test_purchase_counts_are_correct(self):
+        result = analysis.analyze_customer_patterns()
+        self.assertEqual(result["purchasers"].sum(), 3)
 
-        for column in ["customer_count", "purchasers", "non_purchasers"]:
-            with self.subTest(column=column):
-                self.assertTrue((result[column] >= 0).all())
+    def test_non_purchaser_counts_are_correct(self):
+        result = analysis.analyze_customer_patterns()
+        self.assertEqual(result["non_purchasers"].sum(), 2)
 
-    def test_purchasers_do_not_exceed_customer_count(self):
-        result = analyze_customer_patterns()
+    def test_purchase_rates_are_valid(self):
+        result = analysis.analyze_customer_patterns()
 
         self.assertTrue(
-            (result["purchasers"] <= result["customer_count"]).all()
+            result["purchase_rate_percent"].between(0, 100).all()
         )
 
     def test_purchase_rate_matches_counts(self):
-        result = analyze_customer_patterns()
+        result = analysis.analyze_customer_patterns()
 
-        valid_rows = result["customer_count"] > 0
         expected_rates = (
-            result.loc[valid_rows, "purchasers"]
-            / result.loc[valid_rows, "customer_count"]
+            result["purchasers"]
+            / result["customer_count"]
             * 100
+        ).round(2)
+
+        pd.testing.assert_series_equal(
+            result["purchase_rate_percent"],
+            expected_rates,
+            check_names=False,
         )
 
-        actual_rates = result.loc[valid_rows, "purchase_rate_percent"]
+    def test_output_csv_is_created(self):
+        analysis.analyze_customer_patterns()
+        self.assertTrue(self.output_file.exists())
 
-        self.assertTrue(
-            (expected_rates.round(2) == actual_rates.round(2)).all()
+    def test_chart_is_created(self):
+        analysis.analyze_customer_patterns()
+        self.assertTrue(self.chart_file.exists())
+
+    def test_missing_dataset_raises_error(self):
+        with patch.object(
+            analysis,
+            "DATA_FILE",
+            self.temp_path / "missing.csv",
+        ):
+            with self.assertRaises(FileNotFoundError):
+                analysis.analyze_customer_patterns()
+
+    def test_missing_columns_raise_error(self):
+        invalid_data = pd.DataFrame({
+            "customer_id": [1],
+            "purchase": [1],
+        })
+
+        invalid_data.to_csv(self.data_file, index=False)
+
+        with self.assertRaisesRegex(ValueError, "Missing columns"):
+            analysis.analyze_customer_patterns()
+
+    def test_empty_dataset_raises_error(self):
+        self.test_data.iloc[0:0].to_csv(
+            self.data_file,
+            index=False,
         )
+
+        with self.assertRaisesRegex(ValueError, "empty"):
+            analysis.analyze_customer_patterns()
+
+    def test_invalid_purchase_values_raise_error(self):
+        self.test_data["purchase"] = [0, 1, 2, 0, 1]
+        self.test_data.to_csv(self.data_file, index=False)
+
+        with self.assertRaisesRegex(ValueError, "0 or 1"):
+            analysis.analyze_customer_patterns()
 
     def test_analysis_is_repeatable(self):
-        first_result = analyze_customer_patterns()
-        second_result = analyze_customer_patterns()
+        first_result = analysis.analyze_customer_patterns()
+        second_result = analysis.analyze_customer_patterns()
 
         pd.testing.assert_frame_equal(first_result, second_result)
 
