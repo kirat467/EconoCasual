@@ -1229,3 +1229,48 @@
     document.title = original;
   });
 })();
+/* ===== DAY 6: Copy headline button ===== */
+(function () {
+  var btn = document.getElementById("copyHeadline");
+  var head = document.getElementById("headline");
+  if (!btn || !head) return;
+
+  var timer;
+
+  function done(ok) {
+    btn.textContent = ok ? "Copied" : "Copy failed";
+    btn.classList.toggle("copied", ok);
+    clearTimeout(timer);
+    timer = setTimeout(function () {
+      btn.textContent = "Copy headline";
+      btn.classList.remove("copied");
+    }, 1800);
+  }
+
+  function fallback(text) {
+    var ta = document.createElement("textarea");
+    ta.value = text;
+    ta.setAttribute("readonly", "");
+    ta.style.position = "fixed";
+    ta.style.opacity = "0";
+    document.body.appendChild(ta);
+    ta.select();
+    var ok = false;
+    try { ok = document.execCommand("copy"); } catch (e) { ok = false; }
+    ta.remove();
+    return ok;
+  }
+
+  btn.addEventListener("click", function () {
+    var text = (head.textContent || "").trim();
+    if (!text) return done(false);
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(
+        function () { done(true); },
+        function () { done(fallback(text)); }
+      );
+    } else {
+      done(fallback(text));
+    }
+  });
+})();
