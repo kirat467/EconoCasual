@@ -241,6 +241,30 @@
     </div>
   </section>
 
+  <section class="wrap predict" id="causal" aria-labelledby="causal-title">
+    <div class="sec-head">
+      <h2 id="causal-title">Causal model results</h2>
+      <p>Who a discount actually changes, from the Double ML model. Needs the model API: set <code>apiBase</code> in <code>config.js</code>.</p>
+    </div>
+    <div id="causalDrift"></div>
+    <div class="causal-grid">
+      <div class="causal-card">
+        <h3>Uplift curve</h3>
+        <div id="causalQini"></div>
+        <p class="source" id="causalQiniNote"></p>
+      </div>
+      <div class="causal-card">
+        <h3>Budget optimizer</h3>
+        <div class="causal-row">
+          <label>Budget ($) <input id="causalBudget" type="number" min="1" step="500" value="5000"></label>
+          <button type="button" id="causalGo">Optimize</button>
+        </div>
+        <p id="causalSummary" class="source"></p>
+        <table class="causal-table"><thead><tr><th>Customer</th><th>Coupon</th><th>Cautious uplift</th></tr></thead><tbody id="causalRows"></tbody></table>
+      </div>
+    </div>
+  </section>
+
   <section class="wrap records" id="customers" aria-labelledby="rec-title">
     <div class="rec-head">
       <div class="sec-head">
@@ -370,6 +394,7 @@
 <script src="config.js"></script>
 <script src="script.js"></script>
 <script src="budget.js"></script>
+<script src="model-views.js"></script>
 <script>(function(){var h=document.querySelector(".site-header");if(!h)return;function f(){h.classList.toggle("scrolled",window.scrollY>8)}addEventListener("scroll",f,{passive:true});f()})()</script>
 </body>
 </html>
