@@ -23,7 +23,10 @@ def generate_purchase_insights():
         "purchase",
     ]
 
-    missing = [column for column in required_columns if column not in df.columns]
+    missing = [
+        column for column in required_columns
+        if column not in df.columns
+    ]
 
     if missing:
         raise ValueError(f"Missing required columns: {missing}")
@@ -31,18 +34,37 @@ def generate_purchase_insights():
     if df.empty:
         raise ValueError("Customer dataset is empty.")
 
-    for column in ["previous_purchases", "engagement", "discount", "purchase"]:
+    numeric_columns = [
+        "previous_purchases",
+        "engagement",
+        "discount",
+        "purchase",
+    ]
+
+    for column in numeric_columns:
         df[column] = pd.to_numeric(df[column], errors="raise")
 
     if df[required_columns].isna().any().any():
-        raise ValueError("Dataset contains missing values in required columns.")
+        raise ValueError(
+            "Dataset contains missing values in required columns."
+        )
 
     if not df["purchase"].isin([0, 1]).all():
         raise ValueError("Purchase values must be 0 or 1.")
 
+    if not df["discount"].isin([0, 1]).all():
+        raise ValueError("Discount values must be 0 or 1.")
+
+    if not df["previous_purchases"].ge(0).all():
+        raise ValueError("Previous purchases must be non-negative.")
+
+    if not df["previous_purchases"].mod(1).eq(0).all():
+        raise ValueError("Previous purchases must be whole numbers.")
+
     total_customers = len(df)
     total_purchases = int(df["purchase"].sum())
     non_purchases = total_customers - total_purchases
+
     purchase_rate = total_purchases / total_customers * 100
 
     history_summary = (
@@ -50,6 +72,7 @@ def generate_purchase_insights():
         .agg(["count", "sum", "mean"])
         .reset_index()
     )
+
     history_summary["purchase_rate_percent"] = (
         history_summary["mean"] * 100
     ).round(2)
@@ -59,6 +82,7 @@ def generate_purchase_insights():
         .agg(["count", "sum", "mean"])
         .reset_index()
     )
+
     engagement_summary["purchase_rate_percent"] = (
         engagement_summary["mean"] * 100
     ).round(2)
@@ -68,10 +92,12 @@ def generate_purchase_insights():
         .agg(["count", "sum", "mean"])
         .reset_index()
     )
+
     discount_summary["discount_group"] = discount_summary["discount"].map({
         0: "No Discount",
         1: "Discount",
     })
+
     discount_summary["purchase_rate_percent"] = (
         discount_summary["mean"] * 100
     ).round(2)
@@ -80,6 +106,7 @@ def generate_purchase_insights():
         "| Previous purchases | Customers | Purchases | Purchase rate (%) |",
         "|---:|---:|---:|---:|",
     ]
+
     for _, row in history_summary.iterrows():
         history_lines.append(
             f"| {row['previous_purchases']} | {int(row['count'])} | "
@@ -90,6 +117,7 @@ def generate_purchase_insights():
         "| Engagement | Customers | Purchases | Purchase rate (%) |",
         "|---:|---:|---:|---:|",
     ]
+
     for _, row in engagement_summary.iterrows():
         engagement_lines.append(
             f"| {row['engagement']} | {int(row['count'])} | "
@@ -100,6 +128,7 @@ def generate_purchase_insights():
         "| Group | Customers | Purchases | Purchase rate (%) |",
         "|---|---:|---:|---:|",
     ]
+
     for _, row in discount_summary.iterrows():
         discount_lines.append(
             f"| {row['discount_group']} | {int(row['count'])} | "
@@ -139,9 +168,11 @@ def generate_purchase_insights():
 - Compare these findings with the purchase-prediction model.
 - Evaluate model performance using suitable metrics.
 - Integrate the analysis outputs during the planned final integration phase.
+
 """
 
     REPORT_DIR.mkdir(parents=True, exist_ok=True)
+
     OUTPUT_FILE.write_text(report, encoding="utf-8")
 
     print("Customer purchase insights report generated successfully!")
