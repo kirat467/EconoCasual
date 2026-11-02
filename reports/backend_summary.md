@@ -61,9 +61,11 @@ EconoCasual customer dataset.
 
 These results describe the available dataset and do not prove that
 discounts, engagement, or previous purchases cause customers to buy.
+
 Further analysis and model validation are needed before making predictions.
 
 ## 8. Conclusion
 
 This report brings together the main descriptive statistics for
 EconoCasual customer purchasing behaviour.
+

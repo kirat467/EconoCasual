@@ -1,0 +1,28 @@
+==============================================================================
+PART A: DoWhy refuters ($10 discount vs none, linear backdoor estimator)
+==============================================================================
+Estimated effect: +0.0414   (true effect for treated customers: +0.0345)
+
+                                    test                            what we expect original new effect  p-value
+                       Placebo treatment                            new effect ~ 0  +0.0414    +0.0018     0.88
+                     Random common cause                     new effect ~ original  +0.0414    +0.0414     0.90
+                       Data subset (80%)                     new effect ~ original  +0.0414    +0.0397     0.86
+Unobserved cause (outcome strength 0.02) shrinks as the hidden cause gets stronger  +0.0414    +0.0433      NaN
+ Unobserved cause (outcome strength 0.1) shrinks as the hidden cause gets stronger  +0.0414    +0.0157      NaN
+ Unobserved cause (outcome strength 0.5) shrinks as the hidden cause gets stronger  +0.0414    -0.0293      NaN
+
+==============================================================================
+PART B: refutation of our from-scratch Double ML (all customers)
+==============================================================================
+Original: mean ITE of a $10 discount = +0.0283  (true mean +0.0371; correlation with truth 0.908)
+
+                                 test        expected              result                                                                comparison passed
+Placebo treatment (shuffled discount)        mean ~ 0 -0.0011 (sd 0.0070) original +0.0283 is 4.1 placebo-SDs from 0; 0 of 15 placebo runs as large   PASS
+ Random common cause (+ noise column) mean ~ original +0.0272 (sd 0.0019)                                                             shift -0.0012   PASS
+             Data subset (random 80%) mean ~ original +0.0275 (sd 0.0053)                                                             shift -0.0008   PASS
+
+Sensitivity check: what if we 'forget' a real confounder? (this SHOULD make the estimate worse)
+             features used  mean ITE  corr with truth  RMSE vs truth
+                  all four    0.0283            0.908         0.0309
+without previous_purchases   -0.0229            0.937         0.0650
+        without engagement    0.0396            0.826         0.0340

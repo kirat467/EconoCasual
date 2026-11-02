@@ -1,0 +1,6 @@
+# Minimal packages to RUN the model API (no model training). Used by the Dockerfile.
+flask
+gunicorn
+numpy
+pandas
+scipy
