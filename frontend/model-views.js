@@ -36,16 +36,50 @@
     } catch (e) { $("causalSummary").textContent = "Could not optimize: " + e.message; }
   }
 
+
+  /* ---- Individual treatment effects: all customers, with a segment filter and sorting ---- */
+  let ite = [], sortKey = "ite", sortDir = -1;
+  function mountIteCard() {
+    const grid = document.querySelector("#causal .causal-grid");
+    const card = document.createElement("div");
+    card.className = "causal-card causal-wide";
+    card.innerHTML = `<h3>Individual effects (ITE)</h3>
+      <p class="source">The estimated change in each customer's purchase chance from a $10 discount, with a 95% range.</p>
+      <div class="causal-row">
+        <label>Segment <select id="iteSeg"><option value="">All</option><option value="persuadable">Persuadable</option><option value="sure_thing">Sure thing</option><option value="lost_cause">Lost cause</option><option value="sleeping_dog">Sleeping dog</option></select></label>
+        <span class="source" id="iteCount"></span>
+      </div>
+      <div class="causal-kpis" id="iteKpis"></div>
+      <table class="causal-table"><thead><tr>
+        <th data-k="customer_id">Customer</th><th data-k="baseline_prob">Buys anyway</th><th data-k="ite">Effect</th><th data-k="ci_lower">Low</th><th data-k="ci_upper">High</th><th data-k="segment">Segment</th>
+      </tr></thead><tbody id="iteRows"></tbody></table>
+      <p class="source">Click a column title to sort. Showing the first 15 matching customers.</p>`;
+    grid.appendChild(card);
+    $("iteSeg").addEventListener("change", renderIte);
+    card.querySelectorAll("th[data-k]").forEach((th) => th.addEventListener("click", () => {
+      sortDir = th.dataset.k === sortKey ? -sortDir : -1; sortKey = th.dataset.k; renderIte(); }));
+  }
+  function renderIte() {
+    const seg = $("iteSeg").value;
+    const rows = ite.filter((c) => !seg || c.segment === seg).sort((a, b) => (a[sortKey] > b[sortKey] ? 1 : -1) * sortDir);
+    $("iteCount").textContent = `${rows.length.toLocaleString()} of ${ite.length.toLocaleString()} customers`;
+    $("iteRows").innerHTML = rows.slice(0, 15).map((c) => `<tr><td>${c.customer_id}</td><td>${(c.baseline_prob * 100).toFixed(1)}%</td><td>${pts(c.ite)}</td><td>${pts(c.ci_lower)}</td><td>${pts(c.ci_upper)}</td><td>${c.segment.replace("_", " ")}</td></tr>`).join("");
+  }
+
   async function load() {
     try {
-      const [curve, drift] = await Promise.all([get("/api/uplift-curve"), get("/api/drift")]);
+      const [curve, drift, all] = await Promise.all([get("/api/uplift-curve"), get("/api/drift"), get("/api/ite")]);
       drawQini(curve);
+      ite = all.customers;
+      $("iteKpis").innerHTML = Object.entries(all.segment_counts).map(([k, v]) => `<span class="causal-kpi"><strong>${v}</strong> ${k.replace("_", " ")}</span>`).join("");
+      renderIte();
       const bad = drift.features.filter((f) => f.drift).map((f) => f.name);
       $("causalDrift").innerHTML = drift.drift_detected
         ? `<p class="causal-warn"><strong>Data drift detected</strong> in ${bad.join(", ")}. The model's estimates may no longer be reliable. <em>(Example result: until there is a live data feed, the API returns a simulated shift.)</em></p>` : "";
       await optimize();
     } catch (e) { $("causalSummary").textContent = "Could not reach the model API: " + e.message; }
   }
+  mountIteCard();
   $("causalGo").addEventListener("click", optimize);
   load();
 })();
