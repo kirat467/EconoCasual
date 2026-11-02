@@ -77,7 +77,9 @@ class TestPurchaseSegmentSummary(unittest.TestCase):
     def test_total_purchases_are_correct(self):
         result = analysis.generate_purchase_segment_summary()
 
-        purchases = result.set_index("purchase_segment")["total_purchases"]
+        purchases = result.set_index("purchase_segment")[
+            "total_purchases"
+        ]
 
         self.assertEqual(purchases["Low"], 1)
         self.assertEqual(purchases["Medium"], 1)
@@ -151,10 +153,14 @@ class TestPurchaseSegmentSummary(unittest.TestCase):
         result = analysis.generate_purchase_segment_summary()
 
         saved_result = pd.read_csv(self.output_file)
-
         expected_result = result.copy()
+
+        saved_result["purchase_segment"] = (
+            saved_result["purchase_segment"].astype("string")
+        )
+
         expected_result["purchase_segment"] = (
-            expected_result["purchase_segment"].astype(str)
+            expected_result["purchase_segment"].astype("string")
         )
 
         pd.testing.assert_frame_equal(
@@ -212,6 +218,7 @@ class TestPurchaseSegmentSummary(unittest.TestCase):
         )
 
         invalid_data.loc[0, "previous_purchases"] = "invalid"
+
         invalid_data.to_csv(self.data_file, index=False)
 
         with self.assertRaises(ValueError):
@@ -244,4 +251,3 @@ class TestPurchaseSegmentSummary(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)
-
