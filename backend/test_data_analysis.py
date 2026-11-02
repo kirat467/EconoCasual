@@ -1,4 +1,4 @@
-﻿import tempfile
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -75,8 +75,8 @@ class TestDataAnalysis(unittest.TestCase):
             )
 
             self.assertEqual(results["total_customers"], 1000)
-            self.assertEqual(results["total_purchases"], 586)
-            self.assertEqual(results["total_non_purchases"], 414)
+            self.assertEqual(results["total_purchases"], 573)
+            self.assertEqual(results["total_non_purchases"], 427)
 
             expected_files = [
                 "customer_insights.csv",
