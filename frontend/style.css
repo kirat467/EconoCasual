@@ -766,3 +766,13 @@ tbody tr:hover { background: var(--teal-soft); }
 .cq-legend { font-size: 13px; color: var(--ink-3); margin: 4px 0 0; }
 .cq-key { display: inline-block; width: 18px; height: 3px; margin: 0 5px 3px 10px; vertical-align: middle; }
 .cq-model-key { background: var(--teal); } .cq-random-key { background: var(--ink-3); }
+
+.causal-wide { grid-column: 1 / -1; }
+.causal-card select { padding: 6px 10px; border: 1px solid var(--rule); border-radius: 8px; background: var(--paper); }
+.causal-kpis { display: flex; gap: 10px; flex-wrap: wrap; margin: 6px 0 10px; }
+.causal-kpi { border: 1px solid var(--rule); border-radius: 10px; padding: 4px 12px; font-size: 14px; color: var(--ink-2); }
+.causal-table th[data-k] { cursor: pointer; }
+.causal-table td:last-child, .causal-table th:last-child { text-align: left; }
+.causal-grid > * { min-width: 0; }
+.causal-card { overflow-x: auto; }
+.causal-card .causal-table { min-width: 420px; }
