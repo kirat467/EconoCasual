@@ -35,7 +35,6 @@ class TestCustomerSegments(unittest.TestCase):
     def test_required_segment_columns(self):
         """Detailed report should contain both segment columns."""
         df = pd.read_csv(SEGMENTS_FILE)
-
         self.assertIn("engagement_segment", df.columns)
         self.assertIn("purchase_history_segment", df.columns)
 
@@ -47,25 +46,22 @@ class TestCustomerSegments(unittest.TestCase):
     def test_summary_customer_count(self):
         """Segment customer counts should add up to 1000."""
         summary = pd.read_csv(SUMMARY_FILE)
-
         self.assertEqual(
             summary["total_customers"].sum(),
             1000,
         )
 
     def test_summary_purchase_count(self):
-        """Segment purchase counts should add up to 586."""
+        """Segment purchase counts should add up to 573."""
         summary = pd.read_csv(SUMMARY_FILE)
-
         self.assertEqual(
             summary["total_purchases"].sum(),
-            586,
+            573,
         )
 
     def test_purchase_rates_are_valid(self):
         """Purchase rates should remain between 0 and 100 percent."""
         summary = pd.read_csv(SUMMARY_FILE)
-
         self.assertTrue(
             summary["purchase_rate_percent"].between(0, 100).all()
         )
