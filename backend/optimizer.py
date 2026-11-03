@@ -60,8 +60,8 @@ FEATURES = ["previous_purchases", "engagement", "price_sensitivity", "age"]
 
 
 # --------------------------------------------------------------------------------
-def fit_effects(train, test):
-    """Multi-treatment Double ML: effect (and 95% interval) of $10 and $20 vs none."""
+def fit_model(train):
+    """Multi-treatment Double ML ($0 / $10 / $20), fitted on the training customers."""
     nuisance = dict(n_estimators=200, learning_rate=0.05, num_leaves=8,
                     min_child_samples=30, random_state=0, verbose=-1)
     model = LinearDML(
@@ -72,6 +72,12 @@ def fit_effects(train, test):
         cv=5, random_state=0,
     )
     model.fit(train.purchase.values, train.discount.values, X=train[FEATURES].values)
+    return model
+
+
+def fit_effects(train, test):
+    """Effect (and 95% interval) of $10 and $20 vs none, for the test customers."""
+    model = fit_model(train)
     X = test[FEATURES].values
     tau, lo = {}, {}
     for d in DISCOUNTS:

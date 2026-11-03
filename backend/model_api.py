@@ -24,12 +24,14 @@ import pandas as pd
 from flask import Blueprint, Flask, jsonify, request
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+import predictor  # noqa: E402
 from drift import FEATURES, detect_drift  # noqa: E402
 from optimizer_core import DISCOUNTS, build_response  # noqa: E402
 
 DOCS = Path(__file__).resolve().parent.parent / "docs"
 SEGMENTS = {"persuadable", "sleeping_dog", "sure_thing", "lost_cause"}
 
+MAX_PREDICT_ROWS = 1000
 MIN_DRIFT_ROWS = 50   # fewer rows than this makes the statistical tests unreliable
 
 model_api = Blueprint("model_api", __name__)
@@ -156,9 +158,45 @@ def drift():
     return jsonify(detect_drift(reference, new))
 
 
+@model_api.route("/api/predict", methods=["POST"])
+def predict():
+    """Score NEW customers with the causal model.
+
+    Body: one customer {"previous_purchases": 3, "engagement": 7, "price_sensitivity": 0.4, "age": 35}
+    or {"customers": [ ...up to 1000 of those... ]}.
+    """
+    if predictor.load() is None:
+        return _missing("predict_model.json", "run python backend/export_predict_model.py")
+
+    body = request.get_json(silent=True)
+    if isinstance(body, dict) and "customers" in body:
+        rows, single = body["customers"], False
+    elif isinstance(body, dict):
+        rows, single = [body], True
+    else:
+        return jsonify({"error": "send a customer object or {\"customers\": [...]}"}), 400
+    if not isinstance(rows, list) or not 1 <= len(rows) <= MAX_PREDICT_ROWS:
+        return jsonify({"error": f"send between 1 and {MAX_PREDICT_ROWS} customers"}), 400
+
+    clean = []
+    for n, row in enumerate(rows, start=1):
+        try:
+            values = {f: float(row[f]) for f in FEATURES}
+        except (KeyError, TypeError, ValueError):
+            return jsonify({"error": f"customer {n} needs numeric values for {FEATURES}"}), 400
+        if not all(np.isfinite(v) for v in values.values()):
+            return jsonify({"error": f"customer {n} has a value that is not a finite number"}), 400
+        clean.append(values)
+
+    results = predictor.predict(clean)
+    for row, res in zip(clean, results):
+        res["features"] = row
+    return jsonify(results[0] if single else {"n": len(results), "customers": results})
+
+
 @model_api.route("/api/health")
 def health():
-    files = ["sample_ite.json", "sample_uplift_curve.json", "optimizer_effects.json", "sample_drift.json", "drift_reference.json"]
+    files = ["sample_ite.json", "sample_uplift_curve.json", "optimizer_effects.json", "sample_drift.json", "drift_reference.json", "predict_model.json"]
     return jsonify({"status": "ok", "files": {f: (DOCS / f).exists() for f in files}})
 
 
