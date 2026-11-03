@@ -27,6 +27,7 @@ Writes `data/customers_causal.csv` (5,000 customers, a $0/$10/$20 discount level
 | `python backend/casual_model.py` | Double ML (ours and EconML) vs a predictive baseline | about 30 s |
 | `python backend/propensity.py` | Propensity matching, balance table, two figures in `backend/figures/` | about 1 min |
 | `python backend/refutation.py` | DoWhy and Double ML refutation tests | about 40 s |
+| `python backend/export_predict_model.py` | Saves the trained model as plain numbers (`docs/predict_model.json`) so the API can score new customers | about 30 s |
 | `python backend/export_sample_json.py` | Writes `docs/sample_ite.json` and `docs/sample_uplift_curve.json` for the frontend | about 30 s |
 
 ## 4. Week 3 script
@@ -47,7 +48,7 @@ To connect the dashboard, set `window.ECONO_CONFIG = { apiBase: "http://localhos
 ```bash
 python backend/model_api.py                      # development, http://localhost:8000
 ```
-Needs `docs/optimizer_effects.json` and `docs/drift_reference.json`, which come from `python backend/optimizer.py --export` and `python backend/drift.py --export`. Check `http://localhost:8000/api/health`: every file should say `true`.
+Needs `docs/optimizer_effects.json`, `docs/drift_reference.json` and `docs/predict_model.json`, which come from `python backend/optimizer.py --export`, `python backend/drift.py --export` and `python backend/export_predict_model.py`. Check `http://localhost:8000/api/health`: every file should say `true`.
 
 **See it in a browser.** With the API running, open `docs/api_demo.html` (double-click it). It shows the uplift curve, the ITE table with a segment filter and sorting, the optimizer with a budget box, and the drift banner. It is a reference for the dashboard, not the dashboard itself.
 
@@ -56,7 +57,7 @@ Needs `docs/optimizer_effects.json` and `docs/drift_reference.json`, which come 
 docker build -f backend/Dockerfile -t econocausal-api .
 docker run -p 8000:8000 econocausal-api
 ```
-It installs only `backend/requirements-api.txt` (no model-training libraries), so the image stays small.
+It installs only `backend/requirements-api.txt` (no EconML or other training libraries), so the image stays small.
 
 ## Where things are
 | Folder | Contents |
