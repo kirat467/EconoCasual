@@ -103,6 +103,54 @@ def test_live_drift_rejects_bad_input():
     assert client.post("/api/drift", json={"customers": missing}).status_code == 400
 
 
+def _check_rows():
+    import json
+    from model_api import DOCS
+    return json.loads((DOCS / "predict_model.json").read_text())["check_rows"]
+
+
+def test_predict_matches_the_trained_model_for_known_customers():
+    for case in _check_rows():
+        got = client.post("/api/predict", json=case["features"]).get_json()
+        exp = case["expected"]
+        assert abs(got["baseline_prob"] - exp["baseline_prob"]) < 1e-4
+        for coupon in ("10", "20"):
+            for field in ("effect", "ci_lower", "ci_upper"):
+                assert abs(got["coupons"][coupon][field] - exp[coupon][field]) < 1e-4
+
+
+def test_predict_accepts_a_list_and_returns_the_expected_fields():
+    rows = [c["features"] for c in _check_rows()]
+    body = client.post("/api/predict", json={"customers": rows}).get_json()
+    assert body["n"] == len(rows)
+    first = body["customers"][0]
+    assert {"baseline_prob", "coupons", "segment", "suggested_coupon", "outside_training_range", "features"} <= set(first)
+    assert first["segment"] in {"persuadable", "sleeping_dog", "sure_thing", "lost_cause"}
+    assert first["suggested_coupon"] in (0, 10, 20)
+
+
+def test_predict_never_suggests_a_coupon_that_is_not_clearly_positive():
+    rows = [c["features"] for c in _check_rows()]
+    for res in client.post("/api/predict", json={"customers": rows}).get_json()["customers"]:
+        if res["suggested_coupon"]:
+            assert res["coupons"][str(res["suggested_coupon"])]["ci_lower"] > 0
+
+
+def test_predict_flags_values_outside_the_training_range():
+    row = dict(_check_rows()[0]["features"], age=150)
+    res = client.post("/api/predict", json=row).get_json()
+    assert res["outside_training_range"] == ["age"]
+
+
+def test_predict_rejects_bad_input():
+    good = _check_rows()[0]["features"]
+    assert client.post("/api/predict", json={}).status_code == 400
+    assert client.post("/api/predict", json={"customers": []}).status_code == 400
+    assert client.post("/api/predict", json=dict(good, age="old")).status_code == 400
+    assert client.post("/api/predict", json={k: v for k, v in good.items() if k != "age"}).status_code == 400
+    assert client.post("/api/predict", json={"customers": [good] * 1001}).status_code == 400
+
+
 def test_cors_header_present():
     assert client.get("/api/uplift-curve").headers["Access-Control-Allow-Origin"] == "*"
 

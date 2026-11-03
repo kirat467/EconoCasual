@@ -10,6 +10,7 @@ Until the API exists, build against the sample files in this folder. Their shape
 | `GET /api/customers` | The dashboard's data feed: all 1,000 customers as a plain array (served by `backend/server.py`) | none |
 | `GET /api/ite` | Real model output (Double ML) | `docs/sample_ite.json` |
 | `GET /api/uplift-curve` | Real model output (Double ML) | `docs/sample_uplift_curve.json` |
+| `POST /api/predict` | Scores NEW customers with the trained model (live) | none: send a customer, get the answer |
 | `POST /api/optimize` | Real optimizer output (Week 3, `backend/optimizer.py`) | `docs/sample_optimize.json` |
 | `GET /api/drift` and `POST /api/drift` | Real detector output (`backend/drift.py`). GET returns a stored **simulated** shift; POST checks the customers you send | `docs/sample_drift.json` |
 
@@ -76,6 +77,39 @@ A Qini curve: cumulative extra purchases caused, when customers are targeted bes
 Plot `model` and `random` as two lines on one chart. The further the model line sits above the random line, the better the targeting. `qini_coefficient` is the area between them. (The real file has 21 points; the example above shows the first three.)
 
 Heads-up: the model curve rises, peaks around 80% of customers, then falls back to the random line at 100%. That is expected, because the last customers it ranks are the ones the discount hurts.
+
+## `POST /api/predict`
+
+Scores a customer the model has never seen. Send one customer, or up to 1,000 at once.
+
+Request (one customer):
+```json
+{ "previous_purchases": 2, "engagement": 8, "price_sensitivity": 0.3, "age": 29 }
+```
+or `{ "customers": [ {...}, {...} ] }` for several.
+
+Response for one customer (real output from the saved model):
+```json
+{
+  "baseline_prob": 0.6912,
+  "coupons": {
+    "10": {"effect": -0.0054, "ci_lower": -0.1097, "ci_upper": 0.0988},
+    "20": {"effect": -0.0503, "ci_lower": -0.1522, "ci_upper": 0.0516}
+  },
+  "segment": "sure_thing",
+  "suggested_coupon": 0,
+  "outside_training_range": [],
+  "features": {"previous_purchases": 2.0, "engagement": 8.0, "price_sensitivity": 0.3, "age": 29.0}
+}
+```
+For several customers the response is `{"n": 2, "customers": [ ...one result each... ]}`.
+
+- `baseline_prob` is the chance of buying with no discount. `coupons` gives the estimated change in purchase probability from a $10 and from a $20 coupon, with a 95% interval.
+- `segment` uses the same rule as `/api/ite`, based on the $10 interval.
+- `suggested_coupon` is the coupon with the best **cautious** effect (lower bound) when that is above zero, otherwise `0` (no coupon). It ignores any budget; use `/api/optimize` for budgeted allocation.
+- `outside_training_range` lists any inputs outside what the model was trained on (for example an age of 150). The model extrapolates there, so treat such answers as unreliable.
+- Missing or non-numeric values, an empty list, or more than 1,000 customers return HTTP 400 with an `error` message.
+- This model is the same one the optimizer uses ($0 / $10 / $20 treated separately). `/api/ite` comes from an earlier simpler model that treats the discount as a continuous amount, so its numbers for the same customer can differ a little.
 
 ## `POST /api/optimize`
 
