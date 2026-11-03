@@ -1,25 +1,37 @@
-# Backend contract (what the frontend expects)
+# Backend data contract
 
-The frontend works without a backend (sample data). To connect one, set `apiBase` in `config.js`.
+The dashboard reads customers from one endpoint. Set `apiBase` in `config.js` to turn it on.
 
-## GET /api/customers
-Returns a JSON array. Each item:
+## Request
+`GET {apiBase}/api/customers`
+Header: `Accept: application/json`
 
-| Field | Type | Rule |
-|---|---|---|
-| `customer_id` | any | ignored; the frontend numbers rows 1..n |
-| `previous_purchases` | integer | 0 or more |
-| `engagement` | integer | 0 to 10 |
-| `discount` | 0 or 1 | 1 = offered a discount |
-| `purchase` | 0 or 1 | 1 = bought |
+The first request may take up to 60 seconds while a free-tier server wakes up. After that the dashboard shows a "Try again" button.
+
+## Response
+A JSON array. Each item is one customer.
+
+| Field | Type | Required | Rules |
+|---|---|---|---|
+| `previous_purchases` | number | yes | whole number, 0 to 10 |
+| `engagement` | number | yes | whole number, 0 to 10 |
+| `discount` | number | yes | `0` (no discount) or `1` (discount offered) |
+| `purchase` | number | yes | `0` (did not buy) or `1` (bought) |
+| `ite` | number | no | estimated change in purchase probability, for example `0.08` for +8 points |
+| `recommended_discount` | number | no | discount in rupees chosen by the backend optimiser, `0` means none |
+
+Example:
 
 ```json
-[{ "customer_id": 1, "previous_purchases": 3, "engagement": 7, "discount": 1, "purchase": 1 }]
+[
+  { "previous_purchases": 3, "engagement": 7, "discount": 1, "purchase": 1, "ite": 0.08, "recommended_discount": 500 },
+  { "previous_purchases": 0, "engagement": 2, "discount": 0, "purchase": 0 }
+]
 ```
-Invalid rows are skipped and counted in the Data quality panel.
 
-## CORS
-The server must allow the frontend's origin (`Access-Control-Allow-Origin`), otherwise the browser blocks the request and the dashboard falls back to sample data.
-
-## Planned endpoints (not used yet)
-- `POST /api/predict` with `{engagement, previous_purchases, discount}` returning `{probability}`, to move the model server-side.
+## Notes
+- Rows that break a rule are skipped and counted in the Data quality panel.
+- At most 5,000 rows are used.
+- `customer_id` is assigned by the dashboard (1, 2, 3, ...) in the order received.
+- Enable CORS for the site that serves the dashboard.
+- All results are descriptive. The API must not claim that a discount caused a purchase.

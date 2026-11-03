@@ -1139,3 +1139,268 @@
   }, { threshold: 0.35 });
   els.forEach(function (e) { io.observe(e); });
 })();
+/* ===== DAY 1: Back-to-top button ===== */
+(function () {
+  var btn = document.getElementById("toTop");
+  if (!btn) return;
+
+  var reduce = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  function toggle() {
+    var on = window.scrollY > 400;
+    if (on) btn.hidden = false;
+    btn.classList.toggle("show", on);
+    if (!on) {
+      setTimeout(function () {
+        if (window.scrollY <= 400) btn.hidden = true;
+      }, 200);
+    }
+  }
+
+  btn.addEventListener("click", function () {
+    window.scrollTo({ top: 0, behavior: reduce ? "auto" : "smooth" });
+  });
+
+  addEventListener("scroll", toggle, { passive: true });
+  toggle();
+})();
+
+/* ===== DAY 2: Keyboard shortcuts dialog ===== */
+(function () {
+  var dlg = document.getElementById("keysDlg");
+  if (!dlg) return;
+
+  function open() {
+    if (dlg.open) return;
+    if (dlg.showModal) dlg.showModal();
+    else dlg.setAttribute("open", "");
+  }
+  function close() {
+    if (dlg.close) dlg.close();
+    else dlg.removeAttribute("open");
+  }
+  function typing(t) {
+    return !!t && (t.isContentEditable || /^(INPUT|SELECT|TEXTAREA)$/.test(t.tagName));
+  }
+
+  var btn = document.getElementById("keysBtn");
+  if (btn) btn.addEventListener("click", open);
+  var x = document.getElementById("kClose");
+  if (x) x.addEventListener("click", close);
+
+  dlg.addEventListener("click", function (e) { if (e.target === dlg) close(); });
+
+  document.addEventListener("keydown", function (e) {
+    if (e.ctrlKey || e.metaKey || e.altKey || typing(e.target)) return;
+    if (e.key === "?") {
+      e.preventDefault();
+      open();
+    } else if (e.key === "/") {
+      var s = document.getElementById("search");
+      if (!s) return;
+      e.preventDefault();
+      s.scrollIntoView({ block: "center" });
+      s.focus();
+      s.classList.add("flash");
+      setTimeout(function () { s.classList.remove("flash"); }, 900);
+    }
+  });
+})();
+
+/* ===== DAY 3: Compact table rows ===== */
+(function () {
+  var box = document.getElementById("compactRows");
+  var wrap = document.querySelector(".table-scroll[aria-label='Customer records table']");
+  if (!box || !wrap) return;
+
+  var KEY = "ec-compact";
+
+  function apply(on) {
+    wrap.classList.toggle("is-compact", on);
+    box.checked = on;
+  }
+
+  var saved = false;
+  try { saved = localStorage.getItem(KEY) === "1"; } catch (e) { /* storage may be blocked */ }
+  apply(saved);
+
+  box.addEventListener("change", function () {
+    apply(box.checked);
+    try { localStorage.setItem(KEY, box.checked ? "1" : "0"); } catch (e) { /* ignore */ }
+  });
+})();
+
+/* ===== DAY 4: Calm motion mode ===== */
+(function () {
+  var btn = document.getElementById("calmBtn");
+  if (!btn) return;
+
+  var KEY = "ec-calm";
+  var root = document.documentElement;
+
+  function apply(on) {
+    root.classList.toggle("calm", on);
+    btn.setAttribute("aria-pressed", String(on));
+    btn.textContent = on ? "Calm motion: on" : "Calm motion: off";
+  }
+
+  var saved = false;
+  try { saved = localStorage.getItem(KEY) === "1"; } catch (e) { /* storage may be blocked */ }
+  apply(saved);
+
+  btn.addEventListener("click", function () {
+    var on = !root.classList.contains("calm");
+    apply(on);
+    try { localStorage.setItem(KEY, on ? "1" : "0"); } catch (e) { /* ignore */ }
+  });
+})();
+
+/* ===== DAY 5: Print button ===== */
+(function () {
+  var btn = document.getElementById("printBtn");
+  if (!btn) return;
+
+  btn.addEventListener("click", function () {
+    window.print();
+  });
+
+  var original = document.title;
+  window.addEventListener("beforeprint", function () {
+    document.title = "EconoCausal dashboard";
+  });
+  window.addEventListener("afterprint", function () {
+    document.title = original;
+  });
+})();
+
+/* ===== DAY 6: Copy headline button ===== */
+(function () {
+  var btn = document.getElementById("copyHeadline");
+  var head = document.getElementById("headline");
+  if (!btn || !head) return;
+
+  var timer;
+
+  function done(ok) {
+    btn.textContent = ok ? "Copied" : "Copy failed";
+    btn.classList.toggle("copied", ok);
+    clearTimeout(timer);
+    timer = setTimeout(function () {
+      btn.textContent = "Copy headline";
+      btn.classList.remove("copied");
+    }, 1800);
+  }
+
+  function fallback(text) {
+    var ta = document.createElement("textarea");
+    ta.value = text;
+    ta.setAttribute("readonly", "");
+    ta.style.position = "fixed";
+    ta.style.opacity = "0";
+    document.body.appendChild(ta);
+    ta.select();
+    var ok = false;
+    try { ok = document.execCommand("copy"); } catch (e) { ok = false; }
+    ta.remove();
+    return ok;
+  }
+
+  btn.addEventListener("click", function () {
+    var text = (head.textContent || "").trim();
+    if (!text) return done(false);
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(
+        function () { done(true); },
+        function () { done(fallback(text)); }
+      );
+    } else {
+      done(fallback(text));
+    }
+  });
+})();
+
+/* ===== DAY 7: Jump to section menu ===== */
+(function () {
+  var sel = document.getElementById("jumpSel");
+  if (!sel) return;
+
+  function go(id) {
+    var target = document.getElementById(id);
+    if (!target) return;
+    var calm = document.documentElement.classList.contains("calm");
+    var reduce = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+    target.scrollIntoView({ behavior: calm || reduce ? "auto" : "smooth", block: "start" });
+    if (!target.hasAttribute("tabindex")) target.setAttribute("tabindex", "-1");
+    target.focus({ preventScroll: true });
+  }
+
+  sel.addEventListener("change", function () {
+    if (sel.value) go(sel.value);
+    sel.value = "";
+  });
+})();
+
+/* ===== DAY 8: Offline / online badge ===== */
+(function () {
+  var badge = document.getElementById("netBadge");
+  if (!badge) return;
+
+  var timer;
+
+  function show(online) {
+    clearTimeout(timer);
+    badge.hidden = false;
+    badge.classList.toggle("online", online);
+    badge.classList.toggle("offline", !online);
+    badge.textContent = online
+      ? "Back online"
+      : "You are offline. The dashboard still works with the data in your browser.";
+    if (online) {
+      timer = setTimeout(function () { badge.hidden = true; }, 2500);
+    }
+  }
+
+  window.addEventListener("offline", function () { show(false); });
+  window.addEventListener("online", function () { show(true); });
+
+  if (navigator.onLine === false) show(false);
+})();
+
+/* ===== DAY 9: Resume where you left off ===== */
+(function () {
+  var bar = document.getElementById("resumeBar");
+  var go = document.getElementById("resumeGo");
+  var no = document.getElementById("resumeNo");
+  if (!bar || !go || !no) return;
+
+  var KEY = "ec-scroll";
+  var MIN = 600;
+  var saved = 0;
+  var ticking = false;
+
+  try { saved = parseInt(sessionStorage.getItem(KEY), 10) || 0; } catch (e) { saved = 0; }
+
+  function save() {
+    try { sessionStorage.setItem(KEY, String(Math.round(window.scrollY))); } catch (e) { /* ignore */ }
+  }
+  function hide() { bar.hidden = true; }
+
+  if (saved > MIN && window.scrollY < 100) {
+    bar.hidden = false;
+    setTimeout(hide, 12000);
+  }
+
+  go.addEventListener("click", function () {
+    var calm = document.documentElement.classList.contains("calm");
+    window.scrollTo({ top: saved, behavior: calm ? "auto" : "smooth" });
+    hide();
+  });
+  no.addEventListener("click", hide);
+
+  addEventListener("scroll", function () {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(function () { save(); ticking = false; });
+  }, { passive: true });
+  addEventListener("pagehide", save);
+})();

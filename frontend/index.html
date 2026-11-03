@@ -52,11 +52,24 @@
 </header>
 
 <main id="top">
+  <nav class="wrap jump-nav" aria-label="Jump to section">
+    <label for="jumpSel">Jump to</label>
+    <select id="jumpSel">
+      <option value="">Choose a section…</option>
+      <option value="summary">Summary</option>
+      <option value="predict">Try a customer</option>
+      <option value="target">Plan discounts</option>
+      <option value="budget">Budget allocation</option>
+      <option value="customers">Customer records</option>
+      <option value="data-quality">Data quality</option>
+    </select>
+  </nav>
   <section class="wrap hero" id="summary" aria-labelledby="headline">
     <p class="source"><span id="sourceText">Sample data: 1,000 generated customers</span> <button type="button" class="link" id="useSample" hidden>Back to sample data</button></p>
     <p class="api-status" id="apiStatus" role="status" hidden></p>
     <h1 id="headline" class="headline" aria-live="polite">Loading customer sample…</h1>
     <p class="subline" id="subline"></p>
+    <button type="button" class="link" id="copyHeadline" title="Copy the headline above as text">Copy headline</button>
 
     <div class="segments" role="group" aria-label="Customer group">
       <button type="button" class="seg is-on" data-seg="all" aria-pressed="true">All customers <span class="seg-n"></span></button>
@@ -241,30 +254,6 @@
     </div>
   </section>
 
-  <section class="wrap predict" id="causal" aria-labelledby="causal-title">
-    <div class="sec-head">
-      <h2 id="causal-title">Causal model results</h2>
-      <p>Who a discount actually changes, from the Double ML model. Needs the model API: set <code>apiBase</code> in <code>config.js</code>.</p>
-    </div>
-    <div id="causalDrift"></div>
-    <div class="causal-grid">
-      <div class="causal-card">
-        <h3>Uplift curve</h3>
-        <div id="causalQini"></div>
-        <p class="source" id="causalQiniNote"></p>
-      </div>
-      <div class="causal-card">
-        <h3>Budget optimizer</h3>
-        <div class="causal-row">
-          <label>Budget ($) <input id="causalBudget" type="number" min="1" step="500" value="5000"></label>
-          <button type="button" id="causalGo">Optimize</button>
-        </div>
-        <p id="causalSummary" class="source"></p>
-        <table class="causal-table"><thead><tr><th>Customer</th><th>Coupon</th><th>Cautious uplift</th></tr></thead><tbody id="causalRows"></tbody></table>
-      </div>
-    </div>
-  </section>
-
   <section class="wrap records" id="customers" aria-labelledby="rec-title">
     <div class="rec-head">
       <div class="sec-head">
@@ -325,6 +314,10 @@
       <span id="summaryText" aria-live="polite"></span>
       <div class="pager-ctl">
         <button type="button" id="prev">Previous</button>
+        <label class="compact-toggle">
+          <input type="checkbox" id="compactRows">
+          <span>Compact rows</span>
+        </label>
         <label class="page-size">Rows
           <select id="pageSize" aria-label="Rows per page">
             <option value="10">10</option>
@@ -371,6 +364,11 @@
 
 <footer class="site-footer">
   <div class="wrap">
+    <div class="footer-tools">
+      <button class="btn-ghost" id="keysBtn" type="button" aria-haspopup="dialog" title="Keyboard shortcuts (?)" aria-label="Keyboard shortcuts">Shortcuts</button>
+      <button class="btn-ghost" id="calmBtn" type="button" aria-pressed="false" title="Turn page animations off or on">Calm motion: off</button>
+      <button class="btn-ghost" id="printBtn" type="button" title="Print this page or save it as PDF" aria-label="Print this page">Print</button>
+    </div>
     <p>EconoCausal frontend prototype. The default 1,000 records are generated sample data; you can upload your own CSV, which stays in your browser. Records use the fields <code>customer_id</code>, <code>previous_purchases</code>, <code>engagement</code>, <code>discount</code> and <code>purchase</code>. The purchase estimate comes from a small model fitted in the browser; no backend is connected yet.</p>
   </div>
 </footer>
@@ -390,11 +388,36 @@
   </div>
 </dialog>
 <noscript><p class="noscript">This dashboard needs JavaScript to draw its charts and table.</p></noscript>
+<button type="button" id="toTop" class="to-top" aria-label="Back to top" title="Back to top" hidden>
+  <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 19V5"/>
+    <path d="M5 12l7-7 7 7"/>
+  </svg>
+</button>
+<dialog id="keysDlg" aria-labelledby="kTitle">
+  <div class="dlg">
+    <h2 id="kTitle">Keyboard shortcuts</h2>
+    <ul class="k-list">
+      <li><kbd>?</kbd><span>Open this list</span></li>
+      <li><kbd>/</kbd><span>Jump to the customer search box</span></li>
+      <li><kbd>Esc</kbd><span>Close this window</span></li>
+      <li><kbd>←</kbd><kbd>→</kbd><span>Move along the engagement chart (when it is focused)</span></li>
+    </ul>
+    <div class="dlg-actions">
+      <button type="button" class="btn" id="kClose">Close</button>
+    </div>
+  </div>
+</dialog>
+<div id="netBadge" class="net-badge" role="status" aria-live="polite" hidden></div>
+<div id="resumeBar" class="resume-bar" role="region" aria-label="Resume reading" hidden>
+  <span>Continue where you left off?</span>
+  <button type="button" id="resumeGo" class="resume-go">Resume</button>
+  <button type="button" id="resumeNo" class="resume-no" aria-label="Dismiss">Dismiss</button>
+</div>
 <div id="toast" role="status" aria-live="polite"></div>
 <script src="config.js"></script>
 <script src="script.js"></script>
 <script src="budget.js"></script>
-<script src="model-views.js"></script>
 <script>(function(){var h=document.querySelector(".site-header");if(!h)return;function f(){h.classList.toggle("scrolled",window.scrollY>8)}addEventListener("scroll",f,{passive:true});f()})()</script>
 </body>
 </html>
