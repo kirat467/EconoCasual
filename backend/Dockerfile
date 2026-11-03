@@ -9,9 +9,9 @@ COPY backend/requirements-api.txt backend/requirements-api.txt
 RUN pip install --no-cache-dir -r backend/requirements-api.txt
 
 # only what the API needs: the code and the saved model results
-COPY backend/model_api.py backend/optimizer_core.py backend/drift.py backend/
+COPY backend/model_api.py backend/optimizer_core.py backend/drift.py backend/predictor.py backend/
 COPY docs/sample_ite.json docs/sample_uplift_curve.json docs/sample_drift.json \
-     docs/drift_reference.json docs/optimizer_effects.json docs/
+     docs/drift_reference.json docs/optimizer_effects.json docs/predict_model.json docs/
 
 EXPOSE 8000
 CMD ["gunicorn", "--chdir", "backend", "--bind", "0.0.0.0:8000", "--workers", "2", "model_api:create_app()"]
