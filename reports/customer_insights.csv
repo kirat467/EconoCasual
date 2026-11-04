@@ -1,0 +1,1001 @@
+customer_id,previous_purchases,engagement,discount,purchase,customer_segment,customer_risk,loyalty_level
+1,6,1,0,0,Loyal Customers,Moderate Attention Needed,Moderately Loyal
+2,3,8,1,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+3,7,4,1,1,Loyal Customers,Moderate Attention Needed,Highly Loyal
+4,4,4,1,1,Loyal Customers,Moderate Attention Needed,Moderately Loyal
+5,6,5,1,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+6,9,8,1,1,High-Value Customers,Low Attention Needed,Highly Loyal
+7,2,5,1,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+8,6,8,1,0,High-Value Customers,Low Attention Needed,Moderately Loyal
+9,7,10,0,1,High-Value Customers,Low Attention Needed,Highly Loyal
+10,4,1,1,0,Loyal Customers,Moderate Attention Needed,Moderately Loyal
+11,3,10,1,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+12,7,9,0,0,High-Value Customers,Low Attention Needed,Highly Loyal
+13,7,6,0,0,High-Value Customers,Low Attention Needed,Highly Loyal
+14,2,3,1,1,Customers Needing Attention,High Attention Needed,New or Occasional
+15,5,8,1,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+16,4,9,1,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+17,1,6,1,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+18,7,7,1,1,High-Value Customers,Low Attention Needed,Highly Loyal
+19,5,1,1,0,Loyal Customers,Moderate Attention Needed,Moderately Loyal
+20,1,5,1,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+21,4,5,1,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+22,0,10,1,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+23,9,4,0,1,Loyal Customers,Moderate Attention Needed,Highly Loyal
+24,5,6,0,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+25,8,7,1,1,High-Value Customers,Low Attention Needed,Highly Loyal
+26,0,9,1,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+27,9,1,0,1,Loyal Customers,Moderate Attention Needed,Highly Loyal
+28,2,6,1,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+29,6,7,1,0,High-Value Customers,Low Attention Needed,Moderately Loyal
+30,3,3,1,0,Customers Needing Attention,High Attention Needed,New or Occasional
+31,8,8,1,1,High-Value Customers,Low Attention Needed,Highly Loyal
+32,2,5,0,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+33,4,9,1,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+34,2,5,1,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+35,6,9,1,0,High-Value Customers,Low Attention Needed,Moderately Loyal
+36,4,10,1,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+37,8,4,1,1,Loyal Customers,Moderate Attention Needed,Highly Loyal
+38,6,9,0,0,High-Value Customers,Low Attention Needed,Moderately Loyal
+39,1,5,0,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+40,3,10,1,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+41,8,9,1,1,High-Value Customers,Low Attention Needed,Highly Loyal
+42,1,3,1,0,Customers Needing Attention,High Attention Needed,New or Occasional
+43,9,4,1,0,Loyal Customers,Moderate Attention Needed,Highly Loyal
+44,8,9,1,1,High-Value Customers,Low Attention Needed,Highly Loyal
+45,9,10,1,1,High-Value Customers,Low Attention Needed,Highly Loyal
+46,4,6,0,0,High-Value Customers,Low Attention Needed,Moderately Loyal
+47,1,2,1,0,Customers Needing Attention,High Attention Needed,New or Occasional
+48,3,7,1,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+49,6,2,0,0,Loyal Customers,Moderate Attention Needed,Moderately Loyal
+50,7,2,1,1,Loyal Customers,Moderate Attention Needed,Highly Loyal
+51,2,1,1,0,Customers Needing Attention,High Attention Needed,New or Occasional
+52,0,3,0,0,Customers Needing Attention,High Attention Needed,New or Occasional
+53,3,6,0,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+54,1,8,1,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+55,7,9,0,1,High-Value Customers,Low Attention Needed,Highly Loyal
+56,3,7,1,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+57,1,4,1,1,Customers Needing Attention,High Attention Needed,New or Occasional
+58,5,6,0,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+59,5,5,0,0,High-Value Customers,Low Attention Needed,Moderately Loyal
+60,9,8,1,1,High-Value Customers,Low Attention Needed,Highly Loyal
+61,3,1,1,1,Customers Needing Attention,High Attention Needed,New or Occasional
+62,5,1,0,0,Loyal Customers,Moderate Attention Needed,Moderately Loyal
+63,1,6,1,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+64,9,10,1,1,High-Value Customers,Low Attention Needed,Highly Loyal
+65,1,2,1,1,Customers Needing Attention,High Attention Needed,New or Occasional
+66,9,5,0,1,High-Value Customers,Low Attention Needed,Highly Loyal
+67,3,1,1,1,Customers Needing Attention,High Attention Needed,New or Occasional
+68,7,7,1,1,High-Value Customers,Low Attention Needed,Highly Loyal
+69,6,1,0,0,Loyal Customers,Moderate Attention Needed,Moderately Loyal
+70,8,4,0,1,Loyal Customers,Moderate Attention Needed,Highly Loyal
+71,7,9,0,1,High-Value Customers,Low Attention Needed,Highly Loyal
+72,4,1,0,0,Loyal Customers,Moderate Attention Needed,Moderately Loyal
+73,1,4,0,1,Customers Needing Attention,High Attention Needed,New or Occasional
+74,4,6,0,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+75,7,6,1,1,High-Value Customers,Low Attention Needed,Highly Loyal
+76,9,8,1,1,High-Value Customers,Low Attention Needed,Highly Loyal
+77,8,1,0,0,Loyal Customers,Moderate Attention Needed,Highly Loyal
+78,8,7,1,1,High-Value Customers,Low Attention Needed,Highly Loyal
+79,0,1,1,0,Customers Needing Attention,High Attention Needed,New or Occasional
+80,8,7,1,0,High-Value Customers,Low Attention Needed,Highly Loyal
+81,6,3,0,0,Loyal Customers,Moderate Attention Needed,Moderately Loyal
+82,8,8,0,1,High-Value Customers,Low Attention Needed,Highly Loyal
+83,7,3,1,0,Loyal Customers,Moderate Attention Needed,Highly Loyal
+84,0,1,0,0,Customers Needing Attention,High Attention Needed,New or Occasional
+85,7,8,1,1,High-Value Customers,Low Attention Needed,Highly Loyal
+86,7,3,1,1,Loyal Customers,Moderate Attention Needed,Highly Loyal
+87,2,2,1,0,Customers Needing Attention,High Attention Needed,New or Occasional
+88,0,1,1,0,Customers Needing Attention,High Attention Needed,New or Occasional
+89,7,3,1,1,Loyal Customers,Moderate Attention Needed,Highly Loyal
+90,2,2,1,1,Customers Needing Attention,High Attention Needed,New or Occasional
+91,2,2,1,1,Customers Needing Attention,High Attention Needed,New or Occasional
+92,0,6,1,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+93,4,1,0,0,Loyal Customers,Moderate Attention Needed,Moderately Loyal
+94,9,2,1,1,Loyal Customers,Moderate Attention Needed,Highly Loyal
+95,6,6,0,0,High-Value Customers,Low Attention Needed,Moderately Loyal
+96,9,3,1,1,Loyal Customers,Moderate Attention Needed,Highly Loyal
+97,8,4,1,0,Loyal Customers,Moderate Attention Needed,Highly Loyal
+98,6,1,0,1,Loyal Customers,Moderate Attention Needed,Moderately Loyal
+99,8,8,1,1,High-Value Customers,Low Attention Needed,Highly Loyal
+100,7,7,0,0,High-Value Customers,Low Attention Needed,Highly Loyal
+101,1,7,1,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+102,0,3,0,0,Customers Needing Attention,High Attention Needed,New or Occasional
+103,6,10,0,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+104,6,10,1,0,High-Value Customers,Low Attention Needed,Moderately Loyal
+105,7,3,1,1,Loyal Customers,Moderate Attention Needed,Highly Loyal
+106,4,2,0,1,Loyal Customers,Moderate Attention Needed,Moderately Loyal
+107,2,1,0,1,Customers Needing Attention,High Attention Needed,New or Occasional
+108,7,7,1,1,High-Value Customers,Low Attention Needed,Highly Loyal
+109,5,7,1,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+110,2,2,1,1,Customers Needing Attention,High Attention Needed,New or Occasional
+111,0,7,1,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+112,2,8,1,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+113,4,1,1,0,Loyal Customers,Moderate Attention Needed,Moderately Loyal
+114,2,9,1,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+115,0,7,1,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+116,4,3,0,0,Loyal Customers,Moderate Attention Needed,Moderately Loyal
+117,9,8,1,1,High-Value Customers,Low Attention Needed,Highly Loyal
+118,6,7,1,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+119,6,8,0,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+120,8,6,0,1,High-Value Customers,Low Attention Needed,Highly Loyal
+121,9,9,1,1,High-Value Customers,Low Attention Needed,Highly Loyal
+122,9,5,1,1,High-Value Customers,Low Attention Needed,Highly Loyal
+123,2,3,1,0,Customers Needing Attention,High Attention Needed,New or Occasional
+124,6,3,0,1,Loyal Customers,Moderate Attention Needed,Moderately Loyal
+125,0,1,1,0,Customers Needing Attention,High Attention Needed,New or Occasional
+126,3,8,1,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+127,3,2,1,1,Customers Needing Attention,High Attention Needed,New or Occasional
+128,4,3,1,0,Loyal Customers,Moderate Attention Needed,Moderately Loyal
+129,6,8,0,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+130,6,8,0,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+131,3,4,1,0,Customers Needing Attention,High Attention Needed,New or Occasional
+132,6,4,0,0,Loyal Customers,Moderate Attention Needed,Moderately Loyal
+133,2,5,1,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+134,5,6,1,0,High-Value Customers,Low Attention Needed,Moderately Loyal
+135,1,5,0,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+136,9,7,0,1,High-Value Customers,Low Attention Needed,Highly Loyal
+137,8,2,0,1,Loyal Customers,Moderate Attention Needed,Highly Loyal
+138,4,7,0,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+139,5,10,1,0,High-Value Customers,Low Attention Needed,Moderately Loyal
+140,3,7,1,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+141,9,1,0,0,Loyal Customers,Moderate Attention Needed,Highly Loyal
+142,6,7,1,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+143,8,5,0,1,High-Value Customers,Low Attention Needed,Highly Loyal
+144,6,3,0,0,Loyal Customers,Moderate Attention Needed,Moderately Loyal
+145,0,3,1,0,Customers Needing Attention,High Attention Needed,New or Occasional
+146,0,4,0,0,Customers Needing Attention,High Attention Needed,New or Occasional
+147,8,2,1,0,Loyal Customers,Moderate Attention Needed,Highly Loyal
+148,8,2,1,1,Loyal Customers,Moderate Attention Needed,Highly Loyal
+149,3,1,1,0,Customers Needing Attention,High Attention Needed,New or Occasional
+150,8,5,1,1,High-Value Customers,Low Attention Needed,Highly Loyal
+151,2,4,1,1,Customers Needing Attention,High Attention Needed,New or Occasional
+152,6,10,1,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+153,5,2,0,1,Loyal Customers,Moderate Attention Needed,Moderately Loyal
+154,7,3,0,1,Loyal Customers,Moderate Attention Needed,Highly Loyal
+155,8,7,0,1,High-Value Customers,Low Attention Needed,Highly Loyal
+156,4,7,0,0,High-Value Customers,Low Attention Needed,Moderately Loyal
+157,0,4,1,1,Customers Needing Attention,High Attention Needed,New or Occasional
+158,2,5,1,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+159,9,5,0,1,High-Value Customers,Low Attention Needed,Highly Loyal
+160,7,6,0,1,High-Value Customers,Low Attention Needed,Highly Loyal
+161,5,9,1,0,High-Value Customers,Low Attention Needed,Moderately Loyal
+162,7,2,1,1,Loyal Customers,Moderate Attention Needed,Highly Loyal
+163,8,5,0,0,High-Value Customers,Low Attention Needed,Highly Loyal
+164,3,3,0,0,Customers Needing Attention,High Attention Needed,New or Occasional
+165,0,4,1,0,Customers Needing Attention,High Attention Needed,New or Occasional
+166,0,10,0,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+167,9,6,1,0,High-Value Customers,Low Attention Needed,Highly Loyal
+168,3,8,1,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+169,6,1,0,1,Loyal Customers,Moderate Attention Needed,Moderately Loyal
+170,1,10,1,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+171,2,8,1,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+172,0,7,1,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+173,4,1,1,1,Loyal Customers,Moderate Attention Needed,Moderately Loyal
+174,0,2,1,1,Customers Needing Attention,High Attention Needed,New or Occasional
+175,7,3,0,1,Loyal Customers,Moderate Attention Needed,Highly Loyal
+176,0,1,1,0,Customers Needing Attention,High Attention Needed,New or Occasional
+177,0,9,1,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+178,1,8,0,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+179,1,2,1,0,Customers Needing Attention,High Attention Needed,New or Occasional
+180,5,9,1,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+181,6,7,0,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+182,4,9,1,0,High-Value Customers,Low Attention Needed,Moderately Loyal
+183,0,6,0,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+184,0,6,1,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+185,2,4,0,1,Customers Needing Attention,High Attention Needed,New or Occasional
+186,1,10,1,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+187,4,10,1,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+188,9,2,1,1,Loyal Customers,Moderate Attention Needed,Highly Loyal
+189,5,7,0,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+190,6,5,0,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+191,3,6,1,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+192,6,2,0,0,Loyal Customers,Moderate Attention Needed,Moderately Loyal
+193,7,5,1,0,High-Value Customers,Low Attention Needed,Highly Loyal
+194,0,10,1,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+195,5,4,0,0,Loyal Customers,Moderate Attention Needed,Moderately Loyal
+196,7,9,0,0,High-Value Customers,Low Attention Needed,Highly Loyal
+197,4,6,1,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+198,3,2,1,0,Customers Needing Attention,High Attention Needed,New or Occasional
+199,1,1,1,0,Customers Needing Attention,High Attention Needed,New or Occasional
+200,5,5,1,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+201,5,9,0,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+202,0,6,1,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+203,8,10,0,1,High-Value Customers,Low Attention Needed,Highly Loyal
+204,5,7,1,0,High-Value Customers,Low Attention Needed,Moderately Loyal
+205,2,5,0,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+206,3,10,1,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+207,3,6,1,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+208,2,5,1,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+209,9,9,0,1,High-Value Customers,Low Attention Needed,Highly Loyal
+210,2,6,1,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+211,2,8,0,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+212,3,2,1,0,Customers Needing Attention,High Attention Needed,New or Occasional
+213,6,9,1,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+214,3,5,1,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+215,8,7,0,1,High-Value Customers,Low Attention Needed,Highly Loyal
+216,0,10,1,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+217,7,1,1,1,Loyal Customers,Moderate Attention Needed,Highly Loyal
+218,6,10,0,0,High-Value Customers,Low Attention Needed,Moderately Loyal
+219,1,5,0,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+220,7,10,0,1,High-Value Customers,Low Attention Needed,Highly Loyal
+221,0,2,1,1,Customers Needing Attention,High Attention Needed,New or Occasional
+222,8,6,0,0,High-Value Customers,Low Attention Needed,Highly Loyal
+223,8,1,0,1,Loyal Customers,Moderate Attention Needed,Highly Loyal
+224,1,3,0,0,Customers Needing Attention,High Attention Needed,New or Occasional
+225,6,5,1,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+226,9,4,0,0,Loyal Customers,Moderate Attention Needed,Highly Loyal
+227,2,3,1,1,Customers Needing Attention,High Attention Needed,New or Occasional
+228,6,10,1,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+229,9,5,1,1,High-Value Customers,Low Attention Needed,Highly Loyal
+230,8,8,0,1,High-Value Customers,Low Attention Needed,Highly Loyal
+231,3,4,1,0,Customers Needing Attention,High Attention Needed,New or Occasional
+232,0,1,0,0,Customers Needing Attention,High Attention Needed,New or Occasional
+233,1,7,1,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+234,0,8,1,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+235,4,3,1,0,Loyal Customers,Moderate Attention Needed,Moderately Loyal
+236,4,6,1,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+237,6,2,0,1,Loyal Customers,Moderate Attention Needed,Moderately Loyal
+238,8,7,1,1,High-Value Customers,Low Attention Needed,Highly Loyal
+239,8,8,1,1,High-Value Customers,Low Attention Needed,Highly Loyal
+240,2,6,0,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+241,2,6,1,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+242,2,5,1,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+243,3,8,1,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+244,7,1,0,1,Loyal Customers,Moderate Attention Needed,Highly Loyal
+245,5,10,1,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+246,7,4,1,0,Loyal Customers,Moderate Attention Needed,Highly Loyal
+247,0,4,1,0,Customers Needing Attention,High Attention Needed,New or Occasional
+248,7,3,1,0,Loyal Customers,Moderate Attention Needed,Highly Loyal
+249,3,3,1,1,Customers Needing Attention,High Attention Needed,New or Occasional
+250,0,4,1,0,Customers Needing Attention,High Attention Needed,New or Occasional
+251,7,1,0,0,Loyal Customers,Moderate Attention Needed,Highly Loyal
+252,3,2,0,0,Customers Needing Attention,High Attention Needed,New or Occasional
+253,5,9,1,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+254,7,10,1,1,High-Value Customers,Low Attention Needed,Highly Loyal
+255,3,2,1,0,Customers Needing Attention,High Attention Needed,New or Occasional
+256,2,5,1,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+257,8,9,1,1,High-Value Customers,Low Attention Needed,Highly Loyal
+258,2,9,1,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+259,8,8,0,1,High-Value Customers,Low Attention Needed,Highly Loyal
+260,1,1,0,1,Customers Needing Attention,High Attention Needed,New or Occasional
+261,1,1,1,0,Customers Needing Attention,High Attention Needed,New or Occasional
+262,1,9,1,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+263,5,8,0,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+264,2,10,1,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+265,8,9,1,0,High-Value Customers,Low Attention Needed,Highly Loyal
+266,3,7,0,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+267,0,3,1,1,Customers Needing Attention,High Attention Needed,New or Occasional
+268,3,3,1,0,Customers Needing Attention,High Attention Needed,New or Occasional
+269,0,2,1,1,Customers Needing Attention,High Attention Needed,New or Occasional
+270,4,5,1,0,High-Value Customers,Low Attention Needed,Moderately Loyal
+271,3,3,0,0,Customers Needing Attention,High Attention Needed,New or Occasional
+272,7,6,0,0,High-Value Customers,Low Attention Needed,Highly Loyal
+273,7,2,0,1,Loyal Customers,Moderate Attention Needed,Highly Loyal
+274,6,3,0,1,Loyal Customers,Moderate Attention Needed,Moderately Loyal
+275,2,5,1,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+276,0,1,1,0,Customers Needing Attention,High Attention Needed,New or Occasional
+277,0,1,0,0,Customers Needing Attention,High Attention Needed,New or Occasional
+278,2,10,1,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+279,5,9,1,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+280,6,7,0,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+281,5,1,0,1,Loyal Customers,Moderate Attention Needed,Moderately Loyal
+282,5,8,0,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+283,5,3,1,1,Loyal Customers,Moderate Attention Needed,Moderately Loyal
+284,2,8,0,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+285,5,5,1,0,High-Value Customers,Low Attention Needed,Moderately Loyal
+286,7,1,0,0,Loyal Customers,Moderate Attention Needed,Highly Loyal
+287,1,7,1,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+288,4,5,1,0,High-Value Customers,Low Attention Needed,Moderately Loyal
+289,0,6,0,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+290,0,6,1,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+291,4,8,1,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+292,2,9,1,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+293,3,2,1,0,Customers Needing Attention,High Attention Needed,New or Occasional
+294,2,9,1,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+295,0,10,1,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+296,0,9,0,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+297,4,10,1,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+298,5,10,1,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+299,2,7,1,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+300,8,1,1,1,Loyal Customers,Moderate Attention Needed,Highly Loyal
+301,4,7,0,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+302,7,10,0,0,High-Value Customers,Low Attention Needed,Highly Loyal
+303,0,5,1,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+304,4,6,1,0,High-Value Customers,Low Attention Needed,Moderately Loyal
+305,2,10,0,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+306,0,7,1,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+307,3,5,1,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+308,4,7,0,0,High-Value Customers,Low Attention Needed,Moderately Loyal
+309,6,9,0,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+310,0,3,1,0,Customers Needing Attention,High Attention Needed,New or Occasional
+311,2,8,1,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+312,1,2,1,1,Customers Needing Attention,High Attention Needed,New or Occasional
+313,8,7,1,1,High-Value Customers,Low Attention Needed,Highly Loyal
+314,9,2,0,1,Loyal Customers,Moderate Attention Needed,Highly Loyal
+315,5,4,0,0,Loyal Customers,Moderate Attention Needed,Moderately Loyal
+316,9,7,1,1,High-Value Customers,Low Attention Needed,Highly Loyal
+317,2,3,0,0,Customers Needing Attention,High Attention Needed,New or Occasional
+318,7,2,0,1,Loyal Customers,Moderate Attention Needed,Highly Loyal
+319,7,10,0,1,High-Value Customers,Low Attention Needed,Highly Loyal
+320,1,7,0,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+321,5,1,1,1,Loyal Customers,Moderate Attention Needed,Moderately Loyal
+322,6,8,0,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+323,1,3,0,0,Customers Needing Attention,High Attention Needed,New or Occasional
+324,9,2,0,0,Loyal Customers,Moderate Attention Needed,Highly Loyal
+325,1,3,1,0,Customers Needing Attention,High Attention Needed,New or Occasional
+326,9,5,0,1,High-Value Customers,Low Attention Needed,Highly Loyal
+327,0,8,1,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+328,7,10,0,1,High-Value Customers,Low Attention Needed,Highly Loyal
+329,0,7,0,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+330,8,7,0,1,High-Value Customers,Low Attention Needed,Highly Loyal
+331,5,7,1,0,High-Value Customers,Low Attention Needed,Moderately Loyal
+332,6,8,0,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+333,9,1,0,0,Loyal Customers,Moderate Attention Needed,Highly Loyal
+334,6,4,0,0,Loyal Customers,Moderate Attention Needed,Moderately Loyal
+335,9,6,0,1,High-Value Customers,Low Attention Needed,Highly Loyal
+336,2,9,1,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+337,1,2,1,0,Customers Needing Attention,High Attention Needed,New or Occasional
+338,8,1,0,1,Loyal Customers,Moderate Attention Needed,Highly Loyal
+339,7,10,1,0,High-Value Customers,Low Attention Needed,Highly Loyal
+340,9,2,1,1,Loyal Customers,Moderate Attention Needed,Highly Loyal
+341,6,7,1,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+342,8,3,1,1,Loyal Customers,Moderate Attention Needed,Highly Loyal
+343,3,10,1,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+344,3,2,1,0,Customers Needing Attention,High Attention Needed,New or Occasional
+345,0,7,1,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+346,7,2,0,1,Loyal Customers,Moderate Attention Needed,Highly Loyal
+347,2,3,1,1,Customers Needing Attention,High Attention Needed,New or Occasional
+348,6,7,0,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+349,1,4,1,0,Customers Needing Attention,High Attention Needed,New or Occasional
+350,1,1,1,0,Customers Needing Attention,High Attention Needed,New or Occasional
+351,6,5,1,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+352,5,9,1,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+353,2,8,1,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+354,8,9,0,1,High-Value Customers,Low Attention Needed,Highly Loyal
+355,9,10,0,0,High-Value Customers,Low Attention Needed,Highly Loyal
+356,5,9,0,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+357,9,7,0,1,High-Value Customers,Low Attention Needed,Highly Loyal
+358,9,4,1,1,Loyal Customers,Moderate Attention Needed,Highly Loyal
+359,5,5,1,0,High-Value Customers,Low Attention Needed,Moderately Loyal
+360,0,1,1,0,Customers Needing Attention,High Attention Needed,New or Occasional
+361,3,1,1,0,Customers Needing Attention,High Attention Needed,New or Occasional
+362,9,3,1,0,Loyal Customers,Moderate Attention Needed,Highly Loyal
+363,5,8,1,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+364,5,2,0,0,Loyal Customers,Moderate Attention Needed,Moderately Loyal
+365,4,4,1,1,Loyal Customers,Moderate Attention Needed,Moderately Loyal
+366,0,2,0,0,Customers Needing Attention,High Attention Needed,New or Occasional
+367,7,5,1,0,High-Value Customers,Low Attention Needed,Highly Loyal
+368,4,9,0,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+369,4,1,0,0,Loyal Customers,Moderate Attention Needed,Moderately Loyal
+370,6,5,1,0,High-Value Customers,Low Attention Needed,Moderately Loyal
+371,3,9,1,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+372,5,1,0,0,Loyal Customers,Moderate Attention Needed,Moderately Loyal
+373,3,9,1,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+374,2,8,1,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+375,6,4,1,1,Loyal Customers,Moderate Attention Needed,Moderately Loyal
+376,7,10,0,1,High-Value Customers,Low Attention Needed,Highly Loyal
+377,3,5,0,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+378,1,5,0,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+379,9,6,0,0,High-Value Customers,Low Attention Needed,Highly Loyal
+380,2,7,1,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+381,0,8,0,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+382,7,8,1,1,High-Value Customers,Low Attention Needed,Highly Loyal
+383,2,2,0,0,Customers Needing Attention,High Attention Needed,New or Occasional
+384,9,9,0,1,High-Value Customers,Low Attention Needed,Highly Loyal
+385,6,7,0,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+386,9,4,1,1,Loyal Customers,Moderate Attention Needed,Highly Loyal
+387,4,4,0,1,Loyal Customers,Moderate Attention Needed,Moderately Loyal
+388,9,8,1,1,High-Value Customers,Low Attention Needed,Highly Loyal
+389,4,4,1,0,Loyal Customers,Moderate Attention Needed,Moderately Loyal
+390,6,6,0,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+391,8,5,0,0,High-Value Customers,Low Attention Needed,Highly Loyal
+392,4,3,1,0,Loyal Customers,Moderate Attention Needed,Moderately Loyal
+393,0,10,1,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+394,9,2,0,1,Loyal Customers,Moderate Attention Needed,Highly Loyal
+395,9,9,1,1,High-Value Customers,Low Attention Needed,Highly Loyal
+396,0,10,0,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+397,1,9,1,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+398,5,1,1,1,Loyal Customers,Moderate Attention Needed,Moderately Loyal
+399,8,10,1,1,High-Value Customers,Low Attention Needed,Highly Loyal
+400,7,3,1,1,Loyal Customers,Moderate Attention Needed,Highly Loyal
+401,4,8,0,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+402,0,6,0,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+403,6,5,1,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+404,4,5,1,0,High-Value Customers,Low Attention Needed,Moderately Loyal
+405,5,6,1,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+406,6,7,1,0,High-Value Customers,Low Attention Needed,Moderately Loyal
+407,2,1,1,0,Customers Needing Attention,High Attention Needed,New or Occasional
+408,9,9,0,0,High-Value Customers,Low Attention Needed,Highly Loyal
+409,2,3,1,1,Customers Needing Attention,High Attention Needed,New or Occasional
+410,4,4,1,0,Loyal Customers,Moderate Attention Needed,Moderately Loyal
+411,5,10,1,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+412,8,1,0,1,Loyal Customers,Moderate Attention Needed,Highly Loyal
+413,4,10,1,0,High-Value Customers,Low Attention Needed,Moderately Loyal
+414,0,3,1,0,Customers Needing Attention,High Attention Needed,New or Occasional
+415,3,2,1,0,Customers Needing Attention,High Attention Needed,New or Occasional
+416,4,2,0,0,Loyal Customers,Moderate Attention Needed,Moderately Loyal
+417,9,1,1,0,Loyal Customers,Moderate Attention Needed,Highly Loyal
+418,9,8,0,0,High-Value Customers,Low Attention Needed,Highly Loyal
+419,4,3,1,0,Loyal Customers,Moderate Attention Needed,Moderately Loyal
+420,6,3,1,1,Loyal Customers,Moderate Attention Needed,Moderately Loyal
+421,3,6,1,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+422,0,8,1,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+423,4,9,0,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+424,6,9,1,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+425,9,4,1,1,Loyal Customers,Moderate Attention Needed,Highly Loyal
+426,9,5,0,1,High-Value Customers,Low Attention Needed,Highly Loyal
+427,5,2,0,0,Loyal Customers,Moderate Attention Needed,Moderately Loyal
+428,4,9,1,0,High-Value Customers,Low Attention Needed,Moderately Loyal
+429,3,8,0,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+430,1,3,1,1,Customers Needing Attention,High Attention Needed,New or Occasional
+431,3,9,1,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+432,9,3,1,1,Loyal Customers,Moderate Attention Needed,Highly Loyal
+433,9,9,0,1,High-Value Customers,Low Attention Needed,Highly Loyal
+434,2,2,1,0,Customers Needing Attention,High Attention Needed,New or Occasional
+435,9,10,0,1,High-Value Customers,Low Attention Needed,Highly Loyal
+436,0,9,1,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+437,7,8,0,1,High-Value Customers,Low Attention Needed,Highly Loyal
+438,4,9,0,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+439,3,5,1,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+440,7,2,0,0,Loyal Customers,Moderate Attention Needed,Highly Loyal
+441,6,8,0,0,High-Value Customers,Low Attention Needed,Moderately Loyal
+442,1,6,1,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+443,0,8,1,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+444,3,5,1,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+445,7,10,1,1,High-Value Customers,Low Attention Needed,Highly Loyal
+446,1,2,1,0,Customers Needing Attention,High Attention Needed,New or Occasional
+447,2,6,0,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+448,0,5,0,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+449,0,5,1,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+450,2,1,1,1,Customers Needing Attention,High Attention Needed,New or Occasional
+451,4,2,0,0,Loyal Customers,Moderate Attention Needed,Moderately Loyal
+452,2,8,1,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+453,0,3,1,1,Customers Needing Attention,High Attention Needed,New or Occasional
+454,0,10,1,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+455,7,3,0,1,Loyal Customers,Moderate Attention Needed,Highly Loyal
+456,9,8,1,0,High-Value Customers,Low Attention Needed,Highly Loyal
+457,1,8,1,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+458,2,2,1,0,Customers Needing Attention,High Attention Needed,New or Occasional
+459,1,8,1,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+460,2,1,0,0,Customers Needing Attention,High Attention Needed,New or Occasional
+461,6,6,1,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+462,0,8,1,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+463,9,3,0,1,Loyal Customers,Moderate Attention Needed,Highly Loyal
+464,7,8,0,1,High-Value Customers,Low Attention Needed,Highly Loyal
+465,9,1,0,0,Loyal Customers,Moderate Attention Needed,Highly Loyal
+466,9,9,1,1,High-Value Customers,Low Attention Needed,Highly Loyal
+467,9,9,0,1,High-Value Customers,Low Attention Needed,Highly Loyal
+468,1,5,1,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+469,2,10,1,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+470,8,4,1,1,Loyal Customers,Moderate Attention Needed,Highly Loyal
+471,6,6,1,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+472,3,7,0,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+473,9,5,0,1,High-Value Customers,Low Attention Needed,Highly Loyal
+474,4,10,0,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+475,1,9,1,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+476,7,3,0,1,Loyal Customers,Moderate Attention Needed,Highly Loyal
+477,3,7,0,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+478,8,10,0,1,High-Value Customers,Low Attention Needed,Highly Loyal
+479,4,10,1,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+480,8,5,0,0,High-Value Customers,Low Attention Needed,Highly Loyal
+481,3,7,0,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+482,9,2,0,1,Loyal Customers,Moderate Attention Needed,Highly Loyal
+483,4,4,0,0,Loyal Customers,Moderate Attention Needed,Moderately Loyal
+484,8,2,1,1,Loyal Customers,Moderate Attention Needed,Highly Loyal
+485,7,7,1,1,High-Value Customers,Low Attention Needed,Highly Loyal
+486,2,2,1,0,Customers Needing Attention,High Attention Needed,New or Occasional
+487,0,1,0,0,Customers Needing Attention,High Attention Needed,New or Occasional
+488,2,9,1,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+489,3,1,1,0,Customers Needing Attention,High Attention Needed,New or Occasional
+490,1,8,0,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+491,0,2,1,0,Customers Needing Attention,High Attention Needed,New or Occasional
+492,6,8,0,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+493,7,3,0,1,Loyal Customers,Moderate Attention Needed,Highly Loyal
+494,6,6,0,0,High-Value Customers,Low Attention Needed,Moderately Loyal
+495,4,3,1,1,Loyal Customers,Moderate Attention Needed,Moderately Loyal
+496,0,7,1,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+497,6,10,1,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+498,6,9,1,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+499,8,2,1,1,Loyal Customers,Moderate Attention Needed,Highly Loyal
+500,2,5,1,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+501,8,6,0,1,High-Value Customers,Low Attention Needed,Highly Loyal
+502,0,4,1,1,Customers Needing Attention,High Attention Needed,New or Occasional
+503,0,4,1,0,Customers Needing Attention,High Attention Needed,New or Occasional
+504,3,4,1,0,Customers Needing Attention,High Attention Needed,New or Occasional
+505,8,2,0,1,Loyal Customers,Moderate Attention Needed,Highly Loyal
+506,5,4,1,0,Loyal Customers,Moderate Attention Needed,Moderately Loyal
+507,2,1,1,0,Customers Needing Attention,High Attention Needed,New or Occasional
+508,0,6,1,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+509,3,1,0,0,Customers Needing Attention,High Attention Needed,New or Occasional
+510,8,10,1,1,High-Value Customers,Low Attention Needed,Highly Loyal
+511,2,6,1,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+512,8,1,0,0,Loyal Customers,Moderate Attention Needed,Highly Loyal
+513,6,6,1,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+514,3,10,0,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+515,2,8,1,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+516,9,2,0,0,Loyal Customers,Moderate Attention Needed,Highly Loyal
+517,4,2,0,1,Loyal Customers,Moderate Attention Needed,Moderately Loyal
+518,4,4,1,0,Loyal Customers,Moderate Attention Needed,Moderately Loyal
+519,2,3,1,0,Customers Needing Attention,High Attention Needed,New or Occasional
+520,8,4,0,1,Loyal Customers,Moderate Attention Needed,Highly Loyal
+521,3,7,0,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+522,4,1,0,0,Loyal Customers,Moderate Attention Needed,Moderately Loyal
+523,3,6,1,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+524,4,3,0,1,Loyal Customers,Moderate Attention Needed,Moderately Loyal
+525,6,10,1,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+526,8,7,0,1,High-Value Customers,Low Attention Needed,Highly Loyal
+527,6,10,0,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+528,4,2,0,1,Loyal Customers,Moderate Attention Needed,Moderately Loyal
+529,9,2,0,1,Loyal Customers,Moderate Attention Needed,Highly Loyal
+530,9,4,1,0,Loyal Customers,Moderate Attention Needed,Highly Loyal
+531,6,1,1,1,Loyal Customers,Moderate Attention Needed,Moderately Loyal
+532,9,3,1,1,Loyal Customers,Moderate Attention Needed,Highly Loyal
+533,4,9,1,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+534,2,7,0,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+535,6,7,1,0,High-Value Customers,Low Attention Needed,Moderately Loyal
+536,1,4,0,0,Customers Needing Attention,High Attention Needed,New or Occasional
+537,8,2,0,1,Loyal Customers,Moderate Attention Needed,Highly Loyal
+538,9,4,0,1,Loyal Customers,Moderate Attention Needed,Highly Loyal
+539,9,6,1,1,High-Value Customers,Low Attention Needed,Highly Loyal
+540,0,3,1,0,Customers Needing Attention,High Attention Needed,New or Occasional
+541,5,1,1,1,Loyal Customers,Moderate Attention Needed,Moderately Loyal
+542,6,8,0,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+543,7,5,1,0,High-Value Customers,Low Attention Needed,Highly Loyal
+544,9,5,0,1,High-Value Customers,Low Attention Needed,Highly Loyal
+545,8,4,1,1,Loyal Customers,Moderate Attention Needed,Highly Loyal
+546,1,6,1,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+547,9,3,0,0,Loyal Customers,Moderate Attention Needed,Highly Loyal
+548,1,9,0,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+549,4,5,1,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+550,4,3,1,1,Loyal Customers,Moderate Attention Needed,Moderately Loyal
+551,5,1,1,0,Loyal Customers,Moderate Attention Needed,Moderately Loyal
+552,2,10,1,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+553,7,6,1,1,High-Value Customers,Low Attention Needed,Highly Loyal
+554,0,2,0,0,Customers Needing Attention,High Attention Needed,New or Occasional
+555,5,3,1,1,Loyal Customers,Moderate Attention Needed,Moderately Loyal
+556,3,1,0,1,Customers Needing Attention,High Attention Needed,New or Occasional
+557,0,9,0,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+558,6,8,0,0,High-Value Customers,Low Attention Needed,Moderately Loyal
+559,8,2,1,0,Loyal Customers,Moderate Attention Needed,Highly Loyal
+560,3,8,1,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+561,3,9,1,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+562,5,1,1,0,Loyal Customers,Moderate Attention Needed,Moderately Loyal
+563,2,5,0,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+564,5,8,1,0,High-Value Customers,Low Attention Needed,Moderately Loyal
+565,6,2,0,1,Loyal Customers,Moderate Attention Needed,Moderately Loyal
+566,9,4,0,0,Loyal Customers,Moderate Attention Needed,Highly Loyal
+567,9,7,0,1,High-Value Customers,Low Attention Needed,Highly Loyal
+568,2,3,0,0,Customers Needing Attention,High Attention Needed,New or Occasional
+569,6,5,1,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+570,2,8,0,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+571,1,10,1,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+572,9,3,0,1,Loyal Customers,Moderate Attention Needed,Highly Loyal
+573,3,4,0,1,Customers Needing Attention,High Attention Needed,New or Occasional
+574,7,9,1,1,High-Value Customers,Low Attention Needed,Highly Loyal
+575,8,7,1,1,High-Value Customers,Low Attention Needed,Highly Loyal
+576,6,1,1,1,Loyal Customers,Moderate Attention Needed,Moderately Loyal
+577,0,4,0,0,Customers Needing Attention,High Attention Needed,New or Occasional
+578,2,4,0,0,Customers Needing Attention,High Attention Needed,New or Occasional
+579,8,9,1,1,High-Value Customers,Low Attention Needed,Highly Loyal
+580,0,6,1,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+581,8,9,0,1,High-Value Customers,Low Attention Needed,Highly Loyal
+582,7,6,1,1,High-Value Customers,Low Attention Needed,Highly Loyal
+583,0,6,1,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+584,5,5,1,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+585,4,5,0,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+586,5,2,0,0,Loyal Customers,Moderate Attention Needed,Moderately Loyal
+587,9,8,1,1,High-Value Customers,Low Attention Needed,Highly Loyal
+588,4,8,0,0,High-Value Customers,Low Attention Needed,Moderately Loyal
+589,5,1,0,1,Loyal Customers,Moderate Attention Needed,Moderately Loyal
+590,4,8,1,0,High-Value Customers,Low Attention Needed,Moderately Loyal
+591,4,5,1,0,High-Value Customers,Low Attention Needed,Moderately Loyal
+592,3,2,0,1,Customers Needing Attention,High Attention Needed,New or Occasional
+593,2,2,1,0,Customers Needing Attention,High Attention Needed,New or Occasional
+594,2,6,1,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+595,3,9,1,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+596,8,1,1,0,Loyal Customers,Moderate Attention Needed,Highly Loyal
+597,1,6,1,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+598,8,9,0,1,High-Value Customers,Low Attention Needed,Highly Loyal
+599,0,8,0,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+600,0,6,1,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+601,4,3,0,0,Loyal Customers,Moderate Attention Needed,Moderately Loyal
+602,5,8,1,0,High-Value Customers,Low Attention Needed,Moderately Loyal
+603,5,9,0,0,High-Value Customers,Low Attention Needed,Moderately Loyal
+604,2,1,0,0,Customers Needing Attention,High Attention Needed,New or Occasional
+605,6,9,0,0,High-Value Customers,Low Attention Needed,Moderately Loyal
+606,8,6,0,0,High-Value Customers,Low Attention Needed,Highly Loyal
+607,9,6,0,1,High-Value Customers,Low Attention Needed,Highly Loyal
+608,7,4,0,1,Loyal Customers,Moderate Attention Needed,Highly Loyal
+609,5,1,0,0,Loyal Customers,Moderate Attention Needed,Moderately Loyal
+610,7,10,1,1,High-Value Customers,Low Attention Needed,Highly Loyal
+611,4,8,1,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+612,7,2,0,0,Loyal Customers,Moderate Attention Needed,Highly Loyal
+613,9,1,0,1,Loyal Customers,Moderate Attention Needed,Highly Loyal
+614,3,2,0,1,Customers Needing Attention,High Attention Needed,New or Occasional
+615,9,1,0,1,Loyal Customers,Moderate Attention Needed,Highly Loyal
+616,7,1,0,0,Loyal Customers,Moderate Attention Needed,Highly Loyal
+617,9,9,1,1,High-Value Customers,Low Attention Needed,Highly Loyal
+618,1,1,1,1,Customers Needing Attention,High Attention Needed,New or Occasional
+619,4,4,0,0,Loyal Customers,Moderate Attention Needed,Moderately Loyal
+620,8,10,1,1,High-Value Customers,Low Attention Needed,Highly Loyal
+621,3,6,0,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+622,5,7,0,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+623,0,2,0,0,Customers Needing Attention,High Attention Needed,New or Occasional
+624,8,6,1,1,High-Value Customers,Low Attention Needed,Highly Loyal
+625,0,7,0,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+626,4,10,0,0,High-Value Customers,Low Attention Needed,Moderately Loyal
+627,3,10,1,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+628,2,2,1,0,Customers Needing Attention,High Attention Needed,New or Occasional
+629,5,2,1,1,Loyal Customers,Moderate Attention Needed,Moderately Loyal
+630,1,10,1,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+631,2,7,1,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+632,4,1,0,0,Loyal Customers,Moderate Attention Needed,Moderately Loyal
+633,8,8,1,1,High-Value Customers,Low Attention Needed,Highly Loyal
+634,1,3,1,0,Customers Needing Attention,High Attention Needed,New or Occasional
+635,9,6,0,1,High-Value Customers,Low Attention Needed,Highly Loyal
+636,7,9,1,1,High-Value Customers,Low Attention Needed,Highly Loyal
+637,1,6,1,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+638,4,9,1,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+639,6,7,1,0,High-Value Customers,Low Attention Needed,Moderately Loyal
+640,7,9,0,1,High-Value Customers,Low Attention Needed,Highly Loyal
+641,0,2,1,0,Customers Needing Attention,High Attention Needed,New or Occasional
+642,5,8,1,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+643,0,8,1,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+644,1,2,1,0,Customers Needing Attention,High Attention Needed,New or Occasional
+645,0,4,1,0,Customers Needing Attention,High Attention Needed,New or Occasional
+646,4,7,0,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+647,9,4,1,1,Loyal Customers,Moderate Attention Needed,Highly Loyal
+648,8,4,0,1,Loyal Customers,Moderate Attention Needed,Highly Loyal
+649,5,6,1,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+650,0,10,0,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+651,0,6,1,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+652,1,10,1,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+653,8,3,1,1,Loyal Customers,Moderate Attention Needed,Highly Loyal
+654,2,9,1,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+655,0,10,1,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+656,4,2,1,0,Loyal Customers,Moderate Attention Needed,Moderately Loyal
+657,6,6,0,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+658,5,7,1,0,High-Value Customers,Low Attention Needed,Moderately Loyal
+659,0,9,1,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+660,4,3,1,1,Loyal Customers,Moderate Attention Needed,Moderately Loyal
+661,4,10,1,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+662,5,3,1,1,Loyal Customers,Moderate Attention Needed,Moderately Loyal
+663,2,7,0,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+664,4,4,1,0,Loyal Customers,Moderate Attention Needed,Moderately Loyal
+665,6,8,1,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+666,4,7,0,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+667,4,5,1,0,High-Value Customers,Low Attention Needed,Moderately Loyal
+668,4,7,0,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+669,9,3,0,0,Loyal Customers,Moderate Attention Needed,Highly Loyal
+670,9,2,1,1,Loyal Customers,Moderate Attention Needed,Highly Loyal
+671,2,6,1,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+672,0,2,0,0,Customers Needing Attention,High Attention Needed,New or Occasional
+673,4,3,1,0,Loyal Customers,Moderate Attention Needed,Moderately Loyal
+674,8,6,0,0,High-Value Customers,Low Attention Needed,Highly Loyal
+675,0,5,1,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+676,2,8,1,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+677,3,9,1,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+678,0,3,0,1,Customers Needing Attention,High Attention Needed,New or Occasional
+679,0,10,1,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+680,7,3,1,1,Loyal Customers,Moderate Attention Needed,Highly Loyal
+681,1,3,1,1,Customers Needing Attention,High Attention Needed,New or Occasional
+682,7,6,0,1,High-Value Customers,Low Attention Needed,Highly Loyal
+683,6,1,0,1,Loyal Customers,Moderate Attention Needed,Moderately Loyal
+684,9,7,0,0,High-Value Customers,Low Attention Needed,Highly Loyal
+685,9,1,1,1,Loyal Customers,Moderate Attention Needed,Highly Loyal
+686,1,5,0,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+687,5,10,1,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+688,5,8,1,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+689,2,4,1,1,Customers Needing Attention,High Attention Needed,New or Occasional
+690,1,5,0,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+691,0,4,1,0,Customers Needing Attention,High Attention Needed,New or Occasional
+692,5,4,1,1,Loyal Customers,Moderate Attention Needed,Moderately Loyal
+693,4,8,0,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+694,8,2,0,1,Loyal Customers,Moderate Attention Needed,Highly Loyal
+695,0,1,1,1,Customers Needing Attention,High Attention Needed,New or Occasional
+696,6,3,1,1,Loyal Customers,Moderate Attention Needed,Moderately Loyal
+697,4,9,0,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+698,4,4,1,1,Loyal Customers,Moderate Attention Needed,Moderately Loyal
+699,1,10,1,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+700,2,5,1,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+701,6,2,0,0,Loyal Customers,Moderate Attention Needed,Moderately Loyal
+702,5,4,0,0,Loyal Customers,Moderate Attention Needed,Moderately Loyal
+703,1,2,1,0,Customers Needing Attention,High Attention Needed,New or Occasional
+704,5,2,0,0,Loyal Customers,Moderate Attention Needed,Moderately Loyal
+705,1,4,1,0,Customers Needing Attention,High Attention Needed,New or Occasional
+706,1,6,1,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+707,1,7,1,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+708,2,10,0,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+709,1,3,1,0,Customers Needing Attention,High Attention Needed,New or Occasional
+710,3,3,0,1,Customers Needing Attention,High Attention Needed,New or Occasional
+711,8,10,0,1,High-Value Customers,Low Attention Needed,Highly Loyal
+712,5,6,1,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+713,0,3,1,1,Customers Needing Attention,High Attention Needed,New or Occasional
+714,7,2,0,1,Loyal Customers,Moderate Attention Needed,Highly Loyal
+715,6,8,1,0,High-Value Customers,Low Attention Needed,Moderately Loyal
+716,9,5,0,1,High-Value Customers,Low Attention Needed,Highly Loyal
+717,2,1,1,0,Customers Needing Attention,High Attention Needed,New or Occasional
+718,0,3,1,0,Customers Needing Attention,High Attention Needed,New or Occasional
+719,4,10,0,0,High-Value Customers,Low Attention Needed,Moderately Loyal
+720,3,8,1,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+721,9,4,1,1,Loyal Customers,Moderate Attention Needed,Highly Loyal
+722,7,7,1,1,High-Value Customers,Low Attention Needed,Highly Loyal
+723,0,10,0,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+724,9,2,0,1,Loyal Customers,Moderate Attention Needed,Highly Loyal
+725,0,7,1,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+726,3,5,0,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+727,7,5,0,1,High-Value Customers,Low Attention Needed,Highly Loyal
+728,4,6,1,0,High-Value Customers,Low Attention Needed,Moderately Loyal
+729,1,9,0,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+730,5,6,1,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+731,4,8,1,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+732,1,7,1,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+733,2,9,0,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+734,8,4,1,1,Loyal Customers,Moderate Attention Needed,Highly Loyal
+735,6,2,0,1,Loyal Customers,Moderate Attention Needed,Moderately Loyal
+736,6,7,0,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+737,5,6,1,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+738,7,1,1,1,Loyal Customers,Moderate Attention Needed,Highly Loyal
+739,3,9,0,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+740,7,9,0,1,High-Value Customers,Low Attention Needed,Highly Loyal
+741,3,2,0,1,Customers Needing Attention,High Attention Needed,New or Occasional
+742,7,3,0,1,Loyal Customers,Moderate Attention Needed,Highly Loyal
+743,8,5,1,1,High-Value Customers,Low Attention Needed,Highly Loyal
+744,2,5,0,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+745,2,1,1,0,Customers Needing Attention,High Attention Needed,New or Occasional
+746,1,8,0,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+747,9,8,0,1,High-Value Customers,Low Attention Needed,Highly Loyal
+748,2,4,0,0,Customers Needing Attention,High Attention Needed,New or Occasional
+749,2,7,0,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+750,4,10,1,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+751,4,3,1,0,Loyal Customers,Moderate Attention Needed,Moderately Loyal
+752,1,6,1,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+753,9,10,0,1,High-Value Customers,Low Attention Needed,Highly Loyal
+754,5,10,0,0,High-Value Customers,Low Attention Needed,Moderately Loyal
+755,4,9,1,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+756,5,1,0,1,Loyal Customers,Moderate Attention Needed,Moderately Loyal
+757,0,5,0,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+758,4,4,1,1,Loyal Customers,Moderate Attention Needed,Moderately Loyal
+759,8,8,0,1,High-Value Customers,Low Attention Needed,Highly Loyal
+760,9,1,0,1,Loyal Customers,Moderate Attention Needed,Highly Loyal
+761,1,9,0,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+762,0,6,1,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+763,9,4,0,1,Loyal Customers,Moderate Attention Needed,Highly Loyal
+764,8,9,1,1,High-Value Customers,Low Attention Needed,Highly Loyal
+765,9,5,0,0,High-Value Customers,Low Attention Needed,Highly Loyal
+766,8,5,0,0,High-Value Customers,Low Attention Needed,Highly Loyal
+767,8,5,0,0,High-Value Customers,Low Attention Needed,Highly Loyal
+768,5,1,1,0,Loyal Customers,Moderate Attention Needed,Moderately Loyal
+769,7,1,1,1,Loyal Customers,Moderate Attention Needed,Highly Loyal
+770,0,8,1,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+771,9,8,1,1,High-Value Customers,Low Attention Needed,Highly Loyal
+772,3,6,0,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+773,0,4,0,1,Customers Needing Attention,High Attention Needed,New or Occasional
+774,7,2,1,1,Loyal Customers,Moderate Attention Needed,Highly Loyal
+775,0,2,1,0,Customers Needing Attention,High Attention Needed,New or Occasional
+776,2,9,1,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+777,3,5,1,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+778,7,4,0,0,Loyal Customers,Moderate Attention Needed,Highly Loyal
+779,5,10,0,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+780,9,1,1,1,Loyal Customers,Moderate Attention Needed,Highly Loyal
+781,6,7,1,0,High-Value Customers,Low Attention Needed,Moderately Loyal
+782,7,3,0,1,Loyal Customers,Moderate Attention Needed,Highly Loyal
+783,1,6,0,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+784,9,5,0,1,High-Value Customers,Low Attention Needed,Highly Loyal
+785,7,5,0,0,High-Value Customers,Low Attention Needed,Highly Loyal
+786,2,5,0,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+787,6,1,0,1,Loyal Customers,Moderate Attention Needed,Moderately Loyal
+788,2,1,1,1,Customers Needing Attention,High Attention Needed,New or Occasional
+789,6,3,1,1,Loyal Customers,Moderate Attention Needed,Moderately Loyal
+790,1,10,0,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+791,9,4,0,0,Loyal Customers,Moderate Attention Needed,Highly Loyal
+792,5,5,1,0,High-Value Customers,Low Attention Needed,Moderately Loyal
+793,2,2,1,1,Customers Needing Attention,High Attention Needed,New or Occasional
+794,2,8,1,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+795,8,2,0,1,Loyal Customers,Moderate Attention Needed,Highly Loyal
+796,6,9,0,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+797,4,2,1,1,Loyal Customers,Moderate Attention Needed,Moderately Loyal
+798,9,9,0,1,High-Value Customers,Low Attention Needed,Highly Loyal
+799,6,7,1,0,High-Value Customers,Low Attention Needed,Moderately Loyal
+800,8,8,1,1,High-Value Customers,Low Attention Needed,Highly Loyal
+801,0,2,1,0,Customers Needing Attention,High Attention Needed,New or Occasional
+802,6,7,1,0,High-Value Customers,Low Attention Needed,Moderately Loyal
+803,5,6,1,0,High-Value Customers,Low Attention Needed,Moderately Loyal
+804,9,4,0,1,Loyal Customers,Moderate Attention Needed,Highly Loyal
+805,8,7,0,1,High-Value Customers,Low Attention Needed,Highly Loyal
+806,0,4,1,0,Customers Needing Attention,High Attention Needed,New or Occasional
+807,3,2,1,1,Customers Needing Attention,High Attention Needed,New or Occasional
+808,8,10,0,1,High-Value Customers,Low Attention Needed,Highly Loyal
+809,3,7,0,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+810,9,8,0,1,High-Value Customers,Low Attention Needed,Highly Loyal
+811,2,2,1,1,Customers Needing Attention,High Attention Needed,New or Occasional
+812,8,5,0,0,High-Value Customers,Low Attention Needed,Highly Loyal
+813,1,1,1,1,Customers Needing Attention,High Attention Needed,New or Occasional
+814,3,7,1,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+815,5,8,0,0,High-Value Customers,Low Attention Needed,Moderately Loyal
+816,1,6,1,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+817,7,5,0,0,High-Value Customers,Low Attention Needed,Highly Loyal
+818,7,6,0,0,High-Value Customers,Low Attention Needed,Highly Loyal
+819,0,2,1,0,Customers Needing Attention,High Attention Needed,New or Occasional
+820,2,1,0,0,Customers Needing Attention,High Attention Needed,New or Occasional
+821,9,7,1,1,High-Value Customers,Low Attention Needed,Highly Loyal
+822,8,7,1,1,High-Value Customers,Low Attention Needed,Highly Loyal
+823,4,10,1,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+824,5,10,1,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+825,3,2,0,1,Customers Needing Attention,High Attention Needed,New or Occasional
+826,9,2,0,0,Loyal Customers,Moderate Attention Needed,Highly Loyal
+827,1,1,0,1,Customers Needing Attention,High Attention Needed,New or Occasional
+828,7,10,1,1,High-Value Customers,Low Attention Needed,Highly Loyal
+829,5,8,1,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+830,4,8,1,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+831,8,1,0,1,Loyal Customers,Moderate Attention Needed,Highly Loyal
+832,0,8,0,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+833,4,9,1,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+834,5,4,1,0,Loyal Customers,Moderate Attention Needed,Moderately Loyal
+835,4,1,0,1,Loyal Customers,Moderate Attention Needed,Moderately Loyal
+836,5,1,0,0,Loyal Customers,Moderate Attention Needed,Moderately Loyal
+837,5,3,1,1,Loyal Customers,Moderate Attention Needed,Moderately Loyal
+838,6,5,1,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+839,3,5,0,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+840,7,9,1,0,High-Value Customers,Low Attention Needed,Highly Loyal
+841,6,10,1,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+842,8,2,0,1,Loyal Customers,Moderate Attention Needed,Highly Loyal
+843,6,2,0,0,Loyal Customers,Moderate Attention Needed,Moderately Loyal
+844,2,6,0,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+845,2,9,1,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+846,7,1,0,1,Loyal Customers,Moderate Attention Needed,Highly Loyal
+847,4,9,1,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+848,3,9,1,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+849,7,9,1,1,High-Value Customers,Low Attention Needed,Highly Loyal
+850,5,5,0,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+851,1,9,1,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+852,3,4,0,0,Customers Needing Attention,High Attention Needed,New or Occasional
+853,3,2,1,0,Customers Needing Attention,High Attention Needed,New or Occasional
+854,5,6,1,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+855,5,4,1,1,Loyal Customers,Moderate Attention Needed,Moderately Loyal
+856,0,6,1,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+857,7,3,1,1,Loyal Customers,Moderate Attention Needed,Highly Loyal
+858,5,6,1,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+859,2,2,0,1,Customers Needing Attention,High Attention Needed,New or Occasional
+860,8,2,1,1,Loyal Customers,Moderate Attention Needed,Highly Loyal
+861,1,9,1,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+862,7,7,1,1,High-Value Customers,Low Attention Needed,Highly Loyal
+863,9,3,1,0,Loyal Customers,Moderate Attention Needed,Highly Loyal
+864,2,1,1,1,Customers Needing Attention,High Attention Needed,New or Occasional
+865,4,8,0,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+866,5,6,1,0,High-Value Customers,Low Attention Needed,Moderately Loyal
+867,9,7,0,1,High-Value Customers,Low Attention Needed,Highly Loyal
+868,5,9,1,0,High-Value Customers,Low Attention Needed,Moderately Loyal
+869,3,5,0,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+870,2,1,1,0,Customers Needing Attention,High Attention Needed,New or Occasional
+871,3,10,0,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+872,0,7,1,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+873,3,5,0,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+874,0,3,0,0,Customers Needing Attention,High Attention Needed,New or Occasional
+875,0,9,1,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+876,9,1,0,0,Loyal Customers,Moderate Attention Needed,Highly Loyal
+877,5,1,1,1,Loyal Customers,Moderate Attention Needed,Moderately Loyal
+878,4,1,0,0,Loyal Customers,Moderate Attention Needed,Moderately Loyal
+879,3,3,0,0,Customers Needing Attention,High Attention Needed,New or Occasional
+880,2,6,1,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+881,0,10,0,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+882,5,3,0,1,Loyal Customers,Moderate Attention Needed,Moderately Loyal
+883,1,8,0,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+884,7,10,1,1,High-Value Customers,Low Attention Needed,Highly Loyal
+885,9,2,0,1,Loyal Customers,Moderate Attention Needed,Highly Loyal
+886,4,9,1,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+887,6,3,0,0,Loyal Customers,Moderate Attention Needed,Moderately Loyal
+888,9,5,0,1,High-Value Customers,Low Attention Needed,Highly Loyal
+889,1,10,1,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+890,7,8,0,0,High-Value Customers,Low Attention Needed,Highly Loyal
+891,1,2,1,0,Customers Needing Attention,High Attention Needed,New or Occasional
+892,3,6,1,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+893,0,5,1,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+894,4,10,1,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+895,8,9,1,1,High-Value Customers,Low Attention Needed,Highly Loyal
+896,0,5,0,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+897,8,2,1,1,Loyal Customers,Moderate Attention Needed,Highly Loyal
+898,7,5,1,1,High-Value Customers,Low Attention Needed,Highly Loyal
+899,5,4,1,1,Loyal Customers,Moderate Attention Needed,Moderately Loyal
+900,6,7,0,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+901,2,6,1,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+902,0,2,1,0,Customers Needing Attention,High Attention Needed,New or Occasional
+903,4,5,1,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+904,1,7,1,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+905,4,7,1,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+906,7,5,0,1,High-Value Customers,Low Attention Needed,Highly Loyal
+907,8,9,0,1,High-Value Customers,Low Attention Needed,Highly Loyal
+908,1,4,0,0,Customers Needing Attention,High Attention Needed,New or Occasional
+909,2,3,1,0,Customers Needing Attention,High Attention Needed,New or Occasional
+910,2,4,0,1,Customers Needing Attention,High Attention Needed,New or Occasional
+911,0,5,0,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+912,7,6,1,1,High-Value Customers,Low Attention Needed,Highly Loyal
+913,5,3,1,0,Loyal Customers,Moderate Attention Needed,Moderately Loyal
+914,7,2,1,0,Loyal Customers,Moderate Attention Needed,Highly Loyal
+915,8,4,1,1,Loyal Customers,Moderate Attention Needed,Highly Loyal
+916,4,5,0,0,High-Value Customers,Low Attention Needed,Moderately Loyal
+917,2,4,1,0,Customers Needing Attention,High Attention Needed,New or Occasional
+918,4,3,0,1,Loyal Customers,Moderate Attention Needed,Moderately Loyal
+919,4,8,1,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+920,4,10,1,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+921,2,4,1,1,Customers Needing Attention,High Attention Needed,New or Occasional
+922,9,2,0,0,Loyal Customers,Moderate Attention Needed,Highly Loyal
+923,3,2,1,0,Customers Needing Attention,High Attention Needed,New or Occasional
+924,8,1,0,1,Loyal Customers,Moderate Attention Needed,Highly Loyal
+925,9,4,0,1,Loyal Customers,Moderate Attention Needed,Highly Loyal
+926,8,10,1,1,High-Value Customers,Low Attention Needed,Highly Loyal
+927,1,9,0,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+928,7,7,1,0,High-Value Customers,Low Attention Needed,Highly Loyal
+929,7,10,0,1,High-Value Customers,Low Attention Needed,Highly Loyal
+930,6,7,0,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+931,7,7,0,0,High-Value Customers,Low Attention Needed,Highly Loyal
+932,2,8,1,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+933,5,1,1,1,Loyal Customers,Moderate Attention Needed,Moderately Loyal
+934,0,10,1,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+935,6,10,1,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+936,0,8,1,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+937,8,4,1,1,Loyal Customers,Moderate Attention Needed,Highly Loyal
+938,0,4,1,0,Customers Needing Attention,High Attention Needed,New or Occasional
+939,0,4,0,0,Customers Needing Attention,High Attention Needed,New or Occasional
+940,6,6,1,0,High-Value Customers,Low Attention Needed,Moderately Loyal
+941,1,7,0,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+942,4,6,0,0,High-Value Customers,Low Attention Needed,Moderately Loyal
+943,7,1,0,0,Loyal Customers,Moderate Attention Needed,Highly Loyal
+944,7,8,0,1,High-Value Customers,Low Attention Needed,Highly Loyal
+945,2,10,1,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+946,6,7,1,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+947,2,6,1,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+948,5,6,1,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+949,5,5,0,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+950,2,6,1,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+951,6,9,1,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+952,2,10,0,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+953,7,9,0,0,High-Value Customers,Low Attention Needed,Highly Loyal
+954,9,10,0,1,High-Value Customers,Low Attention Needed,Highly Loyal
+955,3,8,0,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+956,0,10,1,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+957,3,9,1,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+958,6,10,1,0,High-Value Customers,Low Attention Needed,Moderately Loyal
+959,3,8,0,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+960,5,8,1,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+961,8,1,1,0,Loyal Customers,Moderate Attention Needed,Highly Loyal
+962,0,10,1,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+963,4,5,1,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+964,6,4,1,1,Loyal Customers,Moderate Attention Needed,Moderately Loyal
+965,0,2,1,0,Customers Needing Attention,High Attention Needed,New or Occasional
+966,3,8,1,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+967,5,3,0,0,Loyal Customers,Moderate Attention Needed,Moderately Loyal
+968,1,4,1,0,Customers Needing Attention,High Attention Needed,New or Occasional
+969,9,7,0,1,High-Value Customers,Low Attention Needed,Highly Loyal
+970,4,10,0,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+971,9,9,0,0,High-Value Customers,Low Attention Needed,Highly Loyal
+972,0,2,1,0,Customers Needing Attention,High Attention Needed,New or Occasional
+973,5,3,0,1,Loyal Customers,Moderate Attention Needed,Moderately Loyal
+974,5,4,1,1,Loyal Customers,Moderate Attention Needed,Moderately Loyal
+975,3,10,1,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+976,7,1,0,0,Loyal Customers,Moderate Attention Needed,Highly Loyal
+977,3,7,0,0,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+978,7,2,1,1,Loyal Customers,Moderate Attention Needed,Highly Loyal
+979,7,5,0,1,High-Value Customers,Low Attention Needed,Highly Loyal
+980,4,1,1,1,Loyal Customers,Moderate Attention Needed,Moderately Loyal
+981,3,3,1,1,Customers Needing Attention,High Attention Needed,New or Occasional
+982,1,2,1,1,Customers Needing Attention,High Attention Needed,New or Occasional
+983,2,1,1,0,Customers Needing Attention,High Attention Needed,New or Occasional
+984,2,7,1,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+985,3,5,1,1,Highly Engaged Customers,Moderate Attention Needed,New or Occasional
+986,3,1,0,0,Customers Needing Attention,High Attention Needed,New or Occasional
+987,9,6,1,1,High-Value Customers,Low Attention Needed,Highly Loyal
+988,4,5,1,0,High-Value Customers,Low Attention Needed,Moderately Loyal
+989,3,3,1,0,Customers Needing Attention,High Attention Needed,New or Occasional
+990,9,7,0,1,High-Value Customers,Low Attention Needed,Highly Loyal
+991,7,10,1,1,High-Value Customers,Low Attention Needed,Highly Loyal
+992,5,9,1,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+993,5,9,0,1,High-Value Customers,Low Attention Needed,Moderately Loyal
+994,7,9,1,1,High-Value Customers,Low Attention Needed,Highly Loyal
+995,6,2,1,0,Loyal Customers,Moderate Attention Needed,Moderately Loyal
+996,9,3,1,1,Loyal Customers,Moderate Attention Needed,Highly Loyal
+997,9,7,0,0,High-Value Customers,Low Attention Needed,Highly Loyal
+998,7,5,1,1,High-Value Customers,Low Attention Needed,Highly Loyal
+999,1,2,1,1,Customers Needing Attention,High Attention Needed,New or Occasional
+1000,8,3,1,1,Loyal Customers,Moderate Attention Needed,Highly Loyal
