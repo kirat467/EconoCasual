@@ -77,15 +77,54 @@ Dropping `previous_purchases` flipped the mean effect from +0.028 to -0.023 and 
 **What is a Qini curve?**
 It shows cumulative extra purchases caused as you target customers in order of predicted effect. A model that finds the right customers rises above the straight line you'd get from random targeting.
 
-## 7. Week 3 preview (optimizer)
+## 7. Weeks 3-4: optimizer, drift and the API
+
 **How does the optimizer choose who gets a coupon?**
-It is a multiple-choice knapsack problem: each customer gets at most one of $0, $10 or $20, total coupon value must stay within the budget, and the objective is the estimated extra purchases. It is solved exactly with `scipy.optimize.milp`. Customers with a negative effect are never chosen.
+It is a multiple-choice knapsack problem: each customer gets at most one of $0, $10 or $20, total coupon value must stay within the budget, and the objective is the extra purchases we expect. It is solved exactly with `scipy.optimize.milp` (HiGHS) and answers any budget in about 0.05 s. Customers with a negative effect are never chosen.
+
+**Why does it use the "cautious" (lower-bound) effect?**
+Picking the customers with the highest estimates also picks the ones whose estimates happen to be too high by luck (the optimizer's curse). In validation the model said 75.4 extra purchases at a $5,000 budget and the truth was 60.4. Using the lower 95% bound is safer and was never wildly wrong.
+
+**Why does the optimizer sometimes spend less than the budget?**
+It only gives coupons to customers whose cautious effect is above zero. Beyond about $6,670 nobody else qualifies, so it stops. Spending the rest would waste money.
+
+**How good is the optimizer?**
+At $5,000 it gets about 96% of the best possible result (60.4 vs 63.1 true extra purchases) and about 3x what random $10 coupons would. It gave no coupons to Sleeping Dogs.
+
+**What is data drift and how do you detect it?**
+Drift means new customers no longer look like the ones the model was trained on, so its answers get less trustworthy. For each feature we run a KS test and compute PSI, and we flag a feature only when both agree (KS p < 0.01 and PSI >= 0.1). On data from the same population nothing was flagged; on a simulated shift it flagged exactly the two shifted features.
+
+**What does the API do?**
+`/api/ite` and `/api/uplift-curve` serve the Double ML results, `/api/optimize` solves any budget, `/api/drift` checks for drift, and `/api/predict` scores a customer the model has never seen. Member 3's dashboard reads it.
+
+**How does `/api/predict` work without retraining?**
+The last stage of our Double ML model is linear in the (polynomial) features, so the whole causal model is just a few numbers per coupon (15 coefficients and a 15x15 covariance matrix). The API multiplies them with the customer's features. I checked it against EconML and the difference was about 1e-16. The baseline chance of buying comes from a small LightGBM model.
+
+**How do you know the numbers can be trusted?**
+The data is synthetic, so the true effect of each customer is known and I could check against it: correlation 0.91, optimizer at 96% of the best possible. I also ran refutation tests (a random fake cause gets about zero effect, removing a confounder changes the answer) and propensity-score checks.
+
+**What are the weaknesses? (say these first)**
+- The data is synthetic. On real data I would need a sensitivity analysis for hidden confounders.
+- The estimates run high at the top end, so we show the cautious figure.
+- The average effect of the $20 coupon is underestimated (+0.046 vs +0.071 true), although the ranking is good.
+- The drift banner on the dashboard is a stored simulated example.
+- The Docker image was written but I could not build it in my environment.
+- There is no database; the API serves saved model files.
+
+**Live demo order (about 3 minutes)**
+1. Start `python backend/server.py` and open `/api/health` (all files true).
+2. Dashboard: show the uplift curve (model above random), explain the peak at about 80%.
+3. Change the budget and press Optimize; point out the cautious figure and the summary sentence.
+4. Individual effects table: filter to Sleeping Dogs, explain why they get no coupon.
+5. `/api/predict`: send one customer with curl or the demo page, read out the segment and suggested coupon.
+6. Close with the limits above.
 
 ## 8. Questions about your own contribution
 - Which files did you write, and what does each do?
 - What was the hardest bug or decision? (For example: the average effect being underestimated, or the unobserved-confounder test crashing on a boolean column.)
 - What would you do next with more time? (A causal forest for the final stage, real data with a hidden-confounder sensitivity analysis.)
-- How did you work with Member 1 (data, DAG) and Member 3 (API contract)?
+- How did you work with Member 1 (data, DAG) and Member 3 (API contract, dashboard)? (I wrote the API contract and a frontend integration guide; Member 3's dashboard reads the API.)
+- What was your biggest lesson in Weeks 3-4? (Point estimates that look best are the ones most likely to be wrong, so an optimizer must use cautious numbers.)
 
 ## Numbers worth memorising
 | Item | Value |
@@ -95,3 +134,8 @@ It is a multiple-choice knapsack problem: each customer gets at most one of $0, 
 | Correlation with truth: baseline / Double ML | 0.70 / 0.91 |
 | Extra purchases (top 40%): random / baseline / Double ML / best possible | 22.1 / 46.1 / 52.7 / 54.3 |
 | `previous_purchases` SMD before / after matching | -0.398 / 0.012 |
+| Optimizer at $5,000: true extra purchases / best possible / blanket $10 | 60.4 / 63.1 / about 18 |
+| Optimizer estimate vs truth at $5,000 | 75.4 vs 60.4 (runs about 25% high) |
+| Budget where the optimizer stops spending | about $6,670 |
+| Drift rule | KS p < 0.01 and PSI >= 0.1 |
+| `/api/predict` formula vs EconML | max difference about 1e-16 |
