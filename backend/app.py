@@ -1,11 +1,14 @@
-
 from pathlib import Path
 import math
-
 import pandas as pd
+
 from flask import Flask, jsonify, request
+from flask_cors import CORS
 
 app = Flask(__name__)
+
+# Enable CORS for frontend-backend communication
+CORS(app)
 
 PROJECT_DIR = Path(__file__).resolve().parent.parent
 DATA_FILE = PROJECT_DIR / "data" / "customers.csv"
@@ -20,25 +23,32 @@ REQUIRED_COLUMNS = [
 
 
 def load_data():
-    """Load customer data and verify that required columns exist."""
+    """Load customer data and verify required columns."""
+
     if not DATA_FILE.exists():
-        raise FileNotFoundError(f"Customer dataset not found: {DATA_FILE}")
+        raise FileNotFoundError(
+            f"Customer dataset not found: {DATA_FILE}"
+        )
 
     df = pd.read_csv(DATA_FILE)
 
     missing_columns = [
-        column for column in REQUIRED_COLUMNS
+        column
+        for column in REQUIRED_COLUMNS
         if column not in df.columns
     ]
 
     if missing_columns:
-        raise ValueError(f"Missing required columns: {missing_columns}")
+        raise ValueError(
+            f"Missing required columns: {missing_columns}"
+        )
 
     return df
 
 
 def calculate_purchase_statistics(group):
     """Calculate purchase statistics for a customer group."""
+
     total_customers = int(len(group))
     total_purchases = int(group["purchase"].sum())
     non_purchases = total_customers - total_purchases
@@ -59,6 +69,7 @@ def calculate_purchase_statistics(group):
 
 def analyse_column(df, column):
     """Group customer data and calculate purchase statistics."""
+
     result = {}
 
     for value, group in df.groupby(column, dropna=False):
@@ -68,21 +79,39 @@ def analyse_column(df, column):
     return result
 
 
+# --------------------------------------------------
+# HOME ROUTE
+# --------------------------------------------------
+
 @app.route("/", methods=["GET"])
 def home():
+
     return jsonify({
         "message": "Welcome to EconoCasual Backend API",
         "status": "running",
     }), 200
 
 
+# --------------------------------------------------
+# HEALTH CHECK
+# --------------------------------------------------
+
 @app.route("/health", methods=["GET"])
 def health():
-    return jsonify({"status": "healthy"}), 200
 
+    return jsonify({
+        "status": "healthy"
+    }), 200
+
+
+# --------------------------------------------------
+# CUSTOMERS API - PAGINATION
+# Existing endpoint preserved
+# --------------------------------------------------
 
 @app.route("/customers", methods=["GET"])
 def customers():
+
     try:
         df = load_data()
 
@@ -105,9 +134,11 @@ def customers():
         per_page = min(per_page, 100)
 
         for column in ["discount", "engagement", "purchase"]:
+
             value = request.args.get(column)
 
             if value is not None:
+
                 try:
                     numeric_value = float(value)
                 except ValueError:
@@ -123,10 +154,12 @@ def customers():
                 df = df[df[column] == numeric_value]
 
         total_customers = int(len(df))
+
         start = (page - 1) * per_page
         end = start + per_page
 
         page_df = df.iloc[start:end].copy()
+
         page_df = page_df.astype(object).where(
             pd.notna(page_df), None
         )
@@ -141,73 +174,174 @@ def customers():
 
     except FileNotFoundError as error:
         app.logger.error("%s", error)
-        return jsonify({"error": "Customer dataset not found"}), 500
+
+        return jsonify({
+            "error": "Customer dataset not found"
+        }), 500
 
     except (ValueError, pd.errors.ParserError):
         app.logger.exception("Unable to load customer data")
-        return jsonify({"error": "Invalid customer dataset"}), 500
+
+        return jsonify({
+            "error": "Invalid customer dataset"
+        }), 500
 
     except Exception:
         app.logger.exception("Error retrieving customers")
-        return jsonify({"error": "Unable to retrieve customers"}), 500
 
+        return jsonify({
+            "error": "Unable to retrieve customers"
+        }), 500
+
+
+# --------------------------------------------------
+# NEW API FOR FRONTEND INTEGRATION
+# Returns a direct JSON array
+# --------------------------------------------------
+
+@app.route("/api/customers", methods=["GET"])
+def api_customers():
+
+    try:
+        df = load_data()
+
+        # Select the fields required by the frontend
+        frontend_columns = [
+            "customer_id",
+            "previous_purchases",
+            "engagement",
+            "discount",
+            "purchase",
+        ]
+
+        customer_data = df[frontend_columns].copy()
+
+        # Convert missing values into JSON null
+        customers_list = customer_data.to_json(
+            orient="records"
+        )
+
+        import json
+
+        customers_list = json.loads(customers_list)
+
+        return jsonify(customers_list), 200
+
+    except FileNotFoundError as error:
+        app.logger.error("%s", error)
+
+        return jsonify({
+            "error": "Customer dataset not found"
+        }), 500
+
+    except Exception:
+        app.logger.exception("Error retrieving API customers")
+
+        return jsonify({
+            "error": "Unable to retrieve customer data"
+        }), 500
+
+
+# --------------------------------------------------
+# PURCHASE SUMMARY
+# --------------------------------------------------
 
 @app.route("/purchase-summary", methods=["GET"])
 def purchase_summary():
+
     try:
         df = load_data()
-        return jsonify(calculate_purchase_statistics(df)), 200
+
+        return jsonify(
+            calculate_purchase_statistics(df)
+        ), 200
+
     except Exception:
         app.logger.exception("Error generating purchase summary")
+
         return jsonify({
             "error": "Unable to generate purchase summary"
         }), 500
 
 
+# --------------------------------------------------
+# DISCOUNT ANALYSIS
+# --------------------------------------------------
+
 @app.route("/discount-analysis", methods=["GET"])
 def discount_analysis():
+
     try:
         df = load_data()
+
         return jsonify({
             "analysis": analyse_column(df, "discount")
         }), 200
+
     except Exception:
         app.logger.exception("Error generating discount analysis")
+
         return jsonify({
             "error": "Unable to generate discount analysis"
         }), 500
 
 
+# --------------------------------------------------
+# ENGAGEMENT ANALYSIS
+# --------------------------------------------------
+
 @app.route("/engagement-analysis", methods=["GET"])
 def engagement_analysis():
+
     try:
         df = load_data()
+
         return jsonify({
             "analysis": analyse_column(df, "engagement")
         }), 200
+
     except Exception:
         app.logger.exception("Error generating engagement analysis")
+
         return jsonify({
             "error": "Unable to generate engagement analysis"
         }), 500
 
 
+# --------------------------------------------------
+# PREVIOUS PURCHASES ANALYSIS
+# --------------------------------------------------
+
 @app.route("/previous-purchases-analysis", methods=["GET"])
 def previous_purchases_analysis():
+
     try:
         df = load_data()
+
         return jsonify({
-            "analysis": analyse_column(df, "previous_purchases")
+            "analysis": analyse_column(
+                df,
+                "previous_purchases"
+            )
         }), 200
+
     except Exception:
-        app.logger.exception("Error generating previous purchases analysis")
+        app.logger.exception(
+            "Error generating previous purchases analysis"
+        )
+
         return jsonify({
             "error": "Unable to generate previous purchases analysis"
         }), 500
 
 
+# --------------------------------------------------
+# DATA VALIDATION
+# --------------------------------------------------
+
 @app.route("/validate-data", methods=["GET"])
 def validate_data():
+
     try:
         df = load_data()
 
@@ -226,17 +360,26 @@ def validate_data():
 
     except FileNotFoundError as error:
         app.logger.error("%s", error)
-        return jsonify({"error": "Customer dataset not found"}), 500
+
+        return jsonify({
+            "error": "Customer dataset not found"
+        }), 500
 
     except Exception:
         app.logger.exception("Error validating customer data")
+
         return jsonify({
             "error": "Unable to validate customer data"
         }), 500
 
 
+# --------------------------------------------------
+# CUSTOMER STATISTICS
+# --------------------------------------------------
+
 @app.route("/customer-statistics", methods=["GET"])
 def customer_statistics():
+
     try:
         df = load_data()
 
@@ -252,17 +395,31 @@ def customer_statistics():
         }), 200
 
     except Exception:
-        app.logger.exception("Error generating customer statistics")
+        app.logger.exception(
+            "Error generating customer statistics"
+        )
+
         return jsonify({
             "error": "Unable to generate customer statistics"
         }), 500
 
 
+# --------------------------------------------------
+# 404 ERROR HANDLER
+# --------------------------------------------------
+
 @app.errorhandler(404)
 def not_found(error):
-    return jsonify({"error": "Endpoint not found"}), 404
 
+    return jsonify({
+        "error": "Endpoint not found"
+    }), 404
+
+
+# --------------------------------------------------
+# RUN FLASK SERVER
+# --------------------------------------------------
 
 if __name__ == "__main__":
-    app.run(debug=True)
 
+    app.run(debug=True)
